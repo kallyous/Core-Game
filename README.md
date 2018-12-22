@@ -1,2 +1,2 @@
 # Nope-Island
-Short Turn-Based Game Prototype
+Turn Based Strategy Short Game Prototype
