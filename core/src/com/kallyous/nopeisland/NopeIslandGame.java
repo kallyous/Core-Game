@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class NopeIslandGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
+
+	// Default GUI interface texture.
+	public static Texture uiTexture;
 	
 	@Override
 	public void create () {
