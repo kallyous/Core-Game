@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="150" height="150" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" name="tileset_overworld" tilewidth="16" tileheight="16" tilecount="324" columns="18">
+  <image source="../../graphic/tileset_overworld.png" width="288" height="288"/>
+  <terraintypes>
+   <terrain name="GrassIn / WaterOut" tile="-1"/>
+   <terrain name="Water In / Grass Out" tile="-1"/>
+  </terraintypes>
+  <tile id="9" terrain="0,0,0,1"/>
+  <tile id="10" terrain="0,0,1,1"/>
+  <tile id="11" terrain="0,0,1,0"/>
+  <tile id="27" terrain="0,1,0,1"/>
+  <tile id="28" terrain="1,1,1,1"/>
+  <tile id="29" terrain="1,0,1,0"/>
+  <tile id="45" terrain="0,1,0,0"/>
+  <tile id="46" terrain="1,1,0,0"/>
+  <tile id="47" terrain="1,0,0,0"/>
+  <tile id="171" terrain="1,1,1,0"/>
+  <tile id="173" terrain="1,1,0,1"/>
+  <tile id="207" terrain="1,0,1,1"/>
+  <tile id="209" terrain="0,1,1,1"/>
+  <tile id="220" terrain="0,0,0,0"/>
+ </tileset>
+ <layer name="terrain" width="150" height="150">
+  <data encoding="base64" compression="zlib">
+   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
+  </data>
+ </layer>
+ <layer name="features_bot" width="150" height="150">
+  <data encoding="base64" compression="zlib">
+   eJzt2D0LgCAUBVB/fM011dw/LSEXEQKp7OMcCEQa3nB5FwwBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeIq+9QAAB9Ke6ppOwVeUcqQLOUvM15DdyRe1ZIcrpXxN2zfv57jDljbj8HL5vpqLf0GdUh/qSGqUOi5labxzEH7DOxYAAAAAAAAAANEK3C4L7A==
+  </data>
+ </layer>
+ <layer name="featues_top" width="150" height="150">
+  <data encoding="base64" compression="zlib">
+   eJztzjEBAAAIA6AlN7sV5uUDCUgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKA33wEAAAAAAAAAAAA4WI7MAH8=
+  </data>
+ </layer>
+</map>
