@@ -470,11 +470,11 @@ public class Creature extends Entity {
 
   // Entity Selection and Action
   @Override
-  public boolean tap(float x, float y, int count, int button) {
+  public boolean touchDown(int x, int y, int count, int button) {
     Vector3 touchedPoint = new Vector3(x, y, 0);
 
     // Detected tap was on this creature?
-    if(collided(touchedPoint, this.cam)){
+    if(collidedWorld(touchedPoint, this.cam)){
       // Debug info about tap on this creature
       System.out.println(getName() + " touched.");
       System.out.println("Button: " + Integer.toString(button));

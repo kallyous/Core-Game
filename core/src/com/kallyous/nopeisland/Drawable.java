@@ -9,9 +9,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 
+
 public class Drawable {
 
-  // =========================================== DATA ========================================= //
+// =========================================== DATA ========================================= //
 
   // Texture
   private Texture texture;
@@ -35,7 +36,8 @@ public class Drawable {
 
 
 
-  // ======================================== CONSTRUCTION ==================================== //
+
+// ======================================== CONSTRUCTION ==================================== //
 
   // Default Constructor
   Drawable() {
@@ -178,5 +180,6 @@ public class Drawable {
   public TextureRegion getRegionAt(int index) {
     return texture_region[index];
   }
+  public int getTextureRegionLength() {return texture_region.length; }
 
 }

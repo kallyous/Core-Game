@@ -1,17 +1,17 @@
 package com.kallyous.nopeisland;
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
 
 
 
 // Thing to hold basic things about anything that does something
-public class Entity extends Drawable implements GestureDetector.GestureListener {
+public class Entity extends Drawable implements InputProcessor {
 
   // ======================================== CONSTANTS ======================================= //
 
@@ -123,7 +123,7 @@ public class Entity extends Drawable implements GestureDetector.GestureListener 
   }
 
   // Collision Detection (from camera)
-  public boolean collided(Vector3 point, Camera cam) {
+  public boolean collidedWorld(Vector3 point, Camera cam) {
     cam.unproject(point);
     if ( (point.x > getX() && point.x < getX() + colbox_width) &&
         (point.y > getY() && point.y < getY() + colbox_height) ) {
@@ -131,6 +131,16 @@ public class Entity extends Drawable implements GestureDetector.GestureListener 
     }
     else
       return false;
+  }
+
+  // Collision Detection from Screen
+  public boolean collidedScreen(int screenX, int screenY) {
+    int h = Gdx.graphics.getHeight();
+    if ( (screenX > getX() && screenX < getX() + getColbox_width()) &&
+        ( (screenY > h - getY() - getColboxHeight()) && (screenY < h - getY()) ) ) {
+      return true;
+    }
+    return false;
   }
 
   // Sprite Offsets Update
@@ -341,47 +351,53 @@ public class Entity extends Drawable implements GestureDetector.GestureListener 
   // =========================================== INPUT ======================================== //
 
   @Override
-  public boolean touchDown(float x, float y, int pointer, int button) {
+  public boolean keyDown(int keycode) {
     return false;
   }
 
+
   @Override
-  public boolean tap(float x, float y, int count, int button) {
+  public boolean keyUp(int keycode) {
     return false;
   }
 
+
   @Override
-  public boolean longPress(float x, float y) {
+  public boolean keyTyped(char character) {
     return false;
   }
 
+
   @Override
-  public boolean fling(float velocityX, float velocityY, int button) {
+  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    if (collidedScreen(screenX, screenY)) {
+      System.out.println("Entity " + this.getName() + " touched.");
+      return true;
+    }
     return false;
   }
 
+
   @Override
-  public boolean pan(float x, float y, float deltaX, float deltaY) {
+  public boolean touchUp(int screenX, int screenY, int pointer, int button) {
     return false;
   }
 
+
   @Override
-  public boolean panStop(float x, float y, int pointer, int button) {
+  public boolean touchDragged(int screenX, int screenY, int pointer) {
     return false;
   }
 
+
   @Override
-  public boolean zoom(float initialDistance, float distance) {
+  public boolean mouseMoved(int screenX, int screenY) {
     return false;
   }
 
+
   @Override
-  public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+  public boolean scrolled(int amount) {
     return false;
-  }
-
-  @Override
-  public void pinchStop() {
-
   }
 }
