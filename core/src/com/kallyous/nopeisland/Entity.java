@@ -62,7 +62,7 @@ abstract public class Entity implements InputProcessor {
 
   /* There may be several different types of command interpreters, so we
   reserve a special place here, with the superclass CommandComponent. */
-  private CommandComponent command_comp;
+  protected CommandComponent command_comp;
 
 // ========================= DATA END ========================= //
 
@@ -113,7 +113,7 @@ abstract public class Entity implements InputProcessor {
     cam.unproject(point);
     if ( (point.x > x_location && point.x < x_location + width) &&
         (point.y > y_location && point.y < y_location + height) ) {
-      System.out.println("World collision on " + name);
+      System.out.println("collidedWorld(): World collision on " + name);
       return true;
     }
     else
@@ -125,7 +125,7 @@ abstract public class Entity implements InputProcessor {
     int h = Gdx.graphics.getHeight();
     if ( (screenX > x_location && screenX < x_location + width) &&
         ( (screenY > h - y_location - height) && (screenY < h - y_location) ) ) {
-      System.out.println("Screen collision on " + name);
+      System.out.println("collidedScreen(): Screen collision on " + name);
       return true;
     }
     return false;

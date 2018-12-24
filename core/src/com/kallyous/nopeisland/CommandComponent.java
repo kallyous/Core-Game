@@ -15,10 +15,14 @@ public class CommandComponent {
     this.owner = owner;
   }
 
-  // By default we just return true if shit matched
-  public boolean execute(Command command) {
+  protected boolean isItForMe(Command command) {
     if (command.target == this.owner) return true;
     return false;
+  }
+
+  // By default we just return true if shit matched
+  public boolean execute(Command command) {
+    return isItForMe(command);
   }
 
 }

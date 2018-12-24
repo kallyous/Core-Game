@@ -21,6 +21,12 @@ public class NopeIslandGame extends ApplicationAdapter {
   static MainMenuGameState main_menu_state = new MainMenuGameState();
   static RunningGameState running_state = new RunningGameState();
 
+  // Commands Manager
+  static CommandManager command_manager;
+
+  // Default GUI interface texture
+  public static Texture uiTexture;
+
   // Finite State Machine
   GameState game;
 
@@ -31,11 +37,8 @@ public class NopeIslandGame extends ApplicationAdapter {
   // Tracks time for animations and other time based events
   float state_time;
 
-  // Default GUI interface texture
-  public static Texture uiTexture;
-
   // Graphical User Interface
-  private UserInterface gui;
+  UserInterface gui;
 
   // Batch render for the GUI
   SpriteBatch guiBatch;
@@ -67,6 +70,9 @@ public class NopeIslandGame extends ApplicationAdapter {
     // Jogo inicia na tela do menu principal.
     game = main_menu_state;
 
+    // Prepares the Command Manager
+    command_manager = new CommandManager();
+
     // Starts timer
     state_time = 0f;
 
@@ -79,6 +85,7 @@ public class NopeIslandGame extends ApplicationAdapter {
 
     // Initializes GUI
     gui = new UserInterface(game_window_width, game_window_height);
+    gui.setCommandManager(command_manager);
 
     guiBatch = new SpriteBatch();
     /** Sprite batches takes sprites and prepares them to send to the GPU/CPU for rendering the
@@ -123,12 +130,19 @@ public class NopeIslandGame extends ApplicationAdapter {
 
     // ------------------------- GAME LOGIC START ------------------------- //
 
-    // GUI elements
-    gui.update(state_time);
 
-    // Game State update
+
+    // Receive inputs and generate commands
     game.handleInput();
+
+    // Execute all commands until command queue is empty
+    command_manager.flushCommands();
+
+    // Update the game state
     game.update(state_time);
+
+    // Update GUI. TODO: This shall be done inside game.update()
+    gui.update(state_time);
 
     // ------------------------- GAME LOGIC START ------------------------- //
 

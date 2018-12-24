@@ -84,6 +84,10 @@ public class UserInterface {
     for (UiElement elem : elements) multiplexer.addProcessor(elem);
   }
 
+  public void setCommandManager(CommandManager manager) {
+    for (UiElement elem : elements) manager.addListenner(elem);
+  }
+
 // ========================= LOGIC END ========================= //
 
 }
@@ -111,12 +115,30 @@ class UiElement extends Entity {
 
   UiElement() {
     super("uiElement");
-    graphic_comp = new GraphicComponent(this);
+    setupComponents(0);
   }
 
   UiElement(String name, int region_index) {
     super(name);
+    setupComponents(region_index);
+  }
+
+  private void setupComponents(int region_index) {
     graphic_comp = new GraphicComponent(this, region_index);
+
+    command_comp = new CommandComponent(this);
+    /*{
+      @Override
+      public boolean execute(Command command) {
+        if (isItForMe(command)) {
+          System.out.println("Comando exclusivo de " + owner.getName());
+          System.out.println(owner.getName() + " executando " + command.info());
+          return true;
+        }
+        return false;
+      }
+    };*/
+
   }
 
 // ========================= CONSTRUCTION END ========================= //
@@ -133,6 +155,14 @@ class UiElement extends Entity {
 
   public void draw(SpriteBatch batch) {
     graphic_comp.draw(batch);
+  }
+
+  @Override
+  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    if (collidedScreen(screenX, screenY)) {
+      NopeIslandGame.command_manager.sendCommand( new SelectCommand(this) );
+    }
+    return false;
   }
 
 // ========================= LOGIC END ========================= //

@@ -45,20 +45,28 @@ public class CommandManager {
 // ========================= LOGIC BEGIN ========================= //
 
   public void flushCommands() {
-    while ( !pending_commands.isEmpty() ) {
+
+    while ( !(pending_commands.isEmpty()) ) {
+
       command = pending_commands.poll();
+
+      System.out.println("Flushing " + command.info() + " for " +
+        command.target.getName() );
+
       for (Entity entity : listenners) {
+
         if ( entity.executeCommand(command) ) {
           System.out.println(entity.getName() + " executou " + command.info());
-          // No need for extra broadcasting this command.
-          break;
         }
+
       }
     }
   }
 
   // Insere commando na fila
   public boolean sendCommand(Command command) {
+    System.out.println("Enfileirando commando " + command.info() + " para " +
+      command.target.getName() );
     return pending_commands.offer(command);
   }
 
