@@ -37,13 +37,6 @@ public class NopeIslandGame extends ApplicationAdapter {
   // Graphical User Interface
   private UserInterface gui;
 
-
-
-  /** GUI debugging **/
-  TextureTester gui_tester;
-
-
-
   // Batch render for the GUI
   SpriteBatch guiBatch;
   /**
@@ -97,20 +90,11 @@ public class NopeIslandGame extends ApplicationAdapter {
     // Initializes InputMultiplexer
     input_multiplexer = new InputMultiplexer();
 
-
-
-    /** Graphic Debugging for GUI Texture **/
-    gui_tester = new TextureTester("GuiTester", uiTexture, 0);
-    gui_tester.setPosition( (game_window_width/2 -16), 10);
-    input_multiplexer.addProcessor(gui_tester);
-
-
-
     // Adds current InputAdapter to the multiplexer stack
     //input_multiplexer.addProcessor(input_adapter);
 
     // Adds the GUI InputProcessor to the multiplexer.
-    gui.setInputMultiplexer(input_multiplexer);
+    //gui.setInputMultiplexer(input_multiplexer);
 
     // Sets the multiplexer as the active shit
     Gdx.input.setInputProcessor(input_multiplexer);
@@ -140,10 +124,11 @@ public class NopeIslandGame extends ApplicationAdapter {
     // ------------------------- GAME LOGIC START ------------------------- //
 
     // GUI elements
-    gui.update(Entity.selected_entity);
+    gui.update(state_time);
 
+    // Game State update
     game.handleInput();
-    game.update();
+    game.update(state_time);
 
     // ------------------------- GAME LOGIC START ------------------------- //
 
@@ -152,7 +137,6 @@ public class NopeIslandGame extends ApplicationAdapter {
     // Graphical User Interface Rendering
     guiBatch.begin();
     gui.draw(guiBatch);
-    gui_tester.draw(guiBatch);
     guiBatch.end();
 
     // ------------------------- RENDER END ------------------------- //
@@ -163,30 +147,6 @@ public class NopeIslandGame extends ApplicationAdapter {
 
 }
 
-
-
-
-
-class TextureTester extends Entity {
-  TextureTester(String name, Texture texture, int region_index) {
-    super(name, texture, region_index);
-  }
-
-  @Override
-  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    if (collidedScreen(screenX, screenY)) {
-      System.out.println("Entity " + this.getName() + " touched.");
-
-      int curr_index = getRegionIndex();
-      if ( curr_index < getTextureRegionLength() -1 )  setRegionIndex(curr_index + 1);
-      else setRegionIndex(0);
-
-      return true;
-    }
-    return false;
-  }
-
-}
 
 
 
@@ -236,7 +196,7 @@ private Command select;
 abstract class GameState {
   GameState() {}
   abstract void enter();
-  abstract void update();
+  abstract void update(float dt);
   abstract void handleInput();
 }
 
@@ -245,7 +205,7 @@ abstract class GameState {
 class RunningGameState extends GameState {
   void enter(){ }
   void handleInput() { }
-  void update() { }
+  void update(float dt) { }
 }
 
 
@@ -253,7 +213,7 @@ class RunningGameState extends GameState {
 class MainMenuGameState extends GameState {
   void enter(){ }
   void handleInput() { }
-  void update() { }
+  void update(float dt) { }
 }
 
 // ========================= GAME STATE CLASSES END ========================= //

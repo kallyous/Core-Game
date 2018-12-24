@@ -4,16 +4,19 @@ package com.kallyous.nopeisland;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Queue;
 
 
 
-// Thing to hold basic things about anything that does something
-public class Entity extends Drawable implements InputProcessor {
 
-  // ======================================== CONSTANTS ======================================= //
+/** ========================= ENTITY SUPERCLASS ========================= **/
+
+public class Entity implements InputProcessor {
+
+
+
+
+// ========================= CONSTANTS BEGIN ========================= //
 
   // Each new entity type implements a new type of entity as public, static and final.
   public static final int GENERIC_ENTITY = 0;
@@ -24,9 +27,12 @@ public class Entity extends Drawable implements InputProcessor {
   public static final int FACING_RIGHT = 2;
   public static final int FACING_BOT = 3;
 
+// ========================= CONSTANTS END ========================= //
 
 
-  // ========================================== DATA ========================================== //
+
+
+// ========================= DATA BEGIN ========================= //
 
   // ID tracker
   private static long last_used_id = 0;
@@ -39,7 +45,7 @@ public class Entity extends Drawable implements InputProcessor {
   private int entity_type;
 
   // Entity Effective Location
-  private float x, y;
+  private float x_location, y_location;
   // Entity dimensions
   private int width, height;
   // Entity name
@@ -51,82 +57,54 @@ public class Entity extends Drawable implements InputProcessor {
   // Player Controllable (default is false)
   private boolean player_controllable = false;
 
-  // Collision Data
-  private int colbox_width, colbox_height;
-
-  // Graph Map this entity belongs/links to
-  private GraphMap graph_map;
-
   // Facing direction
   private int facing_direction = FACING_BOT;
 
-  // Path for movement
-  private Queue<GraphMapVertex> active_path;
-
-  // Turn won pass while are entities moving.
-  private boolean entity_is_moving = false;
+// ========================= DATA END ========================= //
 
 
 
-  // ======================================= CONSTRUCTION ===================================== //
+
+// ========================= CONSTRUCTION BEGIN ========================= //
 
   // Default Constructor
   Entity() {
     id = ++last_used_id;
-    this.name = "entity" + String.valueOf(id);
-    setDefaultColbox();
+    name = "entity" + String.valueOf(id);
+    setDefaultDimensions();
   }
 
   // Basic Constructor
   Entity(String name) {
     id = ++last_used_id;
     this.name = name + String.valueOf(id);
-    setDefaultColbox();
-  }
-
-  // Basic Constructor with frame index
-  Entity(String name, int region_index) {
-    super(region_index);
-    id = ++last_used_id;
-    this.name = name + String.valueOf(id);
-    setDefaultColbox();
-  }
-
-  // Custom Graphics Constructor with default dimensions (used on UI)
-  Entity(String name, Texture texture, int region_index) {
-    super(texture, region_index);
-    id = ++last_used_id;
-    this.name = name + String.valueOf(id);
-    setDefaultColbox();
-  }
-
-  // Custom Everything Constructor (used on most things, like creatures and plants)
-  Entity(String name, Texture texture, int sheet_cols, int sheet_rows, int region_index) {
-    super(texture, sheet_cols, sheet_rows, region_index);
-    id = ++last_used_id;
-    this.name = name + String.valueOf(id);
-    setDefaultColbox();
+    setDefaultDimensions();
   }
 
   // Default Collision Box (32x32)
-  public void setDefaultColbox() {
-    setCollisionBox(32, 32);
+  public void setDefaultDimensions() {
+    width = 32;
+    height = 32;
   }
 
+// ========================= CONSTRUCTION END ========================= //
 
 
-  // ========================================= LOGIC ========================================== //
+
+
+// ========================= LOGIC BEGIN ========================= //
 
   // Update entity status
-  public void update(float state_time) {
+  public void update(float dt) {
 
   }
 
   // Collision Detection (from camera)
   public boolean collidedWorld(Vector3 point, Camera cam) {
     cam.unproject(point);
-    if ( (point.x > getX() && point.x < getX() + colbox_width) &&
-        (point.y > getY() && point.y < getY() + colbox_height) ) {
+    if ( (point.x > x_location && point.x < x_location + width) &&
+        (point.y > y_location && point.y < y_location + height) ) {
+      System.out.println("World collision on " + name);
       return true;
     }
     else
@@ -136,77 +114,40 @@ public class Entity extends Drawable implements InputProcessor {
   // Collision Detection from Screen
   public boolean collidedScreen(int screenX, int screenY) {
     int h = Gdx.graphics.getHeight();
-    if ( (screenX > getX() && screenX < getX() + getColbox_width()) &&
-        ( (screenY > h - getY() - getColboxHeight()) && (screenY < h - getY()) ) ) {
+    if ( (screenX > x_location && screenX < x_location + width) &&
+        ( (screenY > h - y_location - height) && (screenY < h - y_location) ) ) {
+      System.out.println("Screen collision on " + name);
       return true;
     }
     return false;
   }
 
-  // Sprite Offsets Update
-  private void refreshOffsets() {
-    sprite.setX( getX() - getOffHoriz() );
-    sprite.setY( getY() - getOffVert() );
-  }
+// ========================= LOGIC END ========================= //
 
 
 
-  // ========================================== ACTIONS ======================================= //
 
-  // Default Entity Action
-  public void defaultAction(Entity target_entity){
+// ========================= ACTIONS BEGIN ========================= //
 
-  }
+  // Default Entity's Action
+  public void defaultAction(Entity target_entity){}
 
-  // Default Interaction
-  public void defaultInteraction(Entity source_entity) {
+  // Default Interaction with this entity
+  public void defaultInteraction(Entity source_entity) {}
 
-  }
+// ========================= ACTIONS END ========================= //
 
-  // Context Menu
-  public void openContextMenu(Entity source_entity) {
 
-  }
 
-  // Movement
-  public void move() {
 
-  }
-
-  // ===================================== SETTERS/GETTERS ==================================== //
+// ========================= SETTERS/GETTERS BEGIN ========================= //
 
   // Facing Direction
-  public int getDirection() {
+  public int getFaceDirection() {
     return facing_direction;
   }
-  public void setDirection(int val) {
+  public void setFaceDirection(int val) {
     facing_direction = val;
-  }
-
-  // Link to Graph Vertex
-  public void linkGraphMap(GraphMap graph_map) {
-    this.graph_map = graph_map;
-  }
-  public void enterVertexAt(int x, int y) {
-    graph_map.getVertexAt(x,y).putEntity(this);
-  }
-  public void leaveVertex() {
-    graph_map.getVertexAt(getTileX(), getTileY()).putEntity(null);
-  }
-  public GraphMap getGraphMap() {
-    return graph_map;
-  }
-
-  // Collision Box
-  public void setCollisionBox(int width, int height) {
-    colbox_width = width;
-    colbox_height = height;
-  }
-  public int getColbox_width() {
-    return colbox_width;
-  }
-  public int getColboxHeight() {
-    return colbox_height;
   }
 
   // Return info from the entity
@@ -223,9 +164,6 @@ public class Entity extends Drawable implements InputProcessor {
   public int getEntityType() {
     return entity_type;
   }
-  public void setEntityType(int entity_type) {
-    this.entity_type = entity_type;
-  }
 
   // Control Over Entity
   public boolean isControllable() {
@@ -237,20 +175,18 @@ public class Entity extends Drawable implements InputProcessor {
 
   // X
   public float getX() {
-    return x;
+    return x_location;
   }
   public void setX(float new_x) {
-    x = new_x;
-    refreshOffsets();
+    x_location = new_x;
   }
 
   // Y
   public float getY() {
-    return y;
+    return y_location;
   }
   public void setY(float new_y) {
-    y = new_y;
-    refreshOffsets();
+    y_location = new_y;
   }
 
   // Tile X (Defaults assumes a 32*32 tiles. TODO: Make this value dynamic.
@@ -275,16 +211,6 @@ public class Entity extends Drawable implements InputProcessor {
     setY(new_y);
   }
 
-  // Full Tile Positioning
-  public void setTilePosition(int x, int y) {
-    setTileX(x);
-    setTileY(y);
-    if (graph_map != null) {
-      leaveVertex();
-      enterVertexAt(x, y);
-    }
-  }
-
   // Width
   public int getWidth() {
     return width;
@@ -299,14 +225,6 @@ public class Entity extends Drawable implements InputProcessor {
   }
   public void setHeight(int new_height) {
     height = new_height;
-  }
-
-  // Sprite Width and Height
-  public int getSpriteWidth() {
-    return sprite.getRegionWidth();
-  }
-  public int getSpriteHeight() {
-    return sprite.getRegionHeight();
   }
 
   // Name
@@ -325,30 +243,12 @@ public class Entity extends Drawable implements InputProcessor {
     display_name = name;
   }
 
-  // Movement Path
-  public Queue<GraphMapVertex> getActivePath() {
-    return active_path;
-  }
-  public void setActivePath(Queue<GraphMapVertex> path) {
-    active_path = path;
-  }
-
-  // Moving
-  public boolean isMoving() {
-    return entity_is_moving;
-  }
-  public void setMoving(boolean val) {
-    entity_is_moving = val;
-  }
-  public void startMoving() {
-
-  }
-  public void stopMoving() {
-
-  }
+// ========================= SETTERS/GETTERS END ========================= //
 
 
-  // =========================================== INPUT ======================================== //
+
+
+// ========================= INPUT BEGIN ========================= //
 
   @Override
   public boolean keyDown(int keycode) {
@@ -401,3 +301,5 @@ public class Entity extends Drawable implements InputProcessor {
     return false;
   }
 }
+
+// ========================= INPUT END ========================= //
