@@ -49,7 +49,7 @@ public class NopeIslandGame extends ApplicationAdapter {
    */
 
   // Input Processor
-  GameInput input_adapter;
+  GameInput game_input_adapter;
 
   // Input Multiplexer
   InputMultiplexer input_multiplexer;
@@ -85,7 +85,7 @@ public class NopeIslandGame extends ApplicationAdapter {
      final image. Very important stuff. Do your worship, human. */
 
     // Initilizes InputProcessor
-    input_adapter = new GameInput();
+    game_input_adapter = new GameInput();
 
     // Initializes InputMultiplexer
     input_multiplexer = new InputMultiplexer();
@@ -94,7 +94,7 @@ public class NopeIslandGame extends ApplicationAdapter {
     //input_multiplexer.addProcessor(input_adapter);
 
     // Adds the GUI InputProcessor to the multiplexer.
-    //gui.setInputMultiplexer(input_multiplexer);
+    gui.setInputMultiplexer(input_multiplexer);
 
     // Sets the multiplexer as the active shit
     Gdx.input.setInputProcessor(input_multiplexer);

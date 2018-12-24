@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 
 /** ========================= ENTITY SUPERCLASS ========================= **/
 
-public class Entity implements InputProcessor {
+abstract public class Entity implements InputProcessor {
 
 
 
@@ -60,6 +60,10 @@ public class Entity implements InputProcessor {
   // Facing direction
   private int facing_direction = FACING_BOT;
 
+  /* There may be several different types of command interpreters, so we
+  reserve a special place here, with the superclass CommandComponent. */
+  private CommandComponent command_comp;
+
 // ========================= DATA END ========================= //
 
 
@@ -71,6 +75,7 @@ public class Entity implements InputProcessor {
   Entity() {
     id = ++last_used_id;
     name = "entity" + String.valueOf(id);
+    command_comp = new CommandComponent(this);
     setDefaultDimensions();
   }
 
@@ -78,6 +83,7 @@ public class Entity implements InputProcessor {
   Entity(String name) {
     id = ++last_used_id;
     this.name = name + String.valueOf(id);
+    command_comp = new CommandComponent(this);
     setDefaultDimensions();
   }
 
@@ -95,11 +101,14 @@ public class Entity implements InputProcessor {
 // ========================= LOGIC BEGIN ========================= //
 
   // Update entity status
-  public void update(float dt) {
+  abstract public void update(float dt);
 
+  // Pipes commands to it's command component
+  public boolean executeCommand(Command command) {
+    return command_comp.execute(command);
   }
 
-  // Collision Detection (from camera)
+  // Collision Detection (from camera/world)
   public boolean collidedWorld(Vector3 point, Camera cam) {
     cam.unproject(point);
     if ( (point.x > x_location && point.x < x_location + width) &&

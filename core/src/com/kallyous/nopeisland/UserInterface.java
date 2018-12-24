@@ -3,6 +3,8 @@ package com.kallyous.nopeisland;
 
 import java.util.Vector;
 
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -63,7 +65,9 @@ public class UserInterface {
 // ========================= CONSTRUCTION END ========================= //
 
 
-// ========================= RENDER / UPDATE BEGIN ========================= //
+
+
+// ========================= LOGIC BEGIN ========================= //
 
   // Update all elements based on game sate
   public void update(float dt) {
@@ -75,7 +79,12 @@ public class UserInterface {
     for (UiElement elem : elements) elem.draw(batch);
   }
 
-// ========================= RENDER / UPDATE END ========================= //
+  // Sets all UiElements' input connections
+  public void setInputMultiplexer(InputMultiplexer multiplexer) {
+    for (UiElement elem : elements) multiplexer.addProcessor(elem);
+  }
+
+// ========================= LOGIC END ========================= //
 
 }
 
