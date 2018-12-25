@@ -33,7 +33,7 @@ public class NopeIslandGame extends ApplicationAdapter {
   public static Texture uiTexture;
 
   // Finite State Machine
-  GameState game;
+  public static GameState game;
 
   // Window and Viewport
   float game_window_width, game_window_height;
@@ -73,7 +73,7 @@ public class NopeIslandGame extends ApplicationAdapter {
   public void create() {
 
     // Jogo inicia na tela do menu principal.
-    game = main_menu_state;
+    game = running_state;
 
     // Prepares the Command Manager
     command_manager = new CommandManager();
@@ -133,23 +133,25 @@ public class NopeIslandGame extends ApplicationAdapter {
     // Increment elapsed time
     state_time += Gdx.graphics.getDeltaTime();
 
+
+
+
     // ------------------------- GAME LOGIC START ------------------------- //
-
-
-
-    // Receive inputs and generate commands
-    game.handleInput();
 
     // Execute all commands until command queue is empty
     command_manager.flushCommands();
 
-    // Update the game state
+    // Update the game state then render shit
     game.update(state_time);
+    game.render();
 
     // Update GUI. TODO: This shall be done inside game.update()
     gui.update(state_time);
 
-    // ------------------------- GAME LOGIC START ------------------------- //
+    // ------------------------- GAME LOGIC END ------------------------- //
+
+
+
 
     // ------------------------- RENDER START ------------------------- //
 
@@ -159,6 +161,7 @@ public class NopeIslandGame extends ApplicationAdapter {
     guiBatch.end();
 
     // ------------------------- RENDER END ------------------------- //
+
 
   }
 
@@ -212,40 +215,3 @@ private Command select;
 
 
 
-
-
-// ========================= GAME STATE CLASSES BEGIN ========================= //
-
-abstract class GameState {
-
-  private static final String TAG = "GameState";
-
-  GameState() {}
-  abstract void enter();
-  abstract void update(float dt);
-  abstract void handleInput();
-}
-
-
-
-class RunningGameState extends GameState {
-
-  private static final String TAG = "RunningGameState";
-
-  void enter(){ }
-  void handleInput() { }
-  void update(float dt) { }
-}
-
-
-
-class MainMenuGameState extends GameState {
-
-  private static final String TAG = "MainMenuGameState";
-
-  void enter(){ }
-  void handleInput() { }
-  void update(float dt) { }
-}
-
-// ========================= GAME STATE CLASSES END ========================= //
