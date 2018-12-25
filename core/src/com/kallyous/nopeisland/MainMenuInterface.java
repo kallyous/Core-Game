@@ -13,7 +13,20 @@ public class MainMenuInterface extends UserInterface {
     // Start/Continue Game button
     UiElement start_btn = new UiElement(
         "start_continue_btn", NopeIslandGame.uiTexture,
-        346, 154, 108, 44);
+        346, 154, 108, 44) {
+
+      private final String TAG = "PlayGameButton";
+
+      @Override
+      public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (collidedScreen(screenX, screenY)) {
+          System.out.println(TAG + ": Exit game touched, sending ExitCommand to manager.");
+          NopeIslandGame.command_manager.sendCommand(new RunGameCommand(this));
+          return true;
+        }
+        return false;
+      }
+    };
 
     start_btn.setPosition(
         (screen_width - start_btn.getWidth()) / 2,
@@ -21,6 +34,7 @@ public class MainMenuInterface extends UserInterface {
         );
     start_btn.graphic_comp.sprite.setColor(0.5f, 0.5f, 1.0f, 1f);
 
+    start_btn.command_comp.enableCommand( "RunGameCommand" );
 
 
 
@@ -47,7 +61,6 @@ public class MainMenuInterface extends UserInterface {
         (screen_width - start_btn.getWidth()) / 2,
         (screen_height/2) - margin
     );
-
     exit_game_btn.graphic_comp.sprite.setColor(1f, 0.5f, 0.5f, 1f);
 
     exit_game_btn.command_comp.enableCommand( "ExitCommand" );

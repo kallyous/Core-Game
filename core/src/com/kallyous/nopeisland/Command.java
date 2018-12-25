@@ -24,29 +24,30 @@ abstract public class Command {
 
 
 
+// Start/Resume the game
+class RunGameCommand extends Command {
 
-// A subclass for testing
-class SelectCommand extends Command {
+  private static final String TAG = "RunGameCommand";
 
-  private static final String TAG = "SelectCommand";
 
-  SelectCommand(Entity entity) {
-    super(entity);
+  RunGameCommand(Entity target) {
+    super(target);
   }
 
-  @Override
-  public boolean action() {
-    System.out.println(TAG + ": " + this.target.getName()
-        + " received a select command.");
-    return true;
-  }
 
   @Override
   public String getTAG() {
     return TAG;
   }
 
+  @Override
+  public boolean action() {
+    System.out.println(TAG + ": Starting/Resuming game. ");
+    NopeIslandGame.game.enter(NopeIslandGame.running_state);
+    return true;
+  }
 }
+
 
 
 
@@ -65,6 +66,33 @@ class ExitCommand extends Command {
   public boolean action() {
     System.out.println(TAG + ": Issuing shutdow flag. Game is about to exit.");
     NopeIslandGame.game_running = false;
+    return true;
+  }
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
+
+}
+
+
+
+
+
+// A subclass for testing
+class SelectCommand extends Command {
+
+  private static final String TAG = "SelectCommand";
+
+  SelectCommand(Entity entity) {
+    super(entity);
+  }
+
+  @Override
+  public boolean action() {
+    System.out.println(TAG + ": " + this.target.getName()
+        + " received a select command.");
     return true;
   }
 
