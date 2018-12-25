@@ -2,6 +2,10 @@ package com.kallyous.nopeisland;
 
 
 
+import com.badlogic.gdx.InputMultiplexer;
+
+
+
 /** ========================= GAME STATES - FSM ========================= **/
 
 abstract public class GameState {
@@ -64,8 +68,25 @@ class MainMenuGameState extends GameState {
 
   private static final String TAG = "MainMenuGameState";
 
+
+
   private GameState previous_state;
   private boolean initialized = false;
+  public UserInterface gui;
+
+
+
+  MainMenuGameState(InputMultiplexer input_multiplexer, CommandManager cmd_manager) {
+
+    gui = new UserInterface(
+        NopeIslandGame.game_window_width,
+        NopeIslandGame.game_window_height);
+
+    gui.setInputMultiplexer(input_multiplexer);
+
+    gui.setCommandManager(cmd_manager);
+
+  }
 
 
   @Override

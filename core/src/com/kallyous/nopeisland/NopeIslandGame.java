@@ -23,8 +23,8 @@ public class NopeIslandGame extends ApplicationAdapter {
 // ========================= DATA SETUP BEGIN ========================= //
 
   // Game States
-  static MainMenuGameState main_menu_state = new MainMenuGameState();
-  static RunningGameState running_state = new RunningGameState();
+  static MainMenuGameState main_menu_state;
+  static RunningGameState running_state;
 
   // Commands Manager
   static CommandManager command_manager;
@@ -36,7 +36,7 @@ public class NopeIslandGame extends ApplicationAdapter {
   public static GameState game;
 
   // Window and Viewport
-  float game_window_width, game_window_height;
+  public static float game_window_width, game_window_height;
   // Just like it sounds, we will store the game window size here, for later use.
 
   // Tracks time for animations and other time based events
@@ -72,18 +72,21 @@ public class NopeIslandGame extends ApplicationAdapter {
   @Override
   public void create() {
 
-    // Jogo inicia na tela do menu principal.
-    game = running_state;
-
-    // Prepares the Command Manager
-    command_manager = new CommandManager();
-
     // Starts timer
     state_time = 0f;
 
     // Gets viewport sizes
     game_window_width = Gdx.graphics.getWidth();
     game_window_height = Gdx.graphics.getHeight();
+
+    // Initializes InputProcessor
+    game_input_adapter = new GameInput();
+
+    // Initializes InputMultiplexer
+    input_multiplexer = new InputMultiplexer();
+
+    // Prepares the Command Manager
+    command_manager = new CommandManager();
 
     // Loads GUI graphics
     uiTexture = new Texture(Gdx.files.internal("graphic/interface.png"));
@@ -92,24 +95,25 @@ public class NopeIslandGame extends ApplicationAdapter {
     gui = new UserInterface(game_window_width, game_window_height);
     gui.setCommandManager(command_manager);
 
+    // Adds the GUI InputProcessor to the multiplexer
+    gui.setInputMultiplexer(input_multiplexer);
+
+    // SpriteBach exclusivo para GUI, pois será o únco a não utilizar projeção no mapa
     guiBatch = new SpriteBatch();
     /** Sprite batches takes sprites and prepares them to send to the GPU/CPU for rendering the
      final image. Very important stuff. Do your worship, human. */
 
-    // Initilizes InputProcessor
-    game_input_adapter = new GameInput();
-
-    // Initializes InputMultiplexer
-    input_multiplexer = new InputMultiplexer();
-
-    // Adds current InputAdapter to the multiplexer stack
-    //input_multiplexer.addProcessor(input_adapter);
-
-    // Adds the GUI InputProcessor to the multiplexer.
-    gui.setInputMultiplexer(input_multiplexer);
-
     // Sets the multiplexer as the active shit
     Gdx.input.setInputProcessor(input_multiplexer);
+
+    // Prepara estado do menu principal do jogo, connectando-o com controladores globais
+    main_menu_state = new MainMenuGameState(input_multiplexer, command_manager);
+
+    // Prepara estado de execução do jogo, conectando-o com controladores globais
+    running_state = new RunningGameState();
+
+    // Põe jogo em seu estado inicial.
+    game = running_state;
 
   }
 
