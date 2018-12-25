@@ -3,6 +3,7 @@ package com.kallyous.nopeisland;
 
 
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 
@@ -12,11 +13,38 @@ abstract public class GameState {
 
   private static final String TAG = "GameState";
 
-  GameState() {}
-  abstract public void enter(GameState previous_state);
+  protected SpriteBatch screen_batch;
+  protected GameState previous_state;
+  protected boolean initialized;
+
+
+  GameState() {
+    initialized = false;
+  }
+
   abstract public void update(float dt);
-  abstract public void render();
-  abstract public void exit();
+  abstract protected void drawAll();
+
+  public void enter() {
+    this.previous_state = NopeIslandGame.game;
+    NopeIslandGame.game = this;
+  }
+
+  public void render() {
+    screen_batch.begin();
+    drawAll();
+    screen_batch.end();
+  }
+
+  public void exit() {
+    initialized = false;
+    NopeIslandGame.game = previous_state;
+  }
+
+  public void setScreenbatch(SpriteBatch batch) {
+    screen_batch = batch;
+  }
+
 }
 
 
@@ -29,33 +57,17 @@ class RunningGameState extends GameState {
 
   private static final String TAG = "RunningGameState";
 
-  private boolean initialized = false;
-  private GameState previous_state;
-
-  @Override
-  public void enter(GameState previous_state) {
-    this.previous_state = previous_state;
-  }
-
 
   @Override
   public void update(float dt) {
-
+    // Updates all connected and/or contained elements
   }
-
 
   @Override
-  public void render() {
-
+  protected void drawAll() {
+    // Draw all elements using whatever SpriteBatch's available.
   }
 
-
-  @Override
-  public void exit() {
-    // TODO: 25/12/18 Dispose of any unnecessary resources
-    initialized = false;
-    NopeIslandGame.game = previous_state;
-  }
 }
 
 
@@ -69,9 +81,6 @@ class MainMenuGameState extends GameState {
   private static final String TAG = "MainMenuGameState";
 
 
-
-  private GameState previous_state;
-  private boolean initialized = false;
   public UserInterface gui;
 
 
@@ -90,26 +99,14 @@ class MainMenuGameState extends GameState {
 
 
   @Override
-  public void enter(GameState previous_state) {
-    this.previous_state = previous_state;
-  }
-
-
-  @Override
   public void update(float dt) {
-
+    gui.update(dt);
   }
 
 
   @Override
-  public void render() {
-
+  protected void drawAll() {
+    gui.draw(screen_batch);
   }
 
-
-  @Override
-  public void exit() {
-    initialized = false;
-    NopeIslandGame.game = previous_state;
-  }
 }

@@ -91,13 +91,6 @@ public class NopeIslandGame extends ApplicationAdapter {
     // Loads GUI graphics
     uiTexture = new Texture(Gdx.files.internal("graphic/interface.png"));
 
-    // Initializes GUI
-    gui = new UserInterface(game_window_width, game_window_height);
-    gui.setCommandManager(command_manager);
-
-    // Adds the GUI InputProcessor to the multiplexer
-    gui.setInputMultiplexer(input_multiplexer);
-
     // SpriteBach exclusivo para GUI, pois será o únco a não utilizar projeção no mapa
     guiBatch = new SpriteBatch();
     /** Sprite batches takes sprites and prepares them to send to the GPU/CPU for rendering the
@@ -108,12 +101,13 @@ public class NopeIslandGame extends ApplicationAdapter {
 
     // Prepara estado do menu principal do jogo, connectando-o com controladores globais
     main_menu_state = new MainMenuGameState(input_multiplexer, command_manager);
+    main_menu_state.setScreenbatch(guiBatch);
 
     // Prepara estado de execução do jogo, conectando-o com controladores globais
     running_state = new RunningGameState();
 
     // Põe jogo em seu estado inicial.
-    game = running_state;
+    game = main_menu_state;
 
   }
 
@@ -140,32 +134,18 @@ public class NopeIslandGame extends ApplicationAdapter {
 
 
 
-    // ------------------------- GAME LOGIC START ------------------------- //
+    // ------------------------- LOGIC / RENDER START ------------------------- //
+
+    // Update the game state
+    game.update(state_time);
 
     // Execute all commands until command queue is empty
     command_manager.flushCommands();
 
-    // Update the game state then render shit
-    game.update(state_time);
+    // Render the result
     game.render();
 
-    // Update GUI. TODO: This shall be done inside game.update()
-    gui.update(state_time);
-
-    // ------------------------- GAME LOGIC END ------------------------- //
-
-
-
-
-    // ------------------------- RENDER START ------------------------- //
-
-    // Graphical User Interface Rendering
-    guiBatch.begin();
-    gui.draw(guiBatch);
-    guiBatch.end();
-
-    // ------------------------- RENDER END ------------------------- //
-
+    // ------------------------- LOGIC / RENDER END ------------------------- //
 
   }
 
