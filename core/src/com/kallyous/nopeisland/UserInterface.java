@@ -28,6 +28,9 @@ public class UserInterface {
   // Screen Dimensions
   protected static float screen_width, screen_height;
 
+  // UiElement's margin (in pixels)
+  protected static int margin;
+
   // Array holding the UI elements
   public Vector<UiElement> elements;
 
@@ -44,6 +47,9 @@ public class UserInterface {
     // Screen Dimensions Initialization
     screen_width = width;
     screen_height = height;
+
+    // Define the margin
+    margin = 16;
 
     // Elements Array Initialization
     elements = new Vector<UiElement>();
@@ -110,6 +116,19 @@ class UiElement extends Entity {
   UiElement(String name, int region_index) {
     super(name);
     setupComponents(region_index);
+  }
+
+  UiElement(String name, Texture texture, int region_x, int region_y,
+            int width, int height) {
+    super(name);
+
+    graphic_comp = new GraphicComponent(
+        this, texture,
+        region_x, region_y, width, height
+    );
+
+    command_comp = new CommandComponent(this);
+
   }
 
   private void setupComponents(int region_index) {

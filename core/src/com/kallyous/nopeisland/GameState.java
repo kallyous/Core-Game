@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 
-/** ========================= GAME STATES - FSM ========================= **/
+/** ======================== GAME STATES SUPERCLASS - FSM ======================== **/
 
 abstract public class GameState {
 

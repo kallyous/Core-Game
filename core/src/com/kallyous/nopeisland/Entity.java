@@ -59,7 +59,7 @@ abstract public class Entity implements InputProcessor {
   // Player Controllable (default is false)
   private boolean player_controllable = false;
 
-  // Facing direction
+  // Facing direction (default bottom)
   private int facing_direction = FACING_BOT;
 
   /* There may be several different types of command interpreters, so we

@@ -19,8 +19,11 @@ public class GraphicComponent {
 
 // ========================= DATA BEGIN ========================= //
 
+  // Sprite holding all crazy transformation stuff
+  public Sprite sprite;
+
   // Entity owning this instance of GraphicComponent
-  Entity entity;
+  public Entity entity;
 
   // Texture to be split and used
   Texture texture;
@@ -34,8 +37,6 @@ public class GraphicComponent {
   // Index of the current texture region to be rendered at runtime
   private int region_index;
 
-  // Sprite holding all crazy transformation stuff
-  private Sprite sprite;
 
 // ========================= DATA END ========================= //
 
@@ -57,6 +58,33 @@ public class GraphicComponent {
     this.texture = NopeIslandGame.uiTexture;
     setupDefaultGraphics();
     setRegionIndex(region_index);
+  }
+
+  // Makes a graphic component from an arbitrary region of a given texture
+  GraphicComponent(
+      Entity entity, Texture texture,
+      int region_x, int region_y, int width, int height) {
+
+    this.entity = entity;
+    this.texture = texture;
+
+    texture_region = new TextureRegion[1];
+
+    texture_region[0] = new TextureRegion(
+        this.texture, region_x, region_y,
+        width, height);
+
+    region_index = 0;
+
+    sprite = new Sprite(texture_region[region_index]);
+
+    System.out.println(TAG + ": " + entity.getName() +
+      " created with custom graphics and a single region.");
+
+    // TODO: 25/12/18 Reavaliar essa definição do tamanho da entidade baseada no tamanho da imagem.
+    this.entity.setWidth(width);
+    this.entity.setHeight(height);
+
   }
 
   // Default graphics loads the '?' symbol from the GUI texture

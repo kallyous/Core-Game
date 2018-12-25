@@ -106,7 +106,7 @@ public class NopeIslandGame extends ApplicationAdapter {
     running_state.setScreenbatch(guiBatch);
 
     // Põe jogo em seu estado inicial.
-    running_state.enter(running_state);
+    main_menu_state.enter(main_menu_state);
 
   }
 
