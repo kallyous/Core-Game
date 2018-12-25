@@ -22,6 +22,19 @@ public class NopeIslandGame extends ApplicationAdapter {
 
 // ========================= DATA SETUP BEGIN ========================= //
 
+  // Default GUI interface texture
+  public static Texture uiTexture;
+
+  // Finite State Machine
+  public static GameState game;
+
+  // Window and Viewport dimensions
+  public static float game_window_width, game_window_height;
+
+  // Input Multiplexer
+  public static InputMultiplexer input_multiplexer;
+
+
   // Game States
   static MainMenuGameState main_menu_state;
   static RunningGameState running_state;
@@ -29,21 +42,9 @@ public class NopeIslandGame extends ApplicationAdapter {
   // Commands Manager
   static CommandManager command_manager;
 
-  // Default GUI interface texture
-  public static Texture uiTexture;
-
-  // Finite State Machine
-  public static GameState game;
-
-  // Window and Viewport
-  public static float game_window_width, game_window_height;
-  // Just like it sounds, we will store the game window size here, for later use.
 
   // Tracks time for animations and other time based events
   float state_time;
-
-  // Graphical User Interface
-  UserInterface gui;
 
   // Batch render for the GUI
   SpriteBatch guiBatch;
@@ -58,9 +59,6 @@ public class NopeIslandGame extends ApplicationAdapter {
 
   // Input Processor
   GameInput game_input_adapter;
-
-  // Input Multiplexer
-  InputMultiplexer input_multiplexer;
 
 // ========================= DATA SETUP END ========================= //
 
@@ -97,18 +95,18 @@ public class NopeIslandGame extends ApplicationAdapter {
      final image. Very important stuff. Do your worship, human. */
 
     // Sets the multiplexer as the active shit
-    Gdx.input.setInputProcessor(input_multiplexer);
+    //Gdx.input.setInputProcessor(input_multiplexer);
 
     // Prepara estado do menu principal do jogo, connectando-o com controladores globais
-    //main_menu_state = new MainMenuGameState(input_multiplexer, command_manager);
-    //main_menu_state.setScreenbatch(guiBatch);
+    main_menu_state = new MainMenuGameState(command_manager);
+    main_menu_state.setScreenbatch(guiBatch);
 
     // Prepara estado de execução do jogo, conectando-o com controladores globais
-    running_state = new RunningGameState(input_multiplexer, command_manager);
+    running_state = new RunningGameState(command_manager);
     running_state.setScreenbatch(guiBatch);
 
     // Põe jogo em seu estado inicial.
-    game = running_state;
+    running_state.enter(running_state);
 
   }
 
@@ -124,18 +122,14 @@ public class NopeIslandGame extends ApplicationAdapter {
   @Override
   public void render() {
 
-    // Some openGL stuff.
-    Gdx.gl.glClearColor(0, 0, 0, 1);
-    Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    // Increment elapsed time
-    state_time += Gdx.graphics.getDeltaTime();
-
-
+    // Double-Buffering internal procedures from LibGDX
+    glActions();
 
 
     // ------------------------- LOGIC / RENDER START ------------------------- //
+
+    // Increment elapsed time
+    state_time += Gdx.graphics.getDeltaTime();
 
     // Update the game state
     game.update(state_time);
@@ -148,55 +142,27 @@ public class NopeIslandGame extends ApplicationAdapter {
 
     // ------------------------- LOGIC / RENDER END ------------------------- //
 
+
   }
 
 // ========================= MAIN LOOP END ========================= //
 
-}
 
 
 
 
+// -------------------------  glActions ------------------------- //
 
-// ========================= INPUT BEGIN ========================= //
-
-class GameInput extends InputAdapter {
-
-  private static final String TAG = "GameInput";
-
-  @Override
-  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    System.out.println(TAG + ": Screen Touched at (" + screenX + ", " + screenY + ")");
-    return false;
+  private void glActions() {
+    Gdx.gl.glClearColor(0, 0, 0, 1);
+    Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
   }
 
-}
-
-
-
-class InputHandler {
-
-  private static final String TAG = "InputHandler";
-
-private Command select;
-
-  InputHandler() {}
-
-  public void handleInput() {
-    /**
-      if (toque/clique detectado) {
-        Entregue à GUI e pergunte se ela capturou o toque/clique;
-        if (GUI capturou o toque) return;
-        Entregue ao gerencioador de entidades e pergunte se ele capturou o toque;
-        if (EntityManager capturou o toque) return;
-        Entregue ao WorldMap. Ele sempre captura os toques.
-        return;
-     */
-  }
+// -------------------------------------------------------------- //
 
 }
 
-// ========================= INPUT END ========================= //
 
 
 
