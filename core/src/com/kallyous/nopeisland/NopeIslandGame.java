@@ -15,6 +15,11 @@ import com.badlogic.gdx.InputMultiplexer;
 
 public class NopeIslandGame extends ApplicationAdapter {
 
+  private static final String TAG = "NopeIslandGame";
+
+
+
+
 // ========================= DATA SETUP BEGIN ========================= //
 
   // Game States
@@ -169,9 +174,11 @@ public class NopeIslandGame extends ApplicationAdapter {
 
 class GameInput extends InputAdapter {
 
+  private static final String TAG = "GameInput";
+
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    System.out.println("Screen Touched at (" + screenX + ", " + screenY + ")");
+    System.out.println(TAG + ": Screen Touched at (" + screenX + ", " + screenY + ")");
     return false;
   }
 
@@ -180,6 +187,8 @@ class GameInput extends InputAdapter {
 
 
 class InputHandler {
+
+  private static final String TAG = "InputHandler";
 
 private Command select;
 
@@ -208,6 +217,9 @@ private Command select;
 // ========================= GAME STATE CLASSES BEGIN ========================= //
 
 abstract class GameState {
+
+  private static final String TAG = "GameState";
+
   GameState() {}
   abstract void enter();
   abstract void update(float dt);
@@ -217,6 +229,9 @@ abstract class GameState {
 
 
 class RunningGameState extends GameState {
+
+  private static final String TAG = "RunningGameState";
+
   void enter(){ }
   void handleInput() { }
   void update(float dt) { }
@@ -225,6 +240,9 @@ class RunningGameState extends GameState {
 
 
 class MainMenuGameState extends GameState {
+
+  private static final String TAG = "MainMenuGameState";
+
   void enter(){ }
   void handleInput() { }
   void update(float dt) { }

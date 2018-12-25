@@ -11,6 +11,8 @@ import java.util.Vector;
 
 public class CommandManager {
 
+  private static final String TAG = "CommandManager";
+
 
 
 
@@ -50,13 +52,14 @@ public class CommandManager {
 
       command = pending_commands.poll();
 
-      System.out.println("Flushing " + command.info() + " for " +
-        command.target.getName() );
+      System.out.println(TAG + ": Flushing " + command.info() + " for "
+          + command.target.getName() );
 
       for (Entity entity : listenners) {
 
         if ( entity.executeCommand(command) ) {
-          System.out.println(entity.getName() + " executou " + command.info());
+          System.out.println(TAG + ": " + entity.getName() + " executou "
+              + command.info() );
         }
 
       }
@@ -65,23 +68,25 @@ public class CommandManager {
 
   // Insere commando na fila
   public boolean sendCommand(Command command) {
-    System.out.println("Enfileirando commando " + command.info() + " para " +
-      command.target.getName() );
+    System.out.println(TAG + ": Enfileirando commando " + command.info()
+        + " para " + command.target.getName() );
     return pending_commands.offer(command);
   }
 
   // Adiciona nova entidade a ser commandada
   public boolean addListenner(Entity entity) {
     if ( !(listenners.contains(entity)) ) {
-      System.out.println("Adicionando " + entity.getName() + " em CommandManager.listenners");
+      System.out.println(TAG + ": Adicionando " + entity.getName() + " em " + TAG);
       return listenners.add(entity);
     }
-    System.out.println(entity.getName() + " já presente em CommandManager.listenners, nada a fazer.");
+    System.out.println(TAG + ": " + entity.getName() + " já presente em "
+        + TAG + ", nada a fazer");
     return false;
   }
 
   public boolean remListenner(Entity entity) {
-    System.out.println("Removendo " + entity.getName() + " de CommandManager.listenners, se presente.");
+    System.out.println(TAG + ": Removendo " + entity.getName() + " de "
+        + TAG + ", se presente");
     return listenners.remove(entity);
   }
 

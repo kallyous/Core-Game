@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GraphicComponent {
 
+  private static final String TAG = "GraphicComponent";
+
 
 
 // ========================= DATA BEGIN ========================= //
@@ -59,7 +61,7 @@ public class GraphicComponent {
 
   // Default graphics loads the '?' symbol from the GUI texture
   private void setupDefaultGraphics() {
-    System.out.println("Entity " + entity.getName() + " created with generic graphics.");
+    System.out.println(TAG + ": Entity " + entity.getName() + " created with generic graphics.");
     sheet_cols = 16;
     sheet_rows = 16;
     region_index = 0;

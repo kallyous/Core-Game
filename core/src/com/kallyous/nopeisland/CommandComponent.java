@@ -7,6 +7,8 @@ package com.kallyous.nopeisland;
 
 public class CommandComponent {
 
+  private static final String TAG = "CommandComponent";
+
   // Entity owning the current instance of CommandComponent
   public Entity owner;
 

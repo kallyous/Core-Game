@@ -3,7 +3,6 @@ package com.kallyous.nopeisland;
 
 import java.util.Vector;
 
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,6 +13,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 /** ========================= GRAPHICAL USER INTERFACE ========================= **/
 
 public class UserInterface {
+
+  // Debug tag
+  private static final String TAG = "UserInterface ";
+
 
 
 
@@ -100,6 +103,7 @@ public class UserInterface {
 
 class UiElement extends Entity {
 
+  private static final String TAG = "UiElement ";
 
 
 // ========================= DATA BEGIN ========================= //
@@ -126,18 +130,19 @@ class UiElement extends Entity {
   private void setupComponents(int region_index) {
     graphic_comp = new GraphicComponent(this, region_index);
 
-    command_comp = new CommandComponent(this);
-    /*{
+    command_comp = new CommandComponent(this)
+    {
       @Override
       public boolean execute(Command command) {
         if (isItForMe(command)) {
-          System.out.println("Comando exclusivo de " + owner.getName());
-          System.out.println(owner.getName() + " executando " + command.info());
+          System.out.println(TAG + ": Comando exclusivo de " + owner.getName());
+          System.out.println(TAG + ": " + owner.getName() + " executando "
+              + command.info());
           return true;
         }
         return false;
       }
-    };*/
+    };
 
   }
 

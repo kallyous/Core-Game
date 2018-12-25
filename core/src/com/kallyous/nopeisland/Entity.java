@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.Vector3;
 
 abstract public class Entity implements InputProcessor {
 
+  private static final String TAG = "Entity";
+
 
 
 
@@ -113,7 +115,7 @@ abstract public class Entity implements InputProcessor {
     cam.unproject(point);
     if ( (point.x > x_location && point.x < x_location + width) &&
         (point.y > y_location && point.y < y_location + height) ) {
-      System.out.println("collidedWorld(): World collision on " + name);
+      System.out.println(TAG + ".collidedWorld() detected world collision on " + name);
       return true;
     }
     else
@@ -125,7 +127,7 @@ abstract public class Entity implements InputProcessor {
     int h = Gdx.graphics.getHeight();
     if ( (screenX > x_location && screenX < x_location + width) &&
         ( (screenY > h - y_location - height) && (screenY < h - y_location) ) ) {
-      System.out.println("collidedScreen(): Screen collision on " + name);
+      System.out.println(TAG + ": collidedScreen() detected screen collision on " + name);
       return true;
     }
     return false;
@@ -280,7 +282,7 @@ abstract public class Entity implements InputProcessor {
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     if (collidedScreen(screenX, screenY)) {
-      System.out.println("Entity " + this.getName() + " touched.");
+      System.out.println(TAG + ": " + this.getName() + " touched.");
       return true;
     }
     return false;
