@@ -23,10 +23,10 @@ public class UserInterface {
 // ========================= DATA BEGIN ========================= //
 
   // Default UI graphics
-  private Texture uiTexture = NopeIslandGame.uiTexture;
+  protected Texture uiTexture = NopeIslandGame.uiTexture;
 
   // Screen Dimensions
-  private static float screen_width, screen_height;
+  protected static float screen_width, screen_height;
 
   // Array holding the UI elements
   public Vector<UiElement> elements;
@@ -48,21 +48,6 @@ public class UserInterface {
     // Elements Array Initialization
     elements = new Vector<UiElement>();
 
-    // Actions Buttom
-    elements.add( new UiElement("btn_actions", 1) );
-    elements.get(0).setPosition(10, 10);
-
-    // Options Buttom
-    elements.add( new UiElement("btn_options", 8) );
-    elements.get(1).setPosition(10, screen_height - 42);
-
-    // Inventory Buttom
-    elements.add( new UiElement("btn_inventory", 5) );
-    elements.get(2).setPosition(screen_width - 42, 10);
-
-    // Pass Turn Buttom
-    elements.add( new UiElement("btn_pass", 4) );
-    elements.get(3).setPosition(screen_width - 42, screen_height - 42);
   }
 
 // ========================= CONSTRUCTION END ========================= //

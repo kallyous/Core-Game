@@ -16,6 +16,7 @@ abstract public class GameState {
   protected SpriteBatch screen_batch;
   protected GameState previous_state;
   protected boolean initialized;
+  public UserInterface gui;
 
 
   GameState() {
@@ -23,7 +24,8 @@ abstract public class GameState {
   }
 
   abstract public void update(float dt);
-  abstract protected void drawAll();
+
+  protected void drawAll() {}
 
   public void enter() {
     this.previous_state = NopeIslandGame.game;
@@ -31,12 +33,19 @@ abstract public class GameState {
   }
 
   public void render() {
-    screen_batch.begin();
+
+    // Draw everything that goes below the GUI
     drawAll();
+
+    // Then draw the GUI.
+    screen_batch.begin();
+    gui.draw(screen_batch);
     screen_batch.end();
+
   }
 
   public void exit() {
+
     initialized = false;
     NopeIslandGame.game = previous_state;
   }
@@ -58,9 +67,21 @@ class RunningGameState extends GameState {
   private static final String TAG = "RunningGameState";
 
 
+  RunningGameState(InputMultiplexer input_multiplexer, CommandManager cmd_manager) {
+    // Creates a new interface
+    gui = new RunningGameInterface(
+        NopeIslandGame.game_window_width,
+        NopeIslandGame.game_window_height);
+    // Sets it's input multiplexer
+    gui.setInputMultiplexer(input_multiplexer);
+    // Sets it's command manager
+    gui.setCommandManager(cmd_manager);
+
+  }
+
   @Override
   public void update(float dt) {
-    // Updates all connected and/or contained elements
+    gui.update(dt);
   }
 
   @Override
@@ -81,9 +102,6 @@ class MainMenuGameState extends GameState {
   private static final String TAG = "MainMenuGameState";
 
 
-  public UserInterface gui;
-
-
 
   MainMenuGameState(InputMultiplexer input_multiplexer, CommandManager cmd_manager) {
 
@@ -97,16 +115,9 @@ class MainMenuGameState extends GameState {
 
   }
 
-
   @Override
   public void update(float dt) {
     gui.update(dt);
-  }
-
-
-  @Override
-  protected void drawAll() {
-    gui.draw(screen_batch);
   }
 
 }
