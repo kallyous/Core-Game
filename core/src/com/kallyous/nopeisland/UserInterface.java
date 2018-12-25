@@ -141,7 +141,7 @@ class UiElement extends Entity {
         if (isItForMe(command)) {
           System.out.println(TAG + ": Comando exclusivo de " + owner.getName());
           System.out.println(TAG + ": " + owner.getName() + " executando "
-              + command.info());
+              + command.getTAG() );
           return true;
         }
         return false;

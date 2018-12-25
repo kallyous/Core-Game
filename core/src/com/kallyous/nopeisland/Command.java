@@ -8,17 +8,17 @@ abstract public class Command {
 
   // The superclass only has a target and uses its class name as keyword
   public Entity target;
-  protected String keyword = TAG;
+
+  // Return the command TAG
+  abstract public String getTAG();
 
   // Must have a target for the command
   Command(Entity target) {
     this.target = target;
   }
 
-  // We need the keyowrd for debugging
-  public String info() {
-    return keyword;
-  }
+  // The core of all commands
+  abstract public boolean action();
 
 }
 
@@ -32,7 +32,45 @@ class SelectCommand extends Command {
 
   SelectCommand(Entity entity) {
     super(entity);
-    keyword = TAG;
+  }
+
+  @Override
+  public boolean action() {
+    System.out.println(TAG + ": " + this.target.getName()
+        + " received a select command.");
+    return true;
+  }
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
+
+}
+
+
+
+
+// Exit/Close the game
+class ExitCommand extends Command {
+
+  private static final String TAG = "ExitCommand";
+
+
+  ExitCommand(Entity target) {
+    super(target);
+  }
+
+  @Override
+  public boolean action() {
+    System.out.println(TAG + ": Issuing shutdow flag. Game is about to exit.");
+    NopeIslandGame.game_running = false;
+    return true;
+  }
+
+  @Override
+  public String getTAG() {
+    return TAG;
   }
 
 }

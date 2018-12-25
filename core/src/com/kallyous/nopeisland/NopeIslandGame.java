@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 
 
@@ -21,6 +20,9 @@ public class NopeIslandGame extends ApplicationAdapter {
 
 
 // ========================= DATA SETUP BEGIN ========================= //
+
+  // Game running flag
+  public static boolean game_running = true;
 
   // Default GUI interface texture
   public static Texture uiTexture;
@@ -140,7 +142,12 @@ public class NopeIslandGame extends ApplicationAdapter {
     // Render the result
     game.render();
 
+    // Triggers game shutdown if it's flag has been raised
+    if (!game_running) gameShutdown();
+
     // ------------------------- LOGIC / RENDER END ------------------------- //
+
+
 
 
   }
@@ -160,6 +167,21 @@ public class NopeIslandGame extends ApplicationAdapter {
   }
 
 // -------------------------------------------------------------- //
+
+
+
+
+// ------------------------- GameShutdown ------------------------- //
+
+  private void gameShutdown() {
+    System.out.println(TAG + ": Game no longer running. Shutting down. ");
+    pause();
+    dispose();
+    System.exit(0);
+  }
+
+// -------------------------------------------------------------- //
+
 
 }
 

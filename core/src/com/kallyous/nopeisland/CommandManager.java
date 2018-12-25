@@ -52,14 +52,14 @@ public class CommandManager {
 
       command = pending_commands.poll();
 
-      System.out.println(TAG + ": Flushing " + command.info() + " for "
+      System.out.println(TAG + ": Flushing " + command.getTAG() + " for "
           + command.target.getName() );
 
       for (Entity entity : listenners) {
 
         if ( entity.executeCommand(command) ) {
           System.out.println(TAG + ": " + entity.getName() + " executou "
-              + command.info() );
+              + command.getTAG() );
         }
 
       }
@@ -68,7 +68,7 @@ public class CommandManager {
 
   // Insere commando na fila
   public boolean sendCommand(Command command) {
-    System.out.println(TAG + ": Enfileirando commando " + command.info()
+    System.out.println(TAG + ": Enfileirando commando " + command.getTAG()
         + " para " + command.target.getName() );
     return pending_commands.offer(command);
   }
