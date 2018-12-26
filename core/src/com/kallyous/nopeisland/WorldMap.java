@@ -40,21 +40,20 @@ public class WorldMap {
 
   WorldMap(SpriteBatch entities_batch, Array<Entity> entities_to_draw) {
 
+    int s_width = (int)NopeIslandGame.game_window_width;
+    int s_height = (int)NopeIslandGame.game_window_height;
+
     this.entities_batch = entities_batch;
     this.entities_to_draw = entities_to_draw;
 
     tiled_map = new TmxMapLoader().load("levels/the_bug_island/overworld.tmx");
-    camera = new OrthographicCamera();
     otm_renderer = new OrthogonalTiledMapRenderer(tiled_map);
-
-    int s_width = (int)NopeIslandGame.game_window_width;
-    int s_height = (int)NopeIslandGame.game_window_height;
-
+    camera = new OrthographicCamera();
     camera.setToOrtho(false, s_width, s_height);
 
     // Set initial camera position, relative to the tiled map
     camera.position.set(50*32, 47*32, 0);
-    
+
   }
 
 // ========================= CREATION END ========================= //
