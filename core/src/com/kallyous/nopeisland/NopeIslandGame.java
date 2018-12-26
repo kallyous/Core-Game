@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.InputMultiplexer;
 
+import java.util.Hashtable;
+
 
 
 /** ========================= GAME STARTS ========================= **/
@@ -35,6 +37,9 @@ public class NopeIslandGame extends ApplicationAdapter {
 
   // Input Multiplexer
   public static InputMultiplexer input_multiplexer;
+
+  // Pra facilitar o acesso/comunicação entre entidades
+  public static Hashtable<String, Entity> entities;
 
 
   // Game States
@@ -90,6 +95,9 @@ public class NopeIslandGame extends ApplicationAdapter {
 
     // Prepares the Command Manager
     command_manager = new CommandManager();
+
+    // Entities Hash Table using default values.
+    entities = new Hashtable<String, Entity>();
 
     // Loads GUI graphics
     uiTexture = new Texture(Gdx.files.internal("graphic/interface.png"));

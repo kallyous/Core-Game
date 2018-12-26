@@ -37,13 +37,16 @@ public class MainMenuInterface extends UserInterface {
       @Override
       public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          System.out.println(TAG + ": Exit game touched, sending ExitCommand to manager.");
+          System.out.println(TAG + ": Play game touched, sending RunGameCommand to manager.");
           NopeIslandGame.command_manager.sendCommand(new RunGameCommand(this));
           return true;
         }
         return false;
       }
     };
+
+    // Register button on hash table
+    NopeIslandGame.entities.put(start_btn.getName(), start_btn);
 
     // Enable de desired command for this UiElement to consume.
     start_btn.command_comp.enableCommand( "RunGameCommand" );
@@ -86,6 +89,9 @@ public class MainMenuInterface extends UserInterface {
 
     };
 
+    // Register button on hash table
+    NopeIslandGame.entities.put(exit_game_btn.getName(), exit_game_btn);
+
     // Enable de desired command for this UiElement to consume.
     exit_game_btn.command_comp.enableCommand( "ExitCommand" );
     // TODO: 25/12/18 Set the ExitCommand to be consumed by other entity
@@ -106,11 +112,15 @@ public class MainMenuInterface extends UserInterface {
 
 // ------------------------- Game Title Test -------------------------- //
 
-    TextElement txt_game_title = new TextElement("Nope Island Game");
+    TextElement game_title = new TextElement("game_title_main","Nope Island Game");
 
-    txt_game_title.setPosition(margin, screen_height - margin - 24);
+    NopeIslandGame.entities.put(game_title.getName(), game_title);
 
-    elements.add(txt_game_title);
+    game_title.command_comp.enableCommand("SetTextContentCommand");
+
+    game_title.setPosition(margin, screen_height - margin - 24);
+
+    elements.add(game_title);
 
   }
 

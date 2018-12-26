@@ -6,6 +6,8 @@ import com.badlogic.gdx.utils.Array;
 
 
 
+
+
 /** ========================= RUNNING GAME GUI ========================= **/
 
 // GUI for the main menu or title screen
@@ -15,7 +17,7 @@ public class RunningGameInterface extends UserInterface {
 
 
 
-  // ========================= CONSTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION BEGIN ========================= //
 
   RunningGameInterface(float width, float height) {
 
@@ -56,7 +58,7 @@ public class RunningGameInterface extends UserInterface {
 // ------------------------- UiElement - Pass Turn Button -------------------------- //
 
     // Pass Turn Buttom SetTextContentCommand
-    elements.add( new UiElement("btn_pass", 4) {
+    UiElement btn_pass = new UiElement("btn_pass", 4) {
 
       // Custom debug tag
       private static final String TAG = "PassTurnButton";
@@ -65,25 +67,45 @@ public class RunningGameInterface extends UserInterface {
       @Override
       public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          System.out.println(TAG + ": Pass Turn Button touched, but no action implemented.");
-          //NopeIslandGame.command_manager.sendCommand(new SetTextContentCommand());
+          System.out.println(TAG + ": Pass Turn Button touched, setting selection_name text");
+          NopeIslandGame.command_manager.sendCommand(
+              new SetTextContentCommand("selection_name", "Passar turno pressionado"));
           return true;
         }
         return false;
       }
 
-    } );
+    };
 
-    elements.get(1).setPosition(screen_width - 42, screen_height - 42);
+    // Register in the hash map
+    NopeIslandGame.entities.put(btn_pass.getName(), btn_pass);
+
+    // Positioning
+    btn_pass.setPosition(screen_width - 42, screen_height - 42);
+
+    // Add button to GUI elements array
+    elements.add(btn_pass);
 
 
 
 // ------------------------- TextElement - Name of Entity -------------------------- //
 
-    TextElement sel_txt = new TextElement("Nada selecionado");
+    // Creates a text element to hold the name of the selected entitie
+    TextElement sel_txt = new TextElement("selection_name", "Nada selecionado");
+
+    // Register the element in the hash map
+    NopeIslandGame.entities.put(sel_txt.getName(), sel_txt);
+
+    // Enable the desired command
     sel_txt.command_comp.enableCommand("SetTextContentCommand");
+
+    // Scale down the font
     sel_txt.label.setFontScale(.6f);
+
+    // Positioning
     sel_txt.setPosition(128, screen_height - 48);
+
+    // Add to the GUI elements array
     elements.add(sel_txt);
 
   }

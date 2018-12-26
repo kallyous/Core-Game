@@ -21,14 +21,22 @@ abstract public class Command {
 
 
 
-// ========================= COSNTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION BEGIN ========================= //
 
-  // Must have a target for the command
+  // Mostly used for entities issuing commands to themselves
   Command(Entity target) {
     this.target = target;
   }
 
-// ========================= COSNTRUCTION END ========================= //
+  // Issued for specific entities of known name
+  Command(String target_name) {
+    this.target = NopeIslandGame.entities.get(target_name);
+    if (this.target == null) {
+      System.out.println(TAG + ": Falha ao localizar " + target_name + " na hash table.");
+    }
+  }
+
+// ========================= CONSTRUCTION END ========================= //
 
 
 
@@ -39,7 +47,7 @@ abstract public class Command {
   abstract public String getTAG();
 
   // The core of all commands
-  abstract public boolean action();
+  abstract public boolean execute();
 
 // ========================= ABSTRACT END ========================= //
 
@@ -78,7 +86,7 @@ class OpenMainMenuCommand extends Command {
 
 
   @Override
-  public boolean action() {
+  public boolean execute() {
     System.out.println(TAG + ": Pausando jogo e abrindo menu principal. ");
     NopeIslandGame.game.switchTo(NopeIslandGame.main_menu_state);
     return true;
@@ -120,7 +128,7 @@ class RunGameCommand extends Command {
   }
 
   @Override
-  public boolean action() {
+  public boolean execute() {
     System.out.println(TAG + ": Starting/Resuming game. ");
     NopeIslandGame.game.switchTo(NopeIslandGame.running_state);
     return true;
@@ -157,7 +165,7 @@ class ExitCommand extends Command {
 // ------------------------- Logic -------------------------- //
 
   @Override
-  public boolean action() {
+  public boolean execute() {
     System.out.println(TAG + ": Issuing shutdow flag. Game is about to exit.");
     NopeIslandGame.game_running = false;
     return true;
@@ -199,7 +207,7 @@ class SelectCommand extends Command {
 // ------------------------- Logic -------------------------- //
 
   @Override
-  public boolean action() {
+  public boolean execute() {
     System.out.println(TAG + ": " + this.target.getName()
         + " received a select command.");
     return true;
@@ -219,7 +227,7 @@ class SelectCommand extends Command {
 
 
 
-/** ========================= SetTextContentCommand ========================= **/
+/** ========================= SET TEXT CONTENT COMMAND ========================= **/
 
 class SetTextContentCommand extends Command {
 
@@ -247,6 +255,14 @@ class SetTextContentCommand extends Command {
 
   }
 
+  SetTextContentCommand(String entity_name, String content) {
+
+    super(entity_name);
+
+    this.content = content;
+
+  }
+
 // ========================= CREATION END ========================= //
 
 
@@ -261,10 +277,55 @@ class SetTextContentCommand extends Command {
 
 
   @Override
-  public boolean action() {
+  public boolean execute() {
     // TODO: 26/12/18 Adicionar try{}catch(){} adequado
     TextElement target_te = (TextElement)this.target;
     target_te.label.setText(content);
+    return true;
+  }
+
+// ========================= LOGIC END ========================= //
+
+}
+
+
+
+
+
+
+/** ========================= DESTROY ENTITY COMMAND ========================= **/
+
+class DestroyEntityCommand extends Command {
+
+  private static final String TAG = "DestroyEntityCommand";
+
+
+
+
+// ========================= CREATION BEGIN ========================= //
+
+  DestroyEntityCommand(Entity target) {
+    super(target);
+  }
+
+// ========================= CREATION END ========================= //
+
+
+
+
+// ========================= LOGIC BEGIN ========================= //
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
+
+
+  @Override
+  public boolean execute() {
+    System.out.println(TAG + ": Destroying " + target.getName());
+    System.out.println(TAG + ": Object is  " + target.toString());
+    target.destroy();
     return true;
   }
 

@@ -116,18 +116,9 @@ class UiElement extends Entity {
 // ========================= CONSTRUCTION BEGIN ========================= //
 
   // Default constructor spans a (?) button
-  UiElement() {
-    super("uiElement");
-    graphic_comp = new GraphicComponent(this, 0);
-    command_comp = new CommandComponent(this);
-  }
-
-
-
-  // Creates a UiElement without any graphics, for texts
   UiElement(String name) {
     super(name);
-    graphic_comp = null;
+    graphic_comp = new GraphicComponent(this, 0);
     command_comp = new CommandComponent(this);
   }
 
@@ -140,6 +131,13 @@ class UiElement extends Entity {
     command_comp = new CommandComponent(this);
   }
 
+  // Cosntructor that optionally does not initializes a graphic component, mostly for texts
+  UiElement(String name, boolean has_graphic_comp) {
+    super(name);
+    if (has_graphic_comp) graphic_comp = new GraphicComponent(this, 0);
+    else graphic_comp = null;
+    command_comp = new CommandComponent(this);
+  }
 
 
   // Creates a GUI element of arbitrary texture and dimensions
@@ -185,6 +183,9 @@ class UiElement extends Entity {
     return false;
   }
 
+  @Override
+  public void dispose() {}
+
 // ========================= LOGIC END ========================= //
 
 }
@@ -208,9 +209,9 @@ class TextElement extends UiElement {
   public static final BitmapFont default_font = new BitmapFont(
       Gdx.files.internal("graphic/def-bitmap-font.fnt") );
 
-  protected Label.LabelStyle label_style;
-
   public Label label;
+
+  protected Label.LabelStyle label_style;
 
 // ========================= DATA END ========================= //
 
@@ -219,9 +220,10 @@ class TextElement extends UiElement {
 
 // ========================= CREATION BEGIN ========================= //
 
-  TextElement(String content) {
+  TextElement(String name, String content) {
 
-    super("TextElement");
+    // Uses the version without a graphic component of UiElement
+    super(name, false);
 
     label_style = new Label.LabelStyle();
 
@@ -234,6 +236,8 @@ class TextElement extends UiElement {
     this.setWidth( (int)label.getPrefWidth() );
 
     this.setHeight( (int)label.getPrefHeight() );
+
+    NopeIslandGame.entities.put(name, this);
 
   }
 

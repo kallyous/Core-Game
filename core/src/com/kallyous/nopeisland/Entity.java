@@ -73,20 +73,36 @@ abstract public class Entity implements InputProcessor {
 
 // ========================= CONSTRUCTION BEGIN ========================= //
 
-  // Default Constructor
-  Entity() {
-    id = ++last_used_id;
-    name = "entity" + String.valueOf(id);
-    command_comp = new CommandComponent(this);
-    setDefaultDimensions();
-  }
-
-  // Basic Constructor
+  // General constructor
   Entity(String name) {
+
     id = ++last_used_id;
-    this.name = name + String.valueOf(id);
+
+    this.name = name;
+
     command_comp = new CommandComponent(this);
+
     setDefaultDimensions();
+
+    if (NopeIslandGame.entities.containsKey(name)) {
+
+      System.out.println(TAG + ": Entidade com nome " + name + " já existe. É o objeto "
+          + NopeIslandGame.entities.get(name).toString() );
+
+      System.out.println(TAG + ": Duplicatas não são permitidas, emitindo comando de autodestruição");
+
+      NopeIslandGame.command_manager.sendCommand( new DestroyEntityCommand(this) );
+
+    }
+
+    else {
+
+      NopeIslandGame.entities.put(name, this);
+
+      System.out.println(TAG + ": Adicionado " + name + " à Hashtable de entidades.");
+
+    }
+
   }
 
   // Default Collision Box (32x32)
@@ -104,6 +120,9 @@ abstract public class Entity implements InputProcessor {
 
   // Update entity status
   abstract public void update(float dt);
+
+  // Dispose of any resources for destruction
+  abstract public void dispose();
 
 // ========================= ABSTRACTION END ========================= //
 
@@ -142,6 +161,14 @@ abstract public class Entity implements InputProcessor {
       return true;
     }
     return false;
+  }
+
+
+
+  public void destroy() {
+    System.out.println(TAG + ": Destroying " + this.toString() + "(" + name + ")");
+    this.dispose();
+    NopeIslandGame.entities.remove(this);
   }
 
 // ========================= LOGIC END ========================= //

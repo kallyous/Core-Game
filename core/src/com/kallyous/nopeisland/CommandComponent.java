@@ -62,7 +62,7 @@ public class CommandComponent {
   // Check if command is for current entity and try to run int if so
   public boolean execute(Command command) {
     if ( isItForMe(command) ) {
-      if ( command.action() ) return true;
+      if ( command.execute() ) return true;
     }
     return false;
   }
