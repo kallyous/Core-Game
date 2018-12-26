@@ -61,7 +61,10 @@ public class CommandManager {
         System.out.println(TAG + ": Flushing " + command.getTAG() + " for "
             + command.target.getName() );
 
-        command.target.executeCommand(command);
+        if ( command.target.executeCommand(command) )
+          System.out.println(TAG + ": Comando aceito e executado ");
+        else
+          System.out.println(TAG + ": Comando rejeitado. ");
 
       }
       // If target is null, the command is for multiple targets and shall be broadcast
