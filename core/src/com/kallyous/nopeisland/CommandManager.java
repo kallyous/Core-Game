@@ -51,20 +51,38 @@ public class CommandManager {
 
     while ( !(pending_commands.isEmpty()) ) {
 
+      // Get and remove a command from the queue
       command = pending_commands.poll();
 
-      System.out.println(TAG + ": Flushing " + command.getTAG() + " for "
-          + command.target.getName() );
+      // If the command is single targeted, we simple execute it
+      if (command.target != null) {
 
-      for (Entity entity : listenners) {
+        // Debug message about this shit.
+        System.out.println(TAG + ": Flushing " + command.getTAG() + " for "
+            + command.target.getName() );
 
-        if ( entity.executeCommand(command) ) {
-          System.out.println(TAG + ": " + entity.getName() + " executou "
-              + command.getTAG() );
-        }
+        command.target.executeCommand(command);
 
       }
+      // If target is null, the command is for multiple targets and shall be broadcast
+      else {
+
+        // We travel all listening entities and try to run int for each and all
+        for (Entity entity : listenners) {
+
+          // Send a debug message for each entity which execute the command
+          if ( entity.executeCommand(command) ) {
+            System.out.println(TAG + ": " + entity.getName() + " executou "
+                + command.getTAG() );
+          }
+        }
+
+        // Shout out if command was flushed to several fuckers
+        System.out.println(TAG + ": Flushed " + command.getTAG() + " by broadcast");
+      }
+
     }
+
   }
 
   // Insere commando na fila
