@@ -213,3 +213,61 @@ class SelectCommand extends Command {
 // ---------------------------------------------------------------- //
 
 }
+
+
+
+
+
+
+/** ========================= SetTextContentCommand ========================= **/
+
+class SetTextContentCommand extends Command {
+
+  private static final String TAG = "SetTextContentCommand";
+
+
+
+
+// ========================= DATA BEGIN ========================= //
+
+  public String content;
+
+// ========================= DATA END ========================= //
+
+
+
+
+// ========================= CREATION BEGIN ========================= //
+
+  SetTextContentCommand(Entity entity, String content) {
+
+    super(entity);
+
+    this.content = content;
+
+  }
+
+// ========================= CREATION END ========================= //
+
+
+
+
+// ========================= LOGIC BEGIN ========================= //
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
+
+
+  @Override
+  public boolean action() {
+    // TODO: 26/12/18 Adicionar try{}catch(){} adequado
+    TextElement target_te = (TextElement)this.target;
+    target_te.label.setText(content);
+    return true;
+  }
+
+// ========================= LOGIC END ========================= //
+
+}

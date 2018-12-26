@@ -210,7 +210,7 @@ class TextElement extends UiElement {
 
   protected Label.LabelStyle label_style;
 
-  protected Label text;
+  public Label label;
 
 // ========================= DATA END ========================= //
 
@@ -229,11 +229,11 @@ class TextElement extends UiElement {
 
     label_style.fontColor = Color.WHITE;
 
-    text = new Label(content, label_style);
+    label = new Label(content, label_style);
 
-    this.setWidth( (int)text.getPrefWidth() );
+    this.setWidth( (int)label.getPrefWidth() );
 
-    this.setHeight( (int)text.getPrefHeight() );
+    this.setHeight( (int)label.getPrefHeight() );
 
   }
 
@@ -249,12 +249,12 @@ class TextElement extends UiElement {
 
   @Override
   public void draw(SpriteBatch batch) {
-    text.draw(batch, 1);
+    label.draw(batch, 1);
   }
 
   @Override
   public void setPosition(float x, float y) {
-    this.text.setPosition(x, y);
+    this.label.setPosition(x, y);
     super.setPosition(x, y);
   }
 

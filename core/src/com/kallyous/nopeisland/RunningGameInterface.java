@@ -55,9 +55,36 @@ public class RunningGameInterface extends UserInterface {
 
 // ------------------------- UiElement - Pass Turn Button -------------------------- //
 
-    // Pass Turn Buttom
-    elements.add( new UiElement("btn_pass", 4) );
+    // Pass Turn Buttom SetTextContentCommand
+    elements.add( new UiElement("btn_pass", 4) {
+
+      // Custom debug tag
+      private static final String TAG = "PassTurnButton";
+
+      // Overrides the touchDown() input event to generate the desired command
+      @Override
+      public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (collidedScreen(screenX, screenY)) {
+          System.out.println(TAG + ": Pass Turn Button touched, but no action implemented.");
+          //NopeIslandGame.command_manager.sendCommand(new SetTextContentCommand());
+          return true;
+        }
+        return false;
+      }
+
+    } );
+
     elements.get(1).setPosition(screen_width - 42, screen_height - 42);
+
+
+
+// ------------------------- TextElement - Name of Entity -------------------------- //
+
+    TextElement sel_txt = new TextElement("Nada selecionado");
+    sel_txt.command_comp.enableCommand("SetTextContentCommand");
+    sel_txt.label.setFontScale(.6f);
+    sel_txt.setPosition(128, screen_height - 48);
+    elements.add(sel_txt);
 
   }
 
