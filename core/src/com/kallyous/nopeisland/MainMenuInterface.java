@@ -2,7 +2,6 @@ package com.kallyous.nopeisland;
 
 
 
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.Array;
 
 
@@ -102,6 +101,16 @@ public class MainMenuInterface extends UserInterface {
 
     // Adds the button to the elements list/vector
     elements.add(exit_game_btn);
+
+
+
+// ------------------------- Game Title Test -------------------------- //
+
+    TextElement txt_game_title = new TextElement("Nope Island Game");
+
+    txt_game_title.setPosition(margin, screen_height - margin - 24);
+
+    elements.add(txt_game_title);
 
   }
 

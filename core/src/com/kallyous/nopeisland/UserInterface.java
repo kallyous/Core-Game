@@ -2,9 +2,13 @@ package com.kallyous.nopeisland;
 
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 
 
@@ -120,6 +124,15 @@ class UiElement extends Entity {
 
 
 
+  // Creates a UiElement without any graphics, for texts
+  UiElement(String name) {
+    super(name);
+    graphic_comp = null;
+    command_comp = new CommandComponent(this);
+  }
+
+
+
   // This one spans a button using the default GUI texture
   UiElement(String name, int region_index) {
     super(name);
@@ -170,6 +183,79 @@ class UiElement extends Entity {
       NopeIslandGame.command_manager.sendCommand( new SelectCommand(this) );
     }
     return false;
+  }
+
+// ========================= LOGIC END ========================= //
+
+}
+
+
+
+
+
+
+/** ========================= TextElement ========================= **/
+
+class TextElement extends UiElement {
+
+  private static final String TAG = "TextElement";
+
+
+
+
+// ========================= DATA BEGIN ========================= //
+
+  public static final BitmapFont default_font = new BitmapFont(
+      Gdx.files.internal("graphic/def-bitmap-font.fnt") );
+
+  protected Label.LabelStyle label_style;
+
+  protected Label text;
+
+// ========================= DATA END ========================= //
+
+
+
+
+// ========================= CREATION BEGIN ========================= //
+
+  TextElement(String content) {
+
+    super("TextElement");
+
+    label_style = new Label.LabelStyle();
+
+    label_style.font = default_font;
+
+    label_style.fontColor = Color.WHITE;
+
+    text = new Label(content, label_style);
+
+    this.setWidth( (int)text.getPrefWidth() );
+
+    this.setHeight( (int)text.getPrefHeight() );
+
+  }
+
+// ========================= CREATION END ========================= //
+
+
+
+
+// ========================= LOGIC BEGIN ========================= //
+
+  @Override
+  public void update(float dt) {}
+
+  @Override
+  public void draw(SpriteBatch batch) {
+    text.draw(batch, 1);
+  }
+
+  @Override
+  public void setPosition(float x, float y) {
+    this.text.setPosition(x, y);
+    super.setPosition(x, y);
   }
 
 // ========================= LOGIC END ========================= //

@@ -2,7 +2,6 @@ package com.kallyous.nopeisland;
 
 
 
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.Array;
 
 
