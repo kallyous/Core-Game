@@ -7,6 +7,8 @@ import java.util.Vector;
 
 
 
+
+
 /** ========================= COMMAND CONSUMING COMPONENT ========================= **/
 
 public class CommandManager {
@@ -15,8 +17,7 @@ public class CommandManager {
 
 
 
-
-// ========================= DATA BEGIN ========================= //
+// ========================= DATA SETUP BEGIN ========================= //
 
   // Queue with all commands to broadcast each game cycle
   private LinkedList<Command> pending_commands;
@@ -27,7 +28,7 @@ public class CommandManager {
   // Temporary command holder for various procedures
   private Command command;
 
-// ========================= DATA END ========================= //
+// ========================= DATA SETUP END ========================= //
 
 
 
@@ -44,7 +45,7 @@ public class CommandManager {
 
 
 
-// ========================= LOGIC BEGIN ========================= //
+// ------------------------- Logic -------------------------- //
 
   public void flushCommands() {
 
@@ -90,5 +91,6 @@ public class CommandManager {
     return listenners.remove(entity);
   }
 
-// ========================= LOGIC END ========================= //
+// ---------------------------------------------------------- //
+
 }

@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 
+
+
 /** ========================= GRAPHIC COMPONENT ========================= **/
 
 public class GraphicComponent {
@@ -17,7 +19,7 @@ public class GraphicComponent {
 
 
 
-// ========================= DATA BEGIN ========================= //
+// ========================= DATA SETUP BEGIN ========================= //
 
   // Sprite holding all crazy transformation stuff
   public Sprite sprite;
@@ -37,22 +39,23 @@ public class GraphicComponent {
   // Index of the current texture region to be rendered at runtime
   private int region_index;
 
-
-// ========================= DATA END ========================= //
+// ========================= DATA SETUP END ========================= //
 
 
 
 
 // ========================= CONSTRUCTION BEGIN ========================= //
 
-  // Default constructor assumes the GUI texture
+  // Default constructor assumes the GUI texture and (?) symbol
   GraphicComponent(Entity entity) {
     this.entity = entity;
     this.texture = NopeIslandGame.uiTexture;
     setupDefaultGraphics();
   }
 
-  // This additional constructor just takes also a name and index for the texture region
+
+
+  // This additional one just takes also a name and texture region index
   GraphicComponent(Entity entity, int region_index) {
     this.entity = entity;
     this.texture = NopeIslandGame.uiTexture;
@@ -60,12 +63,15 @@ public class GraphicComponent {
     setRegionIndex(region_index);
   }
 
+
+
   // Makes a graphic component from an arbitrary region of a given texture
   GraphicComponent(
       Entity entity, Texture texture,
       int region_x, int region_y, int width, int height) {
 
     this.entity = entity;
+
     this.texture = texture;
 
     texture_region = new TextureRegion[1];
@@ -81,11 +87,17 @@ public class GraphicComponent {
     System.out.println(TAG + ": " + entity.getName() +
       " created with custom graphics and a single region.");
 
-    // TODO: 25/12/18 Reavaliar essa definição do tamanho da entidade baseada no tamanho da imagem.
+  // ------------------------- Entity Size Setup -------------------------- //
+
     this.entity.setWidth(width);
+
     this.entity.setHeight(height);
 
+  // ---------------------------------------------------------------------- //
+
   }
+
+
 
   // Default graphics loads the '?' symbol from the GUI texture
   private void setupDefaultGraphics() {
@@ -95,6 +107,7 @@ public class GraphicComponent {
     region_index = 0;
     setupTextureRegions();
   }
+
 
 
   // Texture Regions Setup
@@ -125,15 +138,17 @@ public class GraphicComponent {
 
 
 
-// ========================= RENDER / UPDATE BEGIN ========================= //
+// ========================= LOGIC BEGIN ========================= //
 
   public void draw(SpriteBatch batch) {
     sprite.draw(batch);
   }
 
+
+
   public void update(float dt) { sprite.setPosition(entity.getX(), entity.getY()); }
 
-// ========================= RENDER / UPDATE END ========================= //
+// ========================= LOGIC END ========================= //
 
 
 
@@ -142,6 +157,8 @@ public class GraphicComponent {
 
   // Texture
   public Texture getTexture() { return texture; }
+
+
 
   // Region Index (Frame)
   public int getRegionIndex() {
@@ -152,10 +169,14 @@ public class GraphicComponent {
     sprite.setRegion(texture_region[i]);
   }
 
+
+
   // Sheet Columns
   public int getSheetCols() {
     return sheet_cols;
   }
+
+
 
   // Sheet Rows
   public int getSheetRows() {

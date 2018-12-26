@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 
 
 
+
 /** ========================= ENTITY SUPERCLASS ========================= **/
 
 abstract public class Entity implements InputProcessor {
@@ -18,7 +19,9 @@ abstract public class Entity implements InputProcessor {
 
 
 
-// ========================= CONSTANTS BEGIN ========================= //
+// ========================= DATA SETUP BEGIN ========================= //
+
+// ------------------------- Constants -------------------------- //
 
   // Each new entity type implements a new type of entity as public, static and final.
   public static final int GENERIC_ENTITY = 0;
@@ -29,12 +32,8 @@ abstract public class Entity implements InputProcessor {
   public static final int FACING_RIGHT = 2;
   public static final int FACING_BOT = 3;
 
-// ========================= CONSTANTS END ========================= //
 
-
-
-
-// ========================= DATA BEGIN ========================= //
+// ------------------------- Variables -------------------------- //
 
   // ID tracker
   private static long last_used_id = 0;
@@ -65,8 +64,9 @@ abstract public class Entity implements InputProcessor {
   /* There may be several different types of command interpreters, so we
   reserve a special place here, with the superclass CommandComponent. */
   protected CommandComponent command_comp;
+  
 
-// ========================= DATA END ========================= //
+// ========================= DATA SETUP END ========================= //
 
 
 
@@ -100,15 +100,24 @@ abstract public class Entity implements InputProcessor {
 
 
 
-// ========================= LOGIC BEGIN ========================= //
+// ========================= ABSTRACTION BEGIN ========================= //
 
   // Update entity status
   abstract public void update(float dt);
+
+// ========================= ABSTRACTION END ========================= //
+
+
+
+
+// ========================= LOGIC BEGIN ========================= //
 
   // Pipes commands to it's command component
   public boolean executeCommand(Command command) {
     return command_comp.execute(command);
   }
+
+
 
   // Collision Detection (from camera/world)
   public boolean collidedWorld(Vector3 point, Camera cam) {
@@ -121,6 +130,8 @@ abstract public class Entity implements InputProcessor {
     else
       return false;
   }
+
+
 
   // Collision Detection from Screen
   public boolean collidedScreen(int screenX, int screenY) {
@@ -157,24 +168,35 @@ abstract public class Entity implements InputProcessor {
   public int getFaceDirection() {
     return facing_direction;
   }
+
+
+
   public void setFaceDirection(int val) {
     facing_direction = val;
   }
+
+
 
   // Return info from the entity
   public String getInfo() {
     return display_name;
   }
 
+
+
   // ID
   public long getId() {
     return id;
   }
 
+
+
   // Entity Type
   public int getEntityType() {
     return entity_type;
   }
+
+
 
   // Control Over Entity
   public boolean isControllable() {
@@ -184,6 +206,8 @@ abstract public class Entity implements InputProcessor {
     player_controllable = val;
   }
 
+
+
   // X
   public float getX() {
     return x_location;
@@ -191,6 +215,8 @@ abstract public class Entity implements InputProcessor {
   public void setX(float new_x) {
     x_location = new_x;
   }
+
+
 
   // Y
   public float getY() {
@@ -200,6 +226,8 @@ abstract public class Entity implements InputProcessor {
     y_location = new_y;
   }
 
+
+
   // Tile X (Defaults assumes a 32*32 tiles. TODO: Make this value dynamic.
   public int getTileX() {
     return (int)(getX()/32);
@@ -207,6 +235,8 @@ abstract public class Entity implements InputProcessor {
   public void setTileX(int x) {
     setX(x*32);
   }
+
+
 
   // Tile Y (Defaults assumes a 32*32 tiles. TODO: Make this value dynamic.
   public int getTileY() {
@@ -216,11 +246,15 @@ abstract public class Entity implements InputProcessor {
     setY(y*32);
   }
 
+
+
   // Full Positioning
   public void setPosition(float new_x, float new_y){
     setX(new_x);
     setY(new_y);
   }
+
+
 
   // Width
   public int getWidth() {
@@ -230,6 +264,8 @@ abstract public class Entity implements InputProcessor {
     width = new_width;
   }
 
+
+
   // Height
   public int getHeight() {
     return height;
@@ -238,6 +274,8 @@ abstract public class Entity implements InputProcessor {
     height = new_height;
   }
 
+
+
   // Name
   public String getName() {
     return name;
@@ -245,6 +283,8 @@ abstract public class Entity implements InputProcessor {
   public void setName(String new_name) {
     name = new_name;
   }
+
+
 
   // Display Name
   public String getDisplayName() {
@@ -266,12 +306,10 @@ abstract public class Entity implements InputProcessor {
     return false;
   }
 
-
   @Override
   public boolean keyUp(int keycode) {
     return false;
   }
-
 
   @Override
   public boolean keyTyped(char character) {
@@ -294,23 +332,23 @@ abstract public class Entity implements InputProcessor {
     return false;
   }
 
-
   @Override
   public boolean touchDragged(int screenX, int screenY, int pointer) {
     return false;
   }
-
 
   @Override
   public boolean mouseMoved(int screenX, int screenY) {
     return false;
   }
 
-
   @Override
   public boolean scrolled(int amount) {
     return false;
   }
-}
 
 // ========================= INPUT END ========================= //
+
+}
+
+

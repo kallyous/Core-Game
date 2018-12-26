@@ -2,21 +2,39 @@ package com.kallyous.nopeisland;
 
 
 
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.utils.Array;
+
+
+
+/** ========================= MAIN MENU GUI ========================= **/
+
+// GUI for the main menu or title screen
 public class MainMenuInterface extends UserInterface {
 
+  private static final String TAG = "MainMenuInterface";
+
+
+
+// ========================= CONSTRUCTION BEGIN ========================= //
+
   MainMenuInterface(float width, float height) {
+
     super(width, height);
 
+    elements = new Array<UiElement>(2);
 
+// ------------------------- UiElement - Start Button -------------------------- //
 
-
-    // Start/Continue Game button
+    // New Anonymous UiElement Sub-Class
     UiElement start_btn = new UiElement(
         "start_continue_btn", NopeIslandGame.uiTexture,
         346, 154, 108, 44) {
 
+      // Custom debug tag
       private final String TAG = "PlayGameButton";
 
+      // Overrides the touchDown() input event to generate the desired command
       @Override
       public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
@@ -28,23 +46,35 @@ public class MainMenuInterface extends UserInterface {
       }
     };
 
+    // Enable de desired command for this UiElement to consume.
+    start_btn.command_comp.enableCommand( "RunGameCommand" );
+    // TODO: 25/12/18 Set the RunGameCommand to be consumed by other entity
+
+    // Set the entity/button location on the screen
     start_btn.setPosition(
         (screen_width - start_btn.getWidth()) / 2,
         (screen_height/2) + (start_btn.getHeight() + margin)
         );
+
+    // Tint the sprite (blue)
     start_btn.graphic_comp.sprite.setColor(0.5f, 0.5f, 1.0f, 1f);
 
-    start_btn.command_comp.enableCommand( "RunGameCommand" );
+    // Adds the button to the elements list/vector
+    elements.add(start_btn);
 
 
 
-    // Exit Game button
+// ------------------------- UiElement - Exit Game Button -------------------------- //
+
+    // New Anonymous UiElement Sub-Class
     UiElement exit_game_btn = new UiElement(
         "exit_game_btn", NopeIslandGame.uiTexture,
         346, 154, 108, 44) {
 
+      // Custom debug tag
       private final String TAG = "ExitButton";
 
+      // Overrides the touchDown() input event to generate the desired command
       @Override
       public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
@@ -57,21 +87,24 @@ public class MainMenuInterface extends UserInterface {
 
     };
 
+    // Enable de desired command for this UiElement to consume.
+    exit_game_btn.command_comp.enableCommand( "ExitCommand" );
+    // TODO: 25/12/18 Set the ExitCommand to be consumed by other entity
+
+    // Set the entity/button location on the screen
     exit_game_btn.setPosition(
         (screen_width - start_btn.getWidth()) / 2,
         (screen_height/2) - margin
     );
+
+    // Tint the sprite (red)
     exit_game_btn.graphic_comp.sprite.setColor(1f, 0.5f, 0.5f, 1f);
 
-    exit_game_btn.command_comp.enableCommand( "ExitCommand" );
-
-
-
-
-    elements.add(start_btn);
+    // Adds the button to the elements list/vector
     elements.add(exit_game_btn);
+
   }
 
-
+// ========================= CONSTRUCTION END ========================= //
 
 }

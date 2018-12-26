@@ -1,29 +1,25 @@
 package com.kallyous.nopeisland;
 
 
-import java.util.Vector;
 
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 
 
 
+/** ========================= GUI SUPERCLASS ========================= **/
 
-/** ========================= GRAPHICAL USER INTERFACE ========================= **/
-
+// Superclass on top of what all GUI shall be built
 public class UserInterface {
 
-  // Debug tag
   private static final String TAG = "UserInterface ";
 
 
 
 
-// ========================= DATA BEGIN ========================= //
-
-  // Default UI graphics
-  protected Texture uiTexture = NopeIslandGame.uiTexture;
+// ========================= DATA SETUP BEGIN ========================= //
 
   // Screen Dimensions
   protected static float screen_width, screen_height;
@@ -32,9 +28,9 @@ public class UserInterface {
   protected static int margin;
 
   // Array holding the UI elements
-  public Vector<UiElement> elements;
+  public Array<UiElement> elements;
 
-// ========================= DATA END ========================= //
+// ========================= DATA SETUP END ========================= //
 
 
 
@@ -50,9 +46,6 @@ public class UserInterface {
 
     // Define the margin
     margin = 16;
-
-    // Elements Array Initialization
-    elements = new Vector<UiElement>();
 
   }
 
@@ -75,7 +68,14 @@ public class UserInterface {
 
   // Sets all UiElements' input connections
   public void setInputMultiplexer(InputMultiplexer multiplexer) {
+    System.out.println(TAG + ": Setting InputMultiplexer to "
+        + multiplexer.toString() );
     for (UiElement elem : elements) multiplexer.addProcessor(elem);
+  }
+
+  // Remove elementos from InputMultiplexer
+  public void unsetInputMultiplexer(InputMultiplexer multiplexer) {
+    for (UiElement elem : elements) multiplexer.removeProcessor(elem);
   }
 
   public void setCommandManager(CommandManager manager) {
@@ -92,34 +92,47 @@ public class UserInterface {
 
 /** ========================= GUI ELEMENT ========================= **/
 
+// Superclass on top of what all GUI's elements shall be built
 class UiElement extends Entity {
 
   private static final String TAG = "UiElement ";
 
 
-// ========================= DATA BEGIN ========================= //
+
+
+// ========================= DATA SETUP BEGIN ========================= //
 
   GraphicComponent graphic_comp;
 
-// ========================= DATA END ========================= //
+// ========================= DATA SETUP END ========================= //
 
 
 
 
 // ========================= CONSTRUCTION BEGIN ========================= //
 
+  // Default constructor spans a (?) button
   UiElement() {
     super("uiElement");
-    setupComponents(0);
+    graphic_comp = new GraphicComponent(this, 0);
+    command_comp = new CommandComponent(this);
   }
 
+
+
+  // This one spans a button using the default GUI texture
   UiElement(String name, int region_index) {
     super(name);
-    setupComponents(region_index);
+    graphic_comp = new GraphicComponent(this, region_index);
+    command_comp = new CommandComponent(this);
   }
 
+
+
+  // Creates a GUI element of arbitrary texture and dimensions
   UiElement(String name, Texture texture, int region_x, int region_y,
             int width, int height) {
+
     super(name);
 
     graphic_comp = new GraphicComponent(
@@ -131,25 +144,6 @@ class UiElement extends Entity {
 
   }
 
-  private void setupComponents(int region_index) {
-    graphic_comp = new GraphicComponent(this, region_index);
-
-    command_comp = new CommandComponent(this)
-    {
-      @Override
-      public boolean execute(Command command) {
-        if (isItForMe(command)) {
-          System.out.println(TAG + ": Comando exclusivo de " + owner.getName());
-          System.out.println(TAG + ": " + owner.getName() + " executando "
-              + command.getTAG() );
-          return true;
-        }
-        return false;
-      }
-    };
-
-  }
-
 // ========================= CONSTRUCTION END ========================= //
 
 
@@ -157,18 +151,22 @@ class UiElement extends Entity {
 
 // ========================= LOGIC BEGIN ========================= //
 
+  // Updates graphic component
   @Override
   public void update(float dt) {
     graphic_comp.update(dt);
   }
 
+  // Draw whatever is int graphic component
   public void draw(SpriteBatch batch) {
     graphic_comp.draw(batch);
   }
 
+  // By default, each button just issues a SelectCommand to itself (potentially useless)
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     if (collidedScreen(screenX, screenY)) {
+      System.out.println(TAG + ": Sending a SelectCommand. ");
       NopeIslandGame.command_manager.sendCommand( new SelectCommand(this) );
     }
     return false;

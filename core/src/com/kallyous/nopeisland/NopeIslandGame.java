@@ -85,6 +85,9 @@ public class NopeIslandGame extends ApplicationAdapter {
     // Initializes InputMultiplexer
     input_multiplexer = new InputMultiplexer();
 
+    // Sets active input multiplexer
+    Gdx.input.setInputProcessor(input_multiplexer);
+
     // Prepares the Command Manager
     command_manager = new CommandManager();
 
@@ -100,15 +103,15 @@ public class NopeIslandGame extends ApplicationAdapter {
     //Gdx.input.setInputProcessor(input_multiplexer);
 
     // Prepara estado do menu principal do jogo, connectando-o com controladores globais
-    main_menu_state = new MainMenuGameState(command_manager);
+    main_menu_state = new MainMenuGameState(command_manager, input_multiplexer);
     main_menu_state.setScreenbatch(guiBatch);
 
     // Prepara estado de execução do jogo, conectando-o com controladores globais
-    running_state = new RunningGameState(command_manager);
+    running_state = new RunningGameState(command_manager, input_multiplexer);
     running_state.setScreenbatch(guiBatch);
 
     // Põe jogo em seu estado inicial.
-    main_menu_state.enter(main_menu_state);
+    main_menu_state.switchTo(main_menu_state);
 
   }
 

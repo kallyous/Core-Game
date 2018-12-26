@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 
+
+
 /** ======================== GAME STATES SUPERCLASS - FSM ======================== **/
 
 abstract public class GameState {
@@ -15,46 +17,80 @@ abstract public class GameState {
   private static final String TAG = "GameState";
 
 
+
+// ========================= DATA SETUP BEGIN ========================= //
+
   // For single back actions support
   public static GameState previous_state;
 
-
+  // Multiplexer to be used within the current state
   protected InputMultiplexer input_multiplexer;
-  protected SpriteBatch screen_batch;
-  protected boolean initialized;
-  public UserInterface gui;
 
+  // SpriteBatch for rendering current state GUI
+  protected SpriteBatch screen_batch;
+
+  // Current state GUI
+  protected UserInterface gui;
+
+  // Flags if current state has been initialized, for saving overhead resources
+  protected boolean initialized;
+
+// ========================= DATA SETUP END ========================= //
+
+
+
+
+// ========================= CONSTRUCTION BEGIN ========================= //
 
   // Default constructor only needs to create a new input multiplexer
   GameState() {
     initialized = false;
-    input_multiplexer = new InputMultiplexer();
   }
 
+// ========================= CONSTRUCTION END ========================= //
+
+
+
+
+// ========================= ABSTRACTION BEGIN ========================= //
+
+  // Deve ajustar as paradas
+  abstract public void init();
 
   // The update is obligatory
   abstract public void update(float dt);
 
+  // Libera os recursos para próximo estado
+  abstract public void clear();
+
+// ========================= ABSTRACTION END ========================= //
+
+
+
+
+// ========================= LOGIC BEGIN ========================= //
 
   // Each state may have many other things to draw beyond the GUI
   protected void drawAll() {}
 
 
-  public void enter(GameState new_state) {
+
+  public void switchTo(GameState new_state) {
+
     // Call the clear for releasing resources
     clear();
+
     // Switches the game state on the main loop
-    previous_state = NopeIslandGame.game;
+    previous_state = this;
+
+    // Sets the new state
     NopeIslandGame.game = new_state;
-    // Initializes stuff, like the InputMultiplexer
-    init();
+
+    // Initializes the new game state
+    NopeIslandGame.game.init();
+
   }
 
-
-  protected void init() {
-    // Each game state handles input it's own way.
-    Gdx.input.setInputProcessor(input_multiplexer);
-  }
 
 
   public void render() {
@@ -70,12 +106,12 @@ abstract public class GameState {
   }
 
 
+
   public void setScreenbatch(SpriteBatch batch) {
     screen_batch = batch;
   }
 
-  // Deactivate any necessary shit, release any unnecessary crap
-  public void clear() {}
+// ========================= LOGIC END ========================= //
 
 }
 
@@ -90,15 +126,37 @@ class RunningGameState extends GameState {
   private static final String TAG = "RunningGameState";
 
 
-  RunningGameState(CommandManager cmd_manager) {
+
+// ========================= CONSTRUCTION BEGIN ========================= //
+
+  RunningGameState(CommandManager cmd_manager, InputMultiplexer input_multiplexer) {
+
     // Creates a new interface
     gui = new RunningGameInterface(
         NopeIslandGame.game_window_width,
         NopeIslandGame.game_window_height);
-    // Sets it's input multiplexer
-    gui.setInputMultiplexer(input_multiplexer);
+
+    // Cretes new input multiplexer
+    this.input_multiplexer = input_multiplexer;
+
     // Sets it's command manager
     gui.setCommandManager(cmd_manager);
+
+  }
+
+// ========================= CONSTRUCTION END ========================= //
+
+
+
+
+// ========================= LOGIC BEGIN ========================= //
+
+  @Override
+  public void init() {
+
+    System.out.println(TAG + ": init() ");
+
+    gui.setInputMultiplexer(input_multiplexer);
 
   }
 
@@ -111,6 +169,13 @@ class RunningGameState extends GameState {
   protected void drawAll() {
     // Draw all elements using whatever SpriteBatch's available.
   }
+
+  @Override
+  public void clear() {
+    gui.unsetInputMultiplexer(input_multiplexer);
+  }
+
+// ========================= LOGIC END ========================= //
 
 }
 
@@ -126,16 +191,43 @@ class MainMenuGameState extends GameState {
 
 
 
-  MainMenuGameState(CommandManager cmd_manager) {
+// ========================= DATA SETUP BEGIN ========================= //
+
+  private InputMultiplexer input_multiplexer;
+
+// ========================= DATA SETUP END ========================= //
+
+
+
+
+// ========================= CONSTRUCTION BEGIN ========================= //
+
+  MainMenuGameState(CommandManager cmd_manager, InputMultiplexer input_multiplexer) {
 
     gui = new MainMenuInterface(
         NopeIslandGame.game_window_width,
         NopeIslandGame.game_window_height);
 
-    gui.setInputMultiplexer(input_multiplexer);
+    // Cretes new input multiplexer
+    this.input_multiplexer = input_multiplexer;
 
+    // Sets it's command manager
     gui.setCommandManager(cmd_manager);
 
+  }
+
+// ========================= CONSTRUCTION END ========================= //
+
+
+
+
+// ========================= LOGIC BEGIN ========================= //
+
+  @Override
+  public void init() {
+    // Each game state handles input it's own way.
+    System.out.println(TAG + ": init() ");
+    gui.setInputMultiplexer(input_multiplexer);
   }
 
   @Override
@@ -143,4 +235,12 @@ class MainMenuGameState extends GameState {
     gui.update(dt);
   }
 
+  @Override
+  public void clear() {
+    gui.unsetInputMultiplexer(input_multiplexer);
+  }
+
+// ========================= LOGIC END ========================= //
+
 }
+
