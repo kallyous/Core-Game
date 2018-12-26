@@ -41,7 +41,6 @@ public class NopeIslandGame extends ApplicationAdapter {
   // Pra facilitar o acesso/comunicação entre entidades
   public static Hashtable<String, Entity> entities;
 
-
   // Game States
   static MainMenuGameState main_menu_state;
   static RunningGameState running_state;

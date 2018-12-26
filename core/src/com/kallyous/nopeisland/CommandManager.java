@@ -23,10 +23,7 @@ public class CommandManager {
   private LinkedList<Command> pending_commands;
 
   // List with everyone listening to commands in the game
-  private Vector<Entity> listenners;
-
-  // Temporary command holder for various procedures
-  private Command command;
+  private Vector<Entity> listeners;
 
 // ========================= DATA SETUP END ========================= //
 
@@ -37,7 +34,7 @@ public class CommandManager {
 
   CommandManager() {
     pending_commands = new LinkedList<Command>();
-    listenners = new Vector<Entity>();
+    listeners = new Vector<Entity>();
   }
 
 // ========================= CONSTRUCTION END ========================= //
@@ -48,6 +45,8 @@ public class CommandManager {
 // ------------------------- Logic -------------------------- //
 
   public void flushCommands() {
+
+    Command command;
 
     while ( !(pending_commands.isEmpty()) ) {
 
@@ -71,7 +70,7 @@ public class CommandManager {
       else {
 
         // We travel all listening entities and try to run int for each and all
-        for (Entity entity : listenners) {
+        for (Entity entity : listeners) {
 
           // Send a debug message for each entity which execute the command
           if ( entity.executeCommand(command) ) {
@@ -97,9 +96,9 @@ public class CommandManager {
 
   // Adiciona nova entidade a ser commandada
   public boolean addListenner(Entity entity) {
-    if ( !(listenners.contains(entity)) ) {
+    if ( !(listeners.contains(entity)) ) {
       System.out.println(TAG + ": Adicionando " + entity.getName() + " em " + TAG);
-      return listenners.add(entity);
+      return listeners.add(entity);
     }
     System.out.println(TAG + ": " + entity.getName() + " já presente em "
         + TAG + ", nada a fazer");
@@ -109,7 +108,7 @@ public class CommandManager {
   public boolean remListenner(Entity entity) {
     System.out.println(TAG + ": Removendo " + entity.getName() + " de "
         + TAG + ", se presente");
-    return listenners.remove(entity);
+    return listeners.remove(entity);
   }
 
 // ---------------------------------------------------------- //

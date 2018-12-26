@@ -4,8 +4,7 @@ package com.kallyous.nopeisland;
 
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-
+import com.badlogic.gdx.utils.Array;
 
 
 
@@ -21,6 +20,9 @@ abstract public class GameState {
 
   // For single back actions support
   public static GameState previous_state;
+
+  // Holds reference to the current game world map or level
+  public WorldMap world;
 
   // Multiplexer to be used within the current state
   protected InputMultiplexer input_multiplexer;
@@ -141,6 +143,9 @@ class RunningGameState extends GameState {
     // Sets it's command manager
     gui.setCommandManager(cmd_manager);
 
+    // Initializes the world map.
+    world = new WorldMap( new SpriteBatch(), new Array<Entity>() );
+
   }
 
 // ========================= CONSTRUCTION END ========================= //
@@ -161,12 +166,13 @@ class RunningGameState extends GameState {
 
   @Override
   public void update(float dt) {
+    world.update(dt);
     gui.update(dt);
   }
 
   @Override
   protected void drawAll() {
-    // Draw all elements using whatever SpriteBatch's available.
+    world.render();
   }
 
   @Override
