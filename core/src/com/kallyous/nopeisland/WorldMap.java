@@ -59,11 +59,11 @@ public class WorldMap {
     Entity.setCamera(camera);
 
     // Set initial camera position, relative to the tiled map
-    camera.position.set(50*32, 47*32, 0);
+    camera.position.set(23*32, 40*32, 0);
 
     // Set a (?) sprite creature right into the world.
     Creature c = new Creature("Interrogator");
-    c.setPosition(50*32, 47*32);
+    c.setPosition(19*32, 35*32);
     c.command_comp.enableCommand("SelectCommand");
     this.entities.add(c);
 
