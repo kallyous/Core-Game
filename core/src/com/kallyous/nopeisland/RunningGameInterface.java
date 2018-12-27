@@ -68,14 +68,16 @@ public class RunningGameInterface extends UserInterface {
       public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
           System.out.println(TAG + ": Pass Turn Button touched, setting selection_name text");
-          NopeIslandGame.command_manager.sendCommand(
-              new SetTextContentCommand("selection_name", "Passar turno pressionado"));
+          NopeIslandGame.command_manager.sendCommand( new SelectCommand(this) );
           return true;
         }
         return false;
       }
 
     };
+
+    // This entity will process it1s own selection // TODO: 27/12/18 All selections shall be handled somewhere else
+    btn_pass.command_comp.enableCommand("SelectCommand");
 
     // Register in the hash map
     NopeIslandGame.entities.put(btn_pass.getName(), btn_pass);
@@ -91,7 +93,16 @@ public class RunningGameInterface extends UserInterface {
 // ------------------------- TextElement - Name of Entity -------------------------- //
 
     // Creates a text element to hold the name of the selected entitie
-    TextElement sel_txt = new TextElement("selection_name", "Nada selecionado");
+    TextElement sel_txt = new TextElement("selection_name", "Nada selecionado") {
+      private static final String TAG = "SelectionTextElement";
+      @Override
+      public void update(float dt) {
+        if (Entity.selected_entity == null)
+          this.label.setText("Nada selecionado.");
+        else
+          this.label.setText( Entity.selected_entity.getName() + " Selecionado" );
+      }
+    };
 
     // Register the element in the hash map
     NopeIslandGame.entities.put(sel_txt.getName(), sel_txt);

@@ -1,9 +1,11 @@
 package com.kallyous.nopeisland;
 
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 
 
@@ -17,14 +19,38 @@ abstract public class Entity implements InputProcessor {
   private static final String TAG = "Entity";
 
 
+  protected static OrthographicCamera world_camera;
+
+  public static void setCamera(OrthographicCamera new_cam) {
+    world_camera = new_cam;
+  }
 
 
 // ========================= DATA SETUP BEGIN ========================= //
 
-// ------------------------- Constants -------------------------- //
+// ------------------------- Entity Types -------------------------- //
 
-  // Each new entity type implements a new type of entity as public, static and final.
-  public static final int GENERIC_ENTITY = 0;
+  // For undefined and/or invisible entities
+  public static final int GENERIC = 0;
+
+  // Graphical User Interface Elements
+  public static final int GUI = 1;
+
+  // Players, opponents...
+  public static final int CREATURE = 2;
+
+  // Trees, bushes...
+  public static final int PLANT = 3;
+
+  // Walls, chests, rocks on the floor...
+  public static final int STRUCTURE = 4;
+
+  // Things creatures can pass over and will trigger something when so
+  public static final int PICKUP = 5;
+
+
+
+// ------------------------- Facing Directions -------------------------- //
 
   // Entity facing directions
   public static final int FACING_LEFT = 0;
@@ -33,38 +59,46 @@ abstract public class Entity implements InputProcessor {
   public static final int FACING_BOT = 3;
 
 
+
 // ------------------------- Variables -------------------------- //
 
-  // ID tracker
+  /* ID tracker: While using unique internal names is pretty convenient, string operations are slow.
+   * For later optimizations, we will work out a way to map the entities ID's to their objects and
+   * use integer operations on the hash tables when doing lookups. */
   private static long last_used_id = 0;
+
+  // Entity ID
+  private long id;
 
   // Selected Entity tracker
   public static Entity selected_entity;
 
-  // Entity type string. For internal use, as the system must decide what to show on the GUI
-  // for the player about the selected entity based on what it is.
-  private int entity_type;
+  // Type of entity. GENERIC by default, must be overridden by every subclass
+  private int entity_type = GENERIC;
 
   // Entity Effective Location
   private float x_location, y_location;
+
   // Entity dimensions
   private int width, height;
+
   // Entity name
   private String name;
+
   // Entity display name
   private String display_name;
-  // Entity ID
-  private long id;
+
   // Player Controllable (default is false)
   private boolean player_controllable = false;
 
   // Facing direction (default bottom)
   private int facing_direction = FACING_BOT;
 
-  /* There may be several different types of command interpreters, so we
-  reserve a special place here, with the superclass CommandComponent. */
-  protected CommandComponent command_comp;
-  
+  /* Commands: There is two unifying features to all entities - They all have a location in the
+   * game world and they all at least CAN receive commands to perform or be targets of actions.
+   * Therefore, all entities have (X,Y) coordinates and a CommandComponent. */
+  CommandComponent command_comp;
+
 
 // ========================= DATA SETUP END ========================= //
 
@@ -76,29 +110,42 @@ abstract public class Entity implements InputProcessor {
   // General constructor
   Entity(String name) {
 
+    // While not at use yet, we will keep record of id's for later use.
     id = ++last_used_id;
 
+    /* Internal names must be unique. If the name is duplicated, the entity creation won't actually
+     * fail. The new entity just won't be registered to the hash table and will call it's own
+     * destruction method right after it's creation. */
     this.name = name;
 
+    /* Event if the entity creation fails due to duplicated name, we need to setup the
+     * CommandComponent for receiving the self destruction command.
+     * This ensures proper assets disposal. */
     command_comp = new CommandComponent(this);
 
+    // By default we use a 32x32 pixels size.
     setDefaultDimensions();
 
+    // The so important duplicated name checkup
     if (NopeIslandGame.entities.containsKey(name)) {
 
+      // Debug warnings
       System.out.println(TAG + ": Entidade com nome " + name + " já existe. É o objeto "
           + NopeIslandGame.entities.get(name).toString() );
-
       System.out.println(TAG + ": Duplicatas não são permitidas, emitindo comando de autodestruição");
 
+      // Issue self destruct command
       NopeIslandGame.command_manager.sendCommand( new DestroyEntityCommand(this) );
 
     }
 
+    // If name is free, register self into the hash table and proceed to the initial creation
     else {
 
+      // Hash table registration
       NopeIslandGame.entities.put(name, this);
 
+      // Debug notification
       System.out.println(TAG + ": Adicionado " + name + " à Hashtable de entidades.");
 
     }
@@ -121,7 +168,7 @@ abstract public class Entity implements InputProcessor {
   // Update entity status
   abstract public void update(float dt);
 
-  // Dispose of any resources for destruction
+  // Dispose of any resources and/or unplug from any trackers for entity destruction
   abstract public void dispose();
 
 // ========================= ABSTRACTION END ========================= //
@@ -139,15 +186,17 @@ abstract public class Entity implements InputProcessor {
 
 
   // Collision Detection (from camera/world)
-  public boolean collidedWorld(Vector3 point, Camera cam) {
-    cam.unproject(point);
+  public boolean worldTouched(Vector3 point) {
+
+    world_camera.unproject(point);
+
     if ( (point.x > x_location && point.x < x_location + width) &&
         (point.y > y_location && point.y < y_location + height) ) {
-      System.out.println(TAG + ".collidedWorld() detected world collision on " + name);
+      System.out.println(TAG + ".worldTouched() detected world collision on " + name);
       return true;
     }
-    else
-      return false;
+
+    return false;
   }
 
 
@@ -164,7 +213,9 @@ abstract public class Entity implements InputProcessor {
   }
 
 
-
+  /* Destruction: After calling the dispose() method, which shall dispose of all allocated assets
+   * and/or unplug the entity of any records/trackers, the method destroy() will finally unplug
+   * the entity from the hash table. */
   public void destroy() {
     System.out.println(TAG + ": Destroying " + this.toString() + "(" + name + ")");
     this.dispose();
@@ -195,18 +246,8 @@ abstract public class Entity implements InputProcessor {
   public int getFaceDirection() {
     return facing_direction;
   }
-
-
-
   public void setFaceDirection(int val) {
     facing_direction = val;
-  }
-
-
-
-  // Return info from the entity
-  public String getInfo() {
-    return display_name;
   }
 
 
@@ -219,8 +260,11 @@ abstract public class Entity implements InputProcessor {
 
 
   // Entity Type
-  public int getEntityType() {
+  public int type() {
     return entity_type;
+  }
+  public void setType(int entity_type) {
+    this.entity_type = entity_type;
   }
 
 

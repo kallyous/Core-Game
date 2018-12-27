@@ -146,7 +146,9 @@ public class GraphicComponent {
 
 
 
-  public void update(float dt) { sprite.setPosition(entity.getX(), entity.getY()); }
+  public void update(float dt) {
+    sprite.setPosition(entity.getX(), entity.getY());
+  }
 
 // ========================= LOGIC END ========================= //
 

@@ -210,6 +210,7 @@ class SelectCommand extends Command {
   public boolean execute() {
     System.out.println(TAG + ": " + this.target.getName()
         + " received a select command.");
+    Entity.selected_entity = this.target;
     return true;
   }
 

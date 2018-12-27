@@ -95,7 +95,7 @@ public class NopeIslandGame extends ApplicationAdapter {
     // Prepares the Command Manager
     command_manager = new CommandManager();
 
-    // Entities Hash Table using default values.
+    // Entities Hash Table using default values, for locating entities by their names
     entities = new Hashtable<String, Entity>();
 
     // Loads GUI graphics

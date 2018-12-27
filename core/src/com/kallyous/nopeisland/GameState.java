@@ -137,14 +137,14 @@ class RunningGameState extends GameState {
         NopeIslandGame.game_window_width,
         NopeIslandGame.game_window_height);
 
-    // Cretes new input multiplexer
+    // Creates new input multiplexer
     this.input_multiplexer = input_multiplexer;
 
     // Sets it's command manager
     gui.setCommandManager(cmd_manager);
 
     // Initializes the world map.
-    world = new WorldMap( new SpriteBatch(), new Array<Entity>() );
+    world = new WorldMap( new SpriteBatch(), new Array<Entity>(), input_multiplexer );
 
   }
 
@@ -162,6 +162,8 @@ class RunningGameState extends GameState {
 
     gui.setInputMultiplexer(input_multiplexer);
 
+    world.resume();
+
   }
 
   @Override
@@ -178,6 +180,7 @@ class RunningGameState extends GameState {
   @Override
   public void clear() {
     gui.unsetInputMultiplexer(input_multiplexer);
+    world.suspend();
   }
 
 // ========================= LOGIC END ========================= //
