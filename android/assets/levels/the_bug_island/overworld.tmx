@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="1">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="9">
  <tileset firstgid="1" name="terrain_atlas" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
   <image source="../../graphic/terrain_atlas.png" width="1024" height="1024"/>
   <terraintypes>
@@ -41,4 +41,9 @@
    H4sIAAAAAAAAA+3a0XWjMBCFYasbthNciUkFKcHZSkK6DJy1TmbHkpCEgVH4H74nBwNzNZLA+XCXywcAAAAAAAAAAAAAAAAAAAAAAAAAAABQqZuMwh8D13Rm/eRt8n755zORS5f4DHGldZszGTJy8dl9kklRDl+T2+RaePzfRx63Rz5D4Dv835BJXg5yfJfWq49kkDrHSC5PdZI1knQmvqYlNQzlsHSes0plocewrqmsYReoZ04OoUz8cWfMx8/ltXxWc81lbiU56O/zx51xLlubRwm5xr8VnPduoE576Qtrs8a94rw1e7zW7dUjes3OOe+ZeuPoHsnJ46z7rq17xK8dcu7JHQdnzGTrPGLzTu55W5q3Opd+DsiRO1aPyKOFNX2u++h+9vl39/NsV9vfW/ZI6Jr89baeRah28jmqtr+3nrNKnhdD6401uidy7z3WK537//1EzfP03vPbkbXX7/Fq6xWbv/rH+NvzGb3FPHzt5fu1tWM3Nn9b64ulMXSEedz6vY5eF2byPdDg8vdFesxZ7AuLPZLqB7/fkPNZn5lLa3lY6ZFUne7ib0reB4X2jbIPrbKQSapOMg9Z41RPpXrfeo+krt1CJn689Gq8l/ZGToYWWHoejNU49X80Jfcjj6n9rWhrln4jXJpL9LWGMlmaf0vnvSNzOTqT2JiP5TJGapm6l76BLGZW5q1Xrbc5a6Lltd3Cmu7H77DQJ7eMz5fGlsXe8PdlpTd0Lqk9cOjzknekvjeWst0zi6t73kdaEstE7oH9eMrNQX93LNtX13pw6b63Mj+VZqJrv2Y8yWO3Wkv03NNHcmklD3kPpT2Qq3OvX0uWelbmb3G9sJD3q+YsXd8579E9v3tr4TdBC7mszUb/3/WXC89b5FCXTSof/duMd1XfQ+23z4d5346eLAAAAAAAAAAAAAAAAADg1/sG/7/XSECcAAA=
   </data>
  </layer>
+ <objectgroup id="10" name="creatures">
+  <object id="2" template="creature_template.tx" name="robert" x="896" y="1792"/>
+  <object id="7" template="creature_template.tx" name="John" x="992" y="1856"/>
+  <object id="8" template="creature_template.tx" name="arya" x="896" y="1920"/>
+ </objectgroup>
 </map>

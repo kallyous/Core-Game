@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+ <object name="internal_name" type="creature" width="32" height="32">
+  <properties>
+   <property name="controllable" type="bool" value="true"/>
+   <property name="display_name" value="Display Name"/>
+   <property name="health" type="float" value="20"/>
+  </properties>
+ </object>
+</template>
