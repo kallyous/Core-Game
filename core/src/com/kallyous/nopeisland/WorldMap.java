@@ -55,6 +55,7 @@ public class WorldMap {
     int s_height = (int)NopeIslandGame.game_window_height;
 
     this.entities_batch = entities_batch;
+
     this.entities = entities;
 
     tiled_map = new TmxMapLoader().load("levels/the_bug_island/overworld.tmx");
@@ -66,6 +67,13 @@ public class WorldMap {
 
     // Set initial camera position, relative to the tiled map
     camera.position.set(23*32, 40*32, 0);
+
+    // Loads all creatures from the map's creatures layer
+    Array<Creature> lvl_creats = CreatureLoader.LoadCreaturesFromTiledMap(tiled_map);
+
+    // Insert all loaded creatures into the game running world
+    for (int i = 0; i < lvl_creats.size; i++)
+      this.entities.add(lvl_creats.get(i));
 
     // Set a (?) sprite creature right into the world.
     Creature c = new Creature("Interrogator");

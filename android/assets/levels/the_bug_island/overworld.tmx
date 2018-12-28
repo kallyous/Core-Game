@@ -43,7 +43,7 @@
  </layer>
  <objectgroup id="10" name="creatures">
   <object id="2" template="creature_template.tx" name="robert" x="896" y="1792"/>
-  <object id="7" template="creature_template.tx" name="John" x="992" y="1856"/>
+  <object id="7" template="creature_template.tx" name="john" x="992" y="1856"/>
   <object id="8" template="creature_template.tx" name="arya" x="896" y="1920"/>
  </objectgroup>
 </map>

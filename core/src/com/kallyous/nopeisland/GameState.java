@@ -162,8 +162,6 @@ class RunningGameState extends GameState {
 
     gui.setInputMultiplexer(input_multiplexer);
 
-    world.loadRobert();
-
     world.resume();
 
   }
