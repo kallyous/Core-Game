@@ -1,0 +1,35 @@
+{
+  
+  "pickup" : {
+    "prototype" : null,
+    "decay_time" : 10,
+    "description" : "It's dangerous out there, take this."
+  },
+  
+  "health_orb" : {
+    "prototype" : "pickup",
+    "decay_time_mod" : 10,
+    "effects" : {
+      "RecoverHealth" : {"power" : 5}
+    },
+    "description" : "Recover 5 health points."
+  },
+  
+  "power_orb" : {
+    "prototype" : "pickup",
+    "effects" : {
+      "BonusDamage" : {"power" : 3, "time" : 3}
+    },
+    "description" : "Triple damage for three turns."
+  },
+  
+  "haste_orb" : {
+    "prototype" : "pickup",
+    "effects" : {
+      "BonusMoves" : {"power" : 3, "time" : 3},
+      "BonusAction" : {"power" : 1, "time" : 3}
+    },
+    "description" : "Increases movement and grants an extra action. Often results in triple reach."
+  }
+  
+}

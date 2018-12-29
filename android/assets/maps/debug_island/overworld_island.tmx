@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="9">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="28">
  <tileset firstgid="1" name="terrain_atlas" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
   <image source="../../graphic/terrain_atlas.png" width="1024" height="1024"/>
   <terraintypes>
@@ -42,8 +42,13 @@
   </data>
  </layer>
  <objectgroup id="10" name="creatures">
-  <object id="2" template="creature_template.tx" name="robert" x="896" y="1792"/>
-  <object id="7" template="creature_template.tx" name="john" x="992" y="1856"/>
-  <object id="8" template="creature_template.tx" name="arya" x="896" y="1920"/>
+  <object id="27" name="robert" type="creature" gid="1019" x="960" y="1824" width="32" height="32">
+   <properties>
+    <property name="controllable" type="bool" value="true"/>
+    <property name="display_name" value="Robert Batation"/>
+    <property name="prototype" value="fighter"/>
+    <property name="spritesheet" value="HumanBaseMaler"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

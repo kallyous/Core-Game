@@ -1,0 +1,25 @@
+{
+  
+  "plant" : {
+    "prototype" : null,
+    "health" : 5,
+    "growth_time" : 3,
+    "default_actions" : [ "Select", "Grow", "Die" ],
+    "description" : "A plant. It's alive."
+  },
+  
+  "tree" : {
+    "prototype" : "plant",
+    "health_mod" : 5,
+    "growth_time_mod" : 2,
+    "description" : "Trees. Chop down for some wood. Except we don't use wood in this game. Ha!"
+  },
+  
+  "bush" : {
+    "prototype" : "plant",
+    "health_mod" : -2,
+    "growth_time_mod" : -1,
+    "description" : "Bushes. Look up for some berries! Well not on this one, but keep looking on the others."
+  }
+  
+}

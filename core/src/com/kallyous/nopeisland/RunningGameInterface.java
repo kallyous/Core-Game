@@ -100,7 +100,7 @@ public class RunningGameInterface extends UserInterface {
         if (Entity.selected_entity == null)
           this.label.setText("Nada selecionado.");
         else
-          this.label.setText( Entity.selected_entity.getName() + " Selecionado" );
+          this.label.setText( Entity.selected_entity.getDisplayName() );
       }
     };
 

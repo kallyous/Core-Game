@@ -1,0 +1,10 @@
+{
+  "Debug World" : {
+    "root" : {
+      "map" : "maps/debug_island/overworld_island.tmx",
+      "atlas" : "DefaultTerrain",
+      "init_view_x" : 750,
+      "init_view_y" : 1910
+    }
+  }
+}

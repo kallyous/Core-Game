@@ -1,0 +1,21 @@
+{
+  
+  "creature" : {
+    "prototype" : null,
+    "health" : 10,
+    "actions" : 2,
+    "moves" : 3,
+    "damage" : 3,
+    "width" : 32,
+    "height" : 32,
+    "default_actions" : [ "Select", "Move", "Attack", "Deffend", "SwitchControl", "Die" ],
+    "description" : "This is a living creature. Until it's not. Then it's dead. Or not. Undeads are popular."
+  },
+  
+  "fighter" : {
+    "prototype" : "creature",
+    "health" : 5,
+    "description" : "This creature has been trained for fights. It has extra health."
+  }
+  
+}

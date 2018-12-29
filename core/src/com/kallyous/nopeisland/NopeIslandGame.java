@@ -26,6 +26,8 @@ public class NopeIslandGame extends ApplicationAdapter {
   // Game running flag
   public static boolean game_running = true;
 
+  public static AssetManager asset_manager;
+
   // Default GUI interface texture
   public static Texture uiTexture;
 
@@ -82,6 +84,9 @@ public class NopeIslandGame extends ApplicationAdapter {
     // Gets viewport sizes
     game_window_width = Gdx.graphics.getWidth();
     game_window_height = Gdx.graphics.getHeight();
+
+    // Assets loader and manager
+    asset_manager = new AssetManager();
 
     // Initializes InputProcessor
     game_input_adapter = new GameInput();

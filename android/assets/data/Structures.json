@@ -1,0 +1,24 @@
+{
+  
+  "structure" : {
+    "prototype" : null,
+    "health" : 5,
+    "build_time" : 1,
+    "default_actions" : [ "Select", "Build", "Die" ],
+    "description" : "Something built by someone."
+  },
+  
+  "wall" : {
+    "prototype" : "structure",
+    "health_mod" : 15,
+    "build_time_mod" : 3,
+    "description" : "Millenar way to keep undesired folks away."
+  },
+  
+  "rock" : {
+    "prototype" : "structure",
+    "build_time_mod" : 1,
+    "description" : "Blocks your path. In other games, this would be an important source of "
+  }
+  
+}

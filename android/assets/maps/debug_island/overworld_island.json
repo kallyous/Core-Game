@@ -1,0 +1,212 @@
+{ "height":100,
+"infinite":false,
+"layers":[
+{
+"compression":"gzip",
+"data":"H4sIAAAAAAAAA+3a0XWjMBCFYasbthNciUkFKcHZSkK6DJy1TmbHkpCEgVH4H74nBwNzNZLA+XCXywcAAAAAAAAAAAAAAAAAAAAAAAAAAABQqZuMwh8D13Rm\/eRt8n755zORS5f4DHGldZszGTJy8dl9kklRDl+T2+RaePzfRx63Rz5D4Dv835BJXg5yfJfWq49kkDrHSC5PdZI1knQmvqYlNQzlsHSes0plocewrqmsYReoZ04OoUz8cWfMx8\/ltXxWc81lbiU56O\/zx51xLlubRwm5xr8VnPduoE576Qtrs8a94rw1e7zW7dUjes3OOe+ZeuPoHsnJ46z7rq17xK8dcu7JHQdnzGTrPGLzTu55W5q3Opd+DsiRO1aPyKOFNX2u++h+9vl39\/NsV9vfW\/ZI6Jr89baeRah28jmqtr+3nrNKnhdD6401uidy7z3WK537\/\/1EzfP03vPbkbXX7\/Fq6xWbv\/rH+NvzGb3FPHzt5fu1tWM3Nn9b64ulMXSEedz6vY5eF2byPdDg8vdFesxZ7AuLPZLqB7\/fkPNZn5lLa3lY6ZFUne7ib0reB4X2jbIPrbKQSapOMg9Z41RPpXrfeo+krt1CJn689Gq8l\/ZGToYWWHoejNU49X80Jfcjj6n9rWhrln4jXJpL9LWGMlmaf0vnvSNzOTqT2JiP5TJGapm6l76BLGZW5q1Xrbc5a6Lltd3Cmu7H77DQJ7eMz5fGlsXe8PdlpTd0Lqk9cOjzknekvjeWst0zi6t73kdaEstE7oH9eMrNQX93LNtX13pw6b63Mj+VZqJrv2Y8yWO3Wkv03NNHcmklD3kPpT2Qq3OvX0uWelbmb3G9sJD3q+YsXd8579E9v3tr4TdBC7mszUb\/3\/WXC89b5FCXTSof\/duMd1XfQ+23z4d5346eLAAAAAAAAAAAAAAAAADg1\/sG\/7\/XSECcAAA=",
+"encoding":"base64",
+"height":100,
+"id":1,
+"name":"ground",
+"opacity":1,
+"type":"tilelayer",
+"visible":true,
+"width":100,
+"x":0,
+"y":0
+},
+{
+"draworder":"topdown",
+"id":10,
+"name":"creatures",
+"objects":[
+{
+"gid":1019,
+"height":32,
+"id":27,
+"name":"robert",
+"properties":[
+{
+ "name":"controllable",
+ "type":"bool",
+ "value":true
+},
+{
+ "name":"display_name",
+ "type":"string",
+ "value":"Robert Batation"
+},
+{
+ "name":"prototype",
+ "type":"string",
+ "value":"fighter"
+},
+{
+ "name":"spritesheet",
+ "type":"string",
+ "value":"HumanBaseMaler"
+}],
+"rotation":0,
+"type":"creature",
+"visible":true,
+"width":32,
+"x":960,
+"y":1824
+}],
+"opacity":1,
+"type":"objectgroup",
+"visible":true,
+"x":0,
+"y":0
+}],
+"nextlayerid":12,
+"nextobjectid":28,
+"orientation":"orthogonal",
+"renderorder":"right-down",
+"tiledversion":"1.2.1",
+"tileheight":32,
+"tilesets":[
+{
+"columns":32,
+"firstgid":1,
+"image":"..\/..\/graphic\/terrain_atlas.png",
+"imageheight":1024,
+"imagewidth":1024,
+"margin":0,
+"name":"terrain_atlas",
+"spacing":0,
+"terrains":[
+{
+"name":"grass-in\/water-out",
+"tile":-1
+},
+{
+"name":"water-int\/grass-out",
+"tile":-1
+},
+{
+"name":"tiled-in\/grass-out",
+"tile":-1
+},
+{
+"name":"grass-in\/tiled-out",
+"tile":-1
+}],
+"tilecount":1024,
+"tileheight":32,
+"tiles":[
+{
+"id":118,
+"terrain":[0, 0, 0, 0]
+},
+{
+"id":295,
+"terrain":[1, 1, 1, 0]
+},
+{
+"id":296,
+"terrain":[1, 1, 0, 1]
+},
+{
+"id":327,
+"terrain":[1, 0, 1, 1]
+},
+{
+"id":328,
+"terrain":[0, 1, 1, 1]
+},
+{
+"id":358,
+"terrain":[0, 0, 0, 1]
+},
+{
+"id":359,
+"terrain":[0, 0, 1, 1]
+},
+{
+"id":360,
+"terrain":[0, 0, 1, 0]
+},
+{
+"id":390,
+"terrain":[0, 1, 0, 1]
+},
+{
+"id":391,
+"terrain":[1, 1, 1, 1]
+},
+{
+"id":392,
+"terrain":[1, 0, 1, 0]
+},
+{
+"id":422,
+"terrain":[0, 1, 0, 0]
+},
+{
+"id":423,
+"terrain":[1, 1, 0, 0]
+},
+{
+"id":424,
+"terrain":[1, 0, 0, 0]
+},
+{
+"id":486,
+"terrain":[2, 2, 2, 3]
+},
+{
+"id":487,
+"terrain":[2, 2, 3, 2]
+},
+{
+"id":518,
+"terrain":[2, 3, 2, 2]
+},
+{
+"id":519,
+"terrain":[3, 2, 2, 2]
+},
+{
+"id":549,
+"terrain":[3, 3, 3, 2]
+},
+{
+"id":550,
+"terrain":[3, 3, 2, 2]
+},
+{
+"id":551,
+"terrain":[3, 3, 2, 3]
+},
+{
+"id":581,
+"terrain":[3, 2, 3, 2]
+},
+{
+"id":582,
+"terrain":[2, 2, 2, 2]
+},
+{
+"id":583,
+"terrain":[2, 3, 2, 3]
+},
+{
+"id":613,
+"terrain":[3, 2, 3, 3]
+},
+{
+"id":614,
+"terrain":[2, 2, 3, 3]
+},
+{
+"id":615,
+"terrain":[2, 3, 3, 3]
+}],
+"tilewidth":32
+}],
+"tilewidth":32,
+"type":"map",
+"version":1.2,
+"width":100
+}
