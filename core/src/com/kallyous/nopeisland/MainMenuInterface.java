@@ -27,7 +27,8 @@ public class MainMenuInterface extends UserInterface {
 
     // New Anonymous UiElement Sub-Class
     UiElement start_btn = new UiElement(
-        "start_continue_btn", NopeIslandGame.uiTexture,
+        "start_continue_btn",
+        NopeIslandGame.asset_manager.textures.get("DefaultInterface"),
         346, 154, 108, 44) {
 
       // Custom debug tag
@@ -70,7 +71,8 @@ public class MainMenuInterface extends UserInterface {
 
     // New Anonymous UiElement Sub-Class
     UiElement exit_game_btn = new UiElement(
-        "exit_game_btn", NopeIslandGame.uiTexture,
+        "exit_game_btn",
+        NopeIslandGame.asset_manager.textures.get("DefaultInterface"),
         346, 154, 108, 44) {
 
       // Custom debug tag

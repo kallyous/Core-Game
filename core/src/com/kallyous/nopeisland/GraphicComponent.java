@@ -50,7 +50,7 @@ public class GraphicComponent {
   // Default constructor assumes the GUI texture and (?) symbol
   GraphicComponent(Entity entity) {
     this.entity = entity;
-    this.texture = NopeIslandGame.uiTexture;
+    this.texture = NopeIslandGame.asset_manager.textures.get("DefaultInterface");
     setupDefaultGraphics();
   }
 
@@ -59,7 +59,7 @@ public class GraphicComponent {
   // This additional one just takes also a name and texture region index
   GraphicComponent(Entity entity, int region_index) {
     this.entity = entity;
-    this.texture = NopeIslandGame.uiTexture;
+    this.texture = NopeIslandGame.asset_manager.textures.get("DefaultInterface");
     setupDefaultGraphics();
     setRegionIndex(region_index);
   }

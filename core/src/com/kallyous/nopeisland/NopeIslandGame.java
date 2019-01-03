@@ -28,9 +28,6 @@ public class NopeIslandGame extends ApplicationAdapter {
 
   public static AssetManager asset_manager;
 
-  // Default GUI interface texture
-  public static Texture uiTexture;
-
   // Finite State Machine
   public static GameState game;
 
@@ -104,9 +101,6 @@ public class NopeIslandGame extends ApplicationAdapter {
 
     // Entities Hash Table using default values, for locating entities by their names
     entities = new Hashtable<String, Entity>();
-
-    // Loads GUI graphics
-    uiTexture = new Texture(Gdx.files.internal("graphic/interface.png"));
 
     // SpriteBach exclusivo para GUI, pois será o únco a não utilizar projeção no mapa
     guiBatch = new SpriteBatch();

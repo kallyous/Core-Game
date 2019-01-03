@@ -41,7 +41,7 @@ public class Drawable {
 
   // Default Constructor
   Drawable() {
-    texture = NopeIslandGame.uiTexture;
+    texture = NopeIslandGame.asset_manager.textures.get("DefaultInterface");
     sheet_cols = 16;
     sheet_rows = 16;
     region_index = 0;
@@ -49,7 +49,7 @@ public class Drawable {
   }
 
   Drawable(int region_index) {
-    texture = NopeIslandGame.uiTexture;
+    texture = NopeIslandGame.asset_manager.textures.get("DefaultInterface");
     sheet_cols = 16;
     sheet_rows = 16;
     this.region_index = region_index;
