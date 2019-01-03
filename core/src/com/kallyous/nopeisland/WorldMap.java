@@ -98,7 +98,7 @@ public class WorldMap {
     while (prop_itr.hasNext()) {
       key = prop_itr.next().toString();
       value = tiled_map.getProperties().get(key).toString();
-      System.out.println(TAG + ": " + key + " -> " + value );
+      Log.d(TAG + " - " + key + " -> " + value );
     }
 
     MapLayers layers = tiled_map.getLayers();
@@ -107,8 +107,8 @@ public class WorldMap {
 
     while (lay_itr.hasNext()) {
       MapLayer layer = lay_itr.next();
-      System.out.println( "Layer - " + layer.getName() );
-      System.out.println( layer );
+      Log.d( TAG + " - Layer " + layer.getName() );
+      Log.d( layer.toString() );
     }
 
     MapObjects objs =  layers.get("creatures").getObjects();
@@ -117,7 +117,7 @@ public class WorldMap {
 
     Iterator rob_itr = robert_props.getKeys();
 
-    System.out.println("Robert data:");
+    Log.d("Robert data:");
 
     while (rob_itr.hasNext()) {
 
@@ -125,11 +125,11 @@ public class WorldMap {
 
       try {
         value = robert_props.get(key).toString();
-        System.out.println("\t" + key + " : " + value);
+        Log.d("\t" + key + " : " + value);
       }
 
       catch (NullPointerException e) {
-        System.out.println("\t" + key + " : null");
+        Log.d("\t" + key + " : null");
       }
 
     }
@@ -191,13 +191,13 @@ public class WorldMap {
           ((Creature)ent).graphic_comp.draw(entities_batch);
           break;
         case Entity.PLANT:
-          System.out.println("No plants implemetned");
+          Log.w(TAG + " - No plants implemetned");
           break;
         case Entity.STRUCTURE:
-          System.out.println("No structures implemented");
+          Log.w(TAG + " - No structures implemented");
           break;
         case Entity.PICKUP:
-          System.out.println("No pickups implemented");
+          Log.w(TAG + " - No pickups implemented");
           break;
       }
 

@@ -35,7 +35,7 @@ public class CreatureLoader {
 
     // Nothing to to if layer not present
     if (creat_layer == null) {
-      System.out.println(TAG + ": no creatures layer found ");
+      Log.w(TAG + " - no creatures layer found");
       return null;
     }
 
@@ -44,7 +44,7 @@ public class CreatureLoader {
 
     // If there is no objects, there is nothing to do
     if (map_objects.getCount() == 0) {
-      System.out.println(TAG + ": creatures layer is empty ");
+      Log.w(TAG + " - creatures layer is empty");
       return null;
     }
 
@@ -91,7 +91,11 @@ public class CreatureLoader {
       float y = Float.parseFloat( props.get("y").toString() );
 
       // Prepare a new creature with the given name
-      Creature creature = new Creature(creature_name, spritesheet_name, 13, 21, 131);
+      Creature creature = new Creature(
+          creature_name,
+          spritesheet_name,
+          13, 21, 131
+      );
 
       // Set display name
       creature.setDisplayName(display_name);
@@ -101,14 +105,6 @@ public class CreatureLoader {
 
       // Apply position
       creature.setPosition(x,y);
-
-      /* Setup Sprite Sheet: O AssetManager sabe as dimensões e localizações de todas as
-       * spritesheets carregadas e as conhece pelos nomes. O componente gráfico apenas
-       * solicita essas informações para o AssetManager, bem como uma referência para
-       * uma instância ativa da textura/spritesheet desejada. O Asset manager por sua
-       * vez retorna essas informações na forma de um JsonValue. */
-      //creature.graphic_comp.setupStriteSheet(spritesheet_name);
-      //creature.graphic_comp = new GraphicComponent(creature, spritesheet_name, 13, 21, 131);
 
       // build final creature
       applyCreaturePrototype(creature, prototype);
@@ -129,8 +125,7 @@ public class CreatureLoader {
 
     JsonValue creature_json = protoypeFactory(prototype);
 
-    System.out.println(TAG + ": JsonValue of build creature: ");
-    System.out.println( creature_json.toString() );
+    Log.d(TAG + " - JsonValue of build creature:\n" + creature_json.toString());
 
     creature_obj.body_comp.setHealthPtsMax( creature_json.getFloat("health") );
     creature_obj.body_comp.setHealthPtsCurr( creature_json.getFloat("health") );
@@ -179,7 +174,7 @@ private static JsonValue protoypeFactory(JsonValue arc_creature) {
           try {
             creature.addChild(val.name, new JsonValue( val.asString() ) );
           } catch (Exception e) {
-            System.out.println(TAG + ": " + e.getMessage() + " (" + val.name + ")");
+            Log.w(TAG + " - " + e.getMessage() + " (" + val.name + ")");
           }
 
         }
@@ -193,140 +188,9 @@ private static JsonValue protoypeFactory(JsonValue arc_creature) {
 }
 
 
+  // TODO: 03/01/19 Usar esta função para desemaranhar o processo de carregamento e cosntrução de criaturas
   private static Creature loadCreatureFromMapObject(MapObject mobj) {
     return null;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ========================= LOGIC END ========================= //
-
-}
-
-
-
-class OldCreatureLoader {
-
-  private static final String TAG = "OldCreatureLoader";
-
-
-
-
-  public static Array<Creature> LoadCreaturesFromTiledMap(TiledMap tiled_map) {
-
-    // First we isolate our desired layer
-    MapLayer creat_layer = tiled_map.getLayers().get("creatures");
-
-    // If the layer does not exist, return
-    if (creat_layer == null) {
-      System.out.println(TAG + ": Camada creatures não encontrada ");
-      return null;
-    }
-    else
-      System.out.println(TAG + ": Camada creatures encontrada ");
-
-    // If the creatures layer is present, we gather all objects in it
-    MapObjects objs =  creat_layer.getObjects();
-
-    // Of the layer has no objects, return
-    if (objs.getCount() == 0) {
-      System.out.println(TAG + ": Nenhuma criatura encontrada na camada creatures");
-      return null;
-    }
-    else
-      System.out.println(TAG + ": Criaturas presentes, carregando... ");
-
-    // Now we are sure we got at least one creature to be loaded, lets prepare an array
-    Array<Creature> array = new Array<Creature>();
-
-    // Get a iterator to load all object's data one by one
-    Iterator<MapObject> itr_mo = objs.iterator();
-
-    // Load all creatures and insert them into the array
-    while (itr_mo.hasNext())
-      array.add( loadCreatureFromMapObject(itr_mo.next()) );
-
-    // Debug stuff
-    System.out.println(TAG + ": Criaturas carregadas do mapa: ");
-    try {
-      for (int i = 0; i < array.size; i++)
-        System.out.println("\t" + array.get(i).getName() );
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    // Done
-    return array;
-
-  }
-
-
-  // Here goes the core of the creature parsing and loading process
-  private static Creature loadCreatureFromMapObject(MapObject mobj) {
-
-    // Get the properties of the creature
-    MapProperties prop = mobj.getProperties();
-
-    try {
-      JsonValue prototype = NopeIslandGame.asset_manager.creature( "fighter" );
-      System.out.println(TAG + ":\n\t" + prototype);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    // Show all present properties
-    System.out.println(TAG + ": Dumping data of " + mobj.getName() );
-    Iterator<String> itr_str = prop.getKeys();
-    while (itr_str.hasNext()) {
-      String key = itr_str.next();
-      Object val = prop.get( key );
-      System.out.println("\t" + key + " : " + val.toString() );
-    }
-
-    // Creates new creature with the objects name as the creature name
-    Creature creature = new Creature(mobj.getName());
-
-    try {
-      creature.setDisplayName( prop.get("display_name").toString() );
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    try {
-      creature.setControllable( Boolean.parseBoolean(prop.get("controllable").toString()) );
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    // Sets the position given from the map object to the creature
-    try {
-      creature.setPosition(
-          Float.parseFloat(prop.get("x").toString()),
-          Float.parseFloat(prop.get("y").toString())
-      );
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
-    }
-
-    // All creatures are selectable
-    creature.command_comp.enableCommand("SelectCommand");
-
-    // Ready to go
-    return creature;
-
-  }
-
-
 
 }

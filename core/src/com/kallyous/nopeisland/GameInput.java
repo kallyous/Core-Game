@@ -22,7 +22,7 @@ public class GameInput extends InputAdapter {
 
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    System.out.println(TAG + ": Screen Touched at (" + screenX + ", " + screenY + ")");
+    Log.d(TAG + " - Screen Touched at (" + screenX + ", " + screenY + ")");
     return false;
   }
 

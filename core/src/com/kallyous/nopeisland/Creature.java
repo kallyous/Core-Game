@@ -34,35 +34,23 @@ public class Creature extends Entity {
 // ========================= CREATION BEGIN ========================= //
 
   Creature(String name) {
-
     super(name);
-
     graphic_comp = new GraphicComponent(this);
-
     body_comp = new BodyComponent(this);
-
     combat_comp = new CombatComponent(this);
-
     this.command_comp.enableCommand("SelectCommand");
-
     this.setType(CREATURE);
-
   }
 
-  Creature(String name, String spritesheet_name, int sheet_cols, int sheet_rows, int region_index) {
-
+  Creature(String name, String spritesheet_name,
+           int sheet_cols, int sheet_rows, int region_index) {
     super(name);
-
-    graphic_comp = new GraphicComponent(this, spritesheet_name, sheet_cols, sheet_rows, region_index);
-
+    graphic_comp = new GraphicComponent(this, spritesheet_name,
+        sheet_cols, sheet_rows, region_index);
     body_comp = new BodyComponent(this);
-
     combat_comp = new CombatComponent(this);
-
     this.command_comp.enableCommand("SelectCommand");
-
     this.setType(CREATURE);
-
   }
 
 // ========================= CREATION END ========================= //
@@ -89,7 +77,7 @@ public class Creature extends Entity {
 
     // Tests world collision for the touched point
     if ( worldTouched(touched_spot) ) {
-      System.out.println(TAG + ": We got a collision with the touch.");
+      Log.i(TAG + " - We got a collision with the touch.");
       NopeIslandGame.command_manager.sendCommand( new SelectCommand(this) );
       return true;
     }
@@ -99,7 +87,7 @@ public class Creature extends Entity {
 
   @Override
   public String info() {
-    String info = (TAG + ": info on " + this.getDisplayName() + "\n"
+    String info = ("Info on " + this.getDisplayName() + "\n"
         + "\tlocation " + this.getX() + " " + this.getY() + "\n"
         + "\tHP " + body_comp.getHealthPtsCurr()  + "/" + body_comp.getHealthPtsMax() + "\n"
         + "\tAP " + body_comp.getActionPtsCurr() + "/" + body_comp.getActionPtsMax() );

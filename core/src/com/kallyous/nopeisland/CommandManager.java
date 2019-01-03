@@ -57,13 +57,13 @@ public class CommandManager {
       if (command.target != null) {
 
         // Debug message about this shit.
-        System.out.println(TAG + ": Flushing " + command.getTAG() + " for "
+        Log.i(TAG + " - Flushing " + command.getTAG() + " for "
             + command.target.getName() );
 
         if ( command.target.executeCommand(command) )
-          System.out.println(TAG + ": Comando aceito e executado ");
+          Log.i(TAG + " - Comando aceito e executado ");
         else
-          System.out.println(TAG + ": Comando rejeitado. ");
+          Log.i(TAG + " - Comando rejeitado. ");
 
       }
       // If target is null, the command is for multiple targets and shall be broadcast
@@ -74,13 +74,13 @@ public class CommandManager {
 
           // Send a debug message for each entity which execute the command
           if ( entity.executeCommand(command) ) {
-            System.out.println(TAG + ": " + entity.getName() + " executou "
+            Log.d(TAG + " - " + entity.getName() + " executou "
                 + command.getTAG() );
           }
         }
 
         // Shout out if command was flushed to several fuckers
-        System.out.println(TAG + ": Flushed " + command.getTAG() + " by broadcast");
+        Log.i(TAG + " - Flushed " + command.getTAG() + " by broadcast");
       }
 
     }
@@ -89,7 +89,7 @@ public class CommandManager {
 
   // Insere commando na fila
   public boolean sendCommand(Command command) {
-    System.out.println(TAG + ": Enfileirando commando " + command.getTAG()
+    Log.i(TAG + " - Enfileirando commando " + command.getTAG()
         + " para " + command.target.getName() );
     return pending_commands.offer(command);
   }
@@ -97,16 +97,16 @@ public class CommandManager {
   // Adiciona nova entidade a ser commandada
   public boolean addListenner(Entity entity) {
     if ( !(listeners.contains(entity)) ) {
-      System.out.println(TAG + ": Adicionando " + entity.getName() + " em " + TAG);
+      Log.i(TAG + ": Adicionando " + entity.getName() + " em " + TAG);
       return listeners.add(entity);
     }
-    System.out.println(TAG + ": " + entity.getName() + " já presente em "
+    Log.i(TAG + ": " + entity.getName() + " já presente em "
         + TAG + ", nada a fazer");
     return false;
   }
 
   public boolean remListenner(Entity entity) {
-    System.out.println(TAG + ": Removendo " + entity.getName() + " de "
+    Log.i(TAG + ": Removendo " + entity.getName() + " de "
         + TAG + ", se presente");
     return listeners.remove(entity);
   }

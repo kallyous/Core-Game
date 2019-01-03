@@ -37,7 +37,7 @@ public class MainMenuInterface extends UserInterface {
       @Override
       public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          System.out.println(TAG + ": Play game touched, sending RunGameCommand to manager.");
+          Log.i(TAG + " - Play game touched, sending RunGameCommand to manager.");
           NopeIslandGame.command_manager.sendCommand(new RunGameCommand(this));
           return true;
         }
@@ -80,7 +80,7 @@ public class MainMenuInterface extends UserInterface {
       @Override
       public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          System.out.println(TAG + ": Exit game touched, sending ExitCommand to manager.");
+          Log.i(TAG + " - Exit game touched, sending ExitCommand to manager.");
           NopeIslandGame.command_manager.sendCommand(new ExitCommand(this));
           return true;
         }

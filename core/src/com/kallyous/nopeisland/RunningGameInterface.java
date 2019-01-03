@@ -39,7 +39,7 @@ public class RunningGameInterface extends UserInterface {
       @Override
       public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          System.out.println(TAG + ": Main Menu Button touched, sending OpenMainMenuCommand to manager.");
+          Log.d(TAG + " - Main Menu Button touched, sending OpenMainMenuCommand to manager.");
           NopeIslandGame.command_manager.sendCommand(new OpenMainMenuCommand(this));
           return true;
         }
@@ -67,7 +67,7 @@ public class RunningGameInterface extends UserInterface {
       @Override
       public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          System.out.println(TAG + ": Pass Turn Button touched, setting selection_name text");
+          Log.d(TAG + " - Pass Turn Button touched, setting selection_name text");
           NopeIslandGame.command_manager.sendCommand( new SelectCommand(this) );
           return true;
         }
@@ -98,7 +98,7 @@ public class RunningGameInterface extends UserInterface {
       @Override
       public void update(float dt) {
         if (Entity.selected_entity == null)
-          this.label.setText("Nada selecionado.");
+          this.label.setText("Nada selecionado");
         else
           this.label.setText( Entity.selected_entity.getDisplayName() );
       }

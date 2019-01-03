@@ -72,7 +72,7 @@ public class UserInterface {
 
   // Sets all UiElements' input connections
   public void setInputMultiplexer(InputMultiplexer multiplexer) {
-    System.out.println(TAG + ": Setting InputMultiplexer to "
+    Log.i(TAG + ": Setting InputMultiplexer to "
         + multiplexer.toString() );
     for (UiElement elem : elements) multiplexer.addProcessor(elem);
   }
@@ -177,7 +177,7 @@ class UiElement extends Entity {
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     if (collidedScreen(screenX, screenY)) {
-      System.out.println(TAG + ": Sending a SelectCommand. ");
+      Log.i(TAG + ": Sending a SelectCommand. ");
       NopeIslandGame.command_manager.sendCommand( new SelectCommand(this) );
     }
     return false;

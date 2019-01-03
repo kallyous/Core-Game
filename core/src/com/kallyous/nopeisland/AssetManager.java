@@ -40,7 +40,7 @@ public class AssetManager {
     JsonValue default_textures = jsonreader.parse( Gdx.files.internal("data/GraphicAssets.json") );
     for(JsonValue val : default_textures) {
       try {
-        System.out.println(TAG + ": Loading " + val.name + " at '" + val.asString() + "'");
+        Log.i(TAG + " - Loading " + val.name + " at '" + val.asString() + "'");
         Texture texture = new Texture( Gdx.files.internal(val.asString()) );
         textures.put(val.name, texture);
       } catch (Exception e) {
@@ -53,7 +53,7 @@ public class AssetManager {
     creatures = jsonreader.parse( Gdx.files.internal("data/Creatures.json") );
 
     debug_str = creatures.prettyPrint(JsonWriter.OutputType.json, 50);
-    System.out.println(TAG + ": Creatures.json content is\n" + debug_str);
+    Log.i(TAG + " - Creatures.json content is\n" + debug_str);
 
     // Plants.json
 

@@ -97,7 +97,7 @@ public class GraphicComponent {
 
     sprite = new Sprite(texture_region[region_index]);
 
-    System.out.println(TAG + ": " + entity.getName() +
+    Log.d(TAG + " - " + entity.getName() +
       " created with custom graphics and a single region.");
 
   // ------------------------- Entity Size Setup -------------------------- //
@@ -114,7 +114,7 @@ public class GraphicComponent {
 
   // Default graphics loads the '?' symbol from the GUI texture
   private void setupDefaultGraphics() {
-    System.out.println(TAG + ": Entity " + entity.getName() + " created with generic graphics.");
+    Log.d(TAG + " - Entity " + entity.getName() + " created with generic graphics.");
     sheet_cols = 16;
     sheet_rows = 16;
     region_index = 0;

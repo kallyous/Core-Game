@@ -129,9 +129,9 @@ abstract public class Entity implements InputProcessor {
     if (NopeIslandGame.entities.containsKey(name)) {
 
       // Debug warnings
-      System.out.println(TAG + ": Entidade com nome " + name + " já existe. É o objeto "
+      Log.d(TAG + " - Entidade com nome " + name + " já existe. É o objeto "
           + NopeIslandGame.entities.get(name).toString() );
-      System.out.println(TAG + ": Duplicatas não são permitidas, emitindo comando de autodestruição");
+      Log.d(TAG + " - Duplicatas não são permitidas, emitindo comando de autodestruição");
 
       // Issue self destruct command
       NopeIslandGame.command_manager.sendCommand( new DestroyEntityCommand(this) );
@@ -145,7 +145,7 @@ abstract public class Entity implements InputProcessor {
       NopeIslandGame.entities.put(name, this);
 
       // Debug notification
-      System.out.println(TAG + ": Adicionado " + name + " à Hashtable de entidades.");
+      Log.i(TAG + " - Adicionado " + name + " à Hashtable de entidades.");
 
     }
 
@@ -191,7 +191,7 @@ abstract public class Entity implements InputProcessor {
 
     if ( (point.x > x_location && point.x < x_location + width) &&
         (point.y > y_location && point.y < y_location + height) ) {
-      System.out.println(TAG + ".worldTouched() detected world collision on " + name);
+      Log.d(TAG + " - worldTouched() detected world collision on " + name);
       return true;
     }
 
@@ -205,7 +205,7 @@ abstract public class Entity implements InputProcessor {
     int h = Gdx.graphics.getHeight();
     if ( (screenX > x_location && screenX < x_location + width) &&
         ( (screenY > h - y_location - height) && (screenY < h - y_location) ) ) {
-      System.out.println(TAG + ": collidedScreen() detected screen collision on " + name);
+      Log.d(TAG + " - collidedScreen() detected screen collision on " + name);
       return true;
     }
     return false;
@@ -216,7 +216,7 @@ abstract public class Entity implements InputProcessor {
    * and/or unplug the entity of any records/trackers, the method destroy() will finally unplug
    * the entity from the hash table. */
   public void destroy() {
-    System.out.println(TAG + ": Destroying " + this.toString() + "(" + name + ")");
+    Log.i(TAG + " - Destroying " + this.toString() + "(" + name + ")");
     this.dispose();
     NopeIslandGame.entities.remove(this);
   }
@@ -394,7 +394,7 @@ abstract public class Entity implements InputProcessor {
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     if (collidedScreen(screenX, screenY)) {
-      System.out.println(TAG + ": " + this.getName() + " touched.");
+      Log.d(TAG + " - " + this.getName() + " touched.");
       return true;
     }
     return false;

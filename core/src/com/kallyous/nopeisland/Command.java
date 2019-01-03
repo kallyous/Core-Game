@@ -32,7 +32,7 @@ abstract public class Command {
   Command(String target_name) {
     this.target = NopeIslandGame.entities.get(target_name);
     if (this.target == null) {
-      System.out.println(TAG + ": Falha ao localizar " + target_name + " na hash table.");
+      Log.w(TAG + " - Falha ao localizar " + target_name + " na hash table.");
     }
   }
 
@@ -87,7 +87,7 @@ class OpenMainMenuCommand extends Command {
 
   @Override
   public boolean execute() {
-    System.out.println(TAG + ": Pausando jogo e abrindo menu principal. ");
+    Log.i(TAG + " - Pausando jogo e abrindo menu principal. ");
     NopeIslandGame.game.switchTo(NopeIslandGame.main_menu_state);
     return true;
   }
@@ -129,7 +129,7 @@ class RunGameCommand extends Command {
 
   @Override
   public boolean execute() {
-    System.out.println(TAG + ": Starting/Resuming game. ");
+    Log.i(TAG + " - Starting/Resuming game. ");
     NopeIslandGame.game.switchTo(NopeIslandGame.running_state);
     return true;
   }
@@ -166,7 +166,7 @@ class ExitCommand extends Command {
 
   @Override
   public boolean execute() {
-    System.out.println(TAG + ": Issuing shutdow flag. Game is about to exit.");
+    Log.i(TAG + " - Issuing shutdow flag. Game is about to exit.");
     NopeIslandGame.game_running = false;
     return true;
   }
@@ -210,13 +210,13 @@ class SelectCommand extends Command {
   public boolean execute() {
 
     if (this.target == Entity.selected_entity) {
-      System.out.println(TAG + ": Unselecting " + this.target.getName() );
+      Log.i(TAG + " - Unselecting " + this.target.getName() );
       Entity.selected_entity = null;
     }
     else {
-      System.out.println(TAG + ": Selecting " + this.target.getName());
+      Log.i(TAG + " - Selecting " + this.target.getName());
       Entity.selected_entity = this.target;
-      System.out.println( this.target.info() );
+      Log.d( TAG + " - Info on selected entity:\n" + this.target.info() );
     }
 
     return true;
@@ -288,9 +288,15 @@ class SetTextContentCommand extends Command {
   @Override
   public boolean execute() {
     // TODO: 26/12/18 Adicionar try{}catch(){} adequado
-    TextElement target_te = (TextElement)this.target;
-    target_te.label.setText(content);
-    return true;
+    try {
+      TextElement target_te = (TextElement)this.target;
+      target_te.label.setText(content);
+      return true;
+    } catch (Exception e) {
+      Log.e(TAG + " - Comando gerou um erro durante a execução.");
+      e.printStackTrace();
+      return false;
+    }
   }
 
 // ========================= LOGIC END ========================= //
@@ -332,8 +338,8 @@ class DestroyEntityCommand extends Command {
 
   @Override
   public boolean execute() {
-    System.out.println(TAG + ": Destroying " + target.getName());
-    System.out.println(TAG + ": Object is  " + target.toString());
+    Log.i(TAG + " - Destroying " + target.getName());
+    Log.i(TAG + " - Object is  " + target.toString());
     target.destroy();
     return true;
   }

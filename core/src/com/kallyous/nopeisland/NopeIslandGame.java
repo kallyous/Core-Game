@@ -78,6 +78,8 @@ public class NopeIslandGame extends ApplicationAdapter {
   @Override
   public void create() {
 
+    Log.LOG_LEVEL = Log.DEBUG;
+
     // Starts timer
     state_time = 0f;
 
@@ -189,7 +191,7 @@ public class NopeIslandGame extends ApplicationAdapter {
 // ------------------------- GameShutdown ------------------------- //
 
   private void gameShutdown() {
-    System.out.println(TAG + ": Game no longer running. Shutting down. ");
+    Log.i(TAG + " - Game no longer running. Shutting down. ");
     pause();
     dispose();
     System.exit(0);

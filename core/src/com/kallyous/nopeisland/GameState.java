@@ -158,7 +158,7 @@ class RunningGameState extends GameState {
   @Override
   public void init() {
 
-    System.out.println(TAG + ": init() ");
+    Log.d(TAG + " - init() ");
 
     gui.setInputMultiplexer(input_multiplexer);
 
@@ -234,7 +234,7 @@ class MainMenuGameState extends GameState {
   @Override
   public void init() {
     // Each game state handles input it's own way.
-    System.out.println(TAG + ": init() ");
+    Log.d(TAG + " - init() ");
     gui.setInputMultiplexer(input_multiplexer);
   }
 
