@@ -34,7 +34,7 @@ public class GraphMap {
       vertexes[y] = new GraphMapVertex[width];
       for (x = 0; x < width; x++) {
         // Adds new vertex
-        vertexes[y][x] = new GraphMapVertex(x,y);
+        vertexes[y][x] = new GraphMapVertex(x,y); // TODO: 03/01/19 Potencial Error ?
         /** If X > 0, we create a edge connecting this vertex with the one at it's left
          *  and one coming from that too. */
         if (x > 0) {
@@ -62,10 +62,10 @@ public class GraphMap {
   public void test() {
     int i = 0;
     for (GraphMapEdge e : edges) {
-      System.out.println("edge" + i + ":");
-      System.out.println("\tsource: x" + e.getSource().getX() + "y" + e.getSource().getY());
-      System.out.println("\ttarget: x" + e.getTarget().getX() + "y" + e.getTarget().getY());
-      System.out.println();
+      Log.d("edge" + i + ":");
+      Log.d("\tsource: x" + e.getSource().getX() + "y" + e.getSource().getY());
+      Log.d("\ttarget: x" + e.getTarget().getX() + "y" + e.getTarget().getY());
+      Log.d("");
       i++;
     }
   }

@@ -87,70 +87,11 @@ public class WorldMap {
 
 // ========================= LOGIC BEGIN ========================= //
 
-  // Loads Robert and creates a creature based on him.
-  public void loadRobert() {
+  // Draw collision boxes for entities
 
-    Iterator prop_itr = tiled_map.getProperties().getKeys();
+  // Draw grid
 
-    String key;
-    String value;
 
-    while (prop_itr.hasNext()) {
-      key = prop_itr.next().toString();
-      value = tiled_map.getProperties().get(key).toString();
-      Log.d(TAG + " - " + key + " -> " + value );
-    }
-
-    MapLayers layers = tiled_map.getLayers();
-
-    Iterator<MapLayer> lay_itr = layers.iterator();
-
-    while (lay_itr.hasNext()) {
-      MapLayer layer = lay_itr.next();
-      Log.d( TAG + " - Layer " + layer.getName() );
-      Log.d( layer.toString() );
-    }
-
-    MapObjects objs =  layers.get("creatures").getObjects();
-
-    MapProperties robert_props = objs.get("robert").getProperties();
-
-    Iterator rob_itr = robert_props.getKeys();
-
-    Log.d("Robert data:");
-
-    while (rob_itr.hasNext()) {
-
-      key = rob_itr.next().toString();
-
-      try {
-        value = robert_props.get(key).toString();
-        Log.d("\t" + key + " : " + value);
-      }
-
-      catch (NullPointerException e) {
-        Log.d("\t" + key + " : null");
-      }
-
-    }
-
-    Creature robert = new Creature("robert");
-
-    float x_val = Float.parseFloat(robert_props.get("x").toString());
-    float y_val = Float.parseFloat(robert_props.get("y").toString());
-
-    int x = (int)( x_val );
-    int y = (int)( y_val );
-
-    robert.setPosition( x, y );
-
-    robert.command_comp.enableCommand("SelectCommand");
-
-    robert.graphic_comp.setRegionIndex(2);
-
-    entities.add(robert);
-
-  }
 
   public void update(float dt) {
     if (world_running)
