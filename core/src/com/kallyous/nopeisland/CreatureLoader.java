@@ -8,7 +8,6 @@ import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
 import java.util.Iterator;
@@ -92,7 +91,7 @@ public class CreatureLoader {
       float y = Float.parseFloat( props.get("y").toString() );
 
       // Prepare a new creature with the given name
-      Creature creature = new Creature(creature_name);
+      Creature creature = new Creature(creature_name, spritesheet_name, 13, 21, 131);
 
       // Set display name
       creature.setDisplayName(display_name);
@@ -109,6 +108,7 @@ public class CreatureLoader {
        * uma instância ativa da textura/spritesheet desejada. O Asset manager por sua
        * vez retorna essas informações na forma de um JsonValue. */
       //creature.graphic_comp.setupStriteSheet(spritesheet_name);
+      //creature.graphic_comp = new GraphicComponent(creature, spritesheet_name, 13, 21, 131);
 
       // build final creature
       applyCreaturePrototype(creature, prototype);

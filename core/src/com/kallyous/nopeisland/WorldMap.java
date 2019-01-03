@@ -75,16 +75,6 @@ public class WorldMap {
     for (int i = 0; i < lvl_creats.size; i++)
       this.entities.add(lvl_creats.get(i));
 
-    // Test content of all creatures
-    for (Creature creep : lvl_creats)
-      System.out.println(TAG + ": " + creep.getName() + " has HP " + creep.body_comp.getHealthPtsMax() );
-
-    // Set a (?) sprite creature right into the world.
-    /*Creature c = new Creature("Interrogator");
-    c.setPosition(19*32, 35*32);
-    c.command_comp.enableCommand("SelectCommand");
-    this.entities.add(c);*/
-
     // Snaps every owned entity into the multiplexer
     setInputMultiplexer(input_multiplexer);
 

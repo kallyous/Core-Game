@@ -1,5 +1,6 @@
 {
   "DefaultTerrain" : "graphic/terrain_atlas.png",
   "DefaultInterface" : "graphic/interface.png",
-  "HumanBaseMale" : "graphic/human_male_base.png"
+  "HumanBaseMale" : "graphic/human_base_male.png",
+  "HumanBaseFemale" : "graphic/human_base_female.png"
 }

@@ -208,9 +208,17 @@ class SelectCommand extends Command {
 
   @Override
   public boolean execute() {
-    System.out.println(TAG + ": " + this.target.getName()
-        + " received a select command.");
-    Entity.selected_entity = this.target;
+
+    if (this.target == Entity.selected_entity) {
+      System.out.println(TAG + ": Unselecting " + this.target.getName() );
+      Entity.selected_entity = null;
+    }
+    else {
+      System.out.println(TAG + ": Selecting " + this.target.getName());
+      Entity.selected_entity = this.target;
+      System.out.println( this.target.info() );
+    }
+
     return true;
   }
 

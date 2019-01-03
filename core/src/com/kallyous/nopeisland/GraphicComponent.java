@@ -2,6 +2,7 @@ package com.kallyous.nopeisland;
 
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -60,6 +61,18 @@ public class GraphicComponent {
     this.entity = entity;
     this.texture = NopeIslandGame.uiTexture;
     setupDefaultGraphics();
+    setRegionIndex(region_index);
+  }
+
+  // Here we take the name of a Texture inside the AssetManager's textures hash table
+  GraphicComponent(Entity entity, String spritesheet_name,
+                   int sheet_cols, int sheet_rows,  int region_index) {
+    this.entity = entity;
+    this.texture = NopeIslandGame.asset_manager.textures.get(spritesheet_name);
+    this.sheet_cols = sheet_cols;
+    this.sheet_rows = sheet_rows;
+    this.region_index = region_index;
+    setupTextureRegions();
     setRegionIndex(region_index);
   }
 

@@ -43,6 +43,24 @@ public class Creature extends Entity {
 
     combat_comp = new CombatComponent(this);
 
+    this.command_comp.enableCommand("SelectCommand");
+
+    this.setType(CREATURE);
+
+  }
+
+  Creature(String name, String spritesheet_name, int sheet_cols, int sheet_rows, int region_index) {
+
+    super(name);
+
+    graphic_comp = new GraphicComponent(this, spritesheet_name, sheet_cols, sheet_rows, region_index);
+
+    body_comp = new BodyComponent(this);
+
+    combat_comp = new CombatComponent(this);
+
+    this.command_comp.enableCommand("SelectCommand");
+
     this.setType(CREATURE);
 
   }
@@ -77,6 +95,15 @@ public class Creature extends Entity {
     }
 
     return false;
+  }
+
+  @Override
+  public String info() {
+    String info = (TAG + ": info on " + this.getDisplayName() + "\n"
+        + "\tlocation " + this.getX() + " " + this.getY() + "\n"
+        + "\tHP " + body_comp.getHealthPtsCurr()  + "/" + body_comp.getHealthPtsMax() + "\n"
+        + "\tAP " + body_comp.getActionPtsCurr() + "/" + body_comp.getActionPtsMax() );
+    return info;
   }
 
 // ========================= LOGIC END ========================= //

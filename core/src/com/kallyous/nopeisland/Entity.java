@@ -257,6 +257,10 @@ abstract public class Entity implements InputProcessor {
   }
 
 
+  // Get some general data as string
+  public String info() {
+    return getDisplayName();
+  }
 
   // Entity Type
   public int type() {
