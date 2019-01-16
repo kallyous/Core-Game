@@ -393,16 +393,16 @@ abstract public class Entity implements InputProcessor {
 
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    if (collidedScreen(screenX, screenY)) {
-      Log.d(TAG + " - " + this.getName() + " touched.");
-      return true;
-    }
     return false;
   }
 
 
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+    if (collidedScreen(screenX, screenY)) {
+      Log.d(TAG + " - " + this.getName() + " touched.");
+      return true;
+    }
     return false;
   }
 

@@ -175,7 +175,7 @@ class UiElement extends Entity {
 
   // By default, each button just issues a SelectCommand to itself (potentially useless)
   @Override
-  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+  public boolean touchUp(int screenX, int screenY, int pointer, int button) {
     if (collidedScreen(screenX, screenY)) {
       Log.i(TAG + ": Sending a SelectCommand. ");
       CoreGame.command_manager.sendCommand( new SelectCommand(this) );

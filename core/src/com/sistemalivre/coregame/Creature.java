@@ -26,6 +26,8 @@ public class Creature extends Entity {
   // Possui funcionalidades de combate
   public CombatComponent combat_comp;
 
+  public MovementComponent move_comp;
+
 // ========================= DATA END ========================= //
 
 
@@ -38,6 +40,7 @@ public class Creature extends Entity {
     graphic_comp = new GraphicComponent(this);
     body_comp = new BodyComponent(this);
     combat_comp = new CombatComponent(this);
+    move_comp = new MovementComponent(this);
     this.command_comp.enableCommand("SelectCommand");
     this.setType(CREATURE);
   }
@@ -49,6 +52,7 @@ public class Creature extends Entity {
         sheet_cols, sheet_rows, region_index);
     body_comp = new BodyComponent(this);
     combat_comp = new CombatComponent(this);
+    move_comp = new MovementComponent(this);
     this.command_comp.enableCommand("SelectCommand");
     this.setType(CREATURE);
   }
@@ -70,14 +74,14 @@ public class Creature extends Entity {
   public void dispose() {}
 
   @Override
-  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+  public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 
     // Converts touched location into Vector3, for OrthographicCamera consuming it
     Vector3 touched_spot = new Vector3(screenX, screenY, 0);
 
     // Tests world collision for the touched point
     if ( worldTouched(touched_spot) ) {
-      Log.i(TAG + " - We got a collision with the touch.");
+      Log.d(TAG + " - We got a collision with the touch.");
       CoreGame.command_manager.sendCommand( new SelectCommand(this) );
       return true;
     }

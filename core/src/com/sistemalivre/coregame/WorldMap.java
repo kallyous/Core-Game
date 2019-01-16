@@ -2,6 +2,7 @@ package com.sistemalivre.coregame;
 
 
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.utils.Array;
 
 /** ========================= WORLD MAP ========================= **/
 
-public class WorldMap {
+public class WorldMap implements InputProcessor {
 
   private static final String TAG = "WorldMap";
 
@@ -92,12 +93,6 @@ public class WorldMap {
 
 // ========================= LOGIC BEGIN ========================= //
 
-  // Draw collision boxes for entities
-
-  // Draw grid
-
-
-
   public void update(float dt) {
     if (world_running)
       for (Entity ent : entities) ent.update(dt);
@@ -158,7 +153,7 @@ public class WorldMap {
     // Debug collision boxes
     shape_rederer.setProjectionMatrix(camera.combined);
     shape_rederer.begin(ShapeRenderer.ShapeType.Line);
-    // Lets go and check all entities for drawing
+    // Lets go and check all entities for drawing their bounding boxes
     for (Entity ent : entities) {
       // Check, for each entity, if it is of a drawable type.
       switch (ent.type()) {
@@ -187,9 +182,11 @@ public class WorldMap {
     shape_rederer.setColor(Color.GRAY);
 
     for (int i = 0; i < 101; i++) {
-      shape_rederer.line(0, i*32, 100*32, i*32);
+      shape_rederer.line(0, i*Global.tile_size,
+          100*Global.tile_size, i*Global.tile_size);
       for (int j = 0; j < 101; j++) {
-        shape_rederer.line(j*32, 0, j*32, 100*32);
+        shape_rederer.line(j*Global.tile_size, 0,
+            j*Global.tile_size, 100*Global.tile_size);
       }
     }
 
@@ -218,18 +215,74 @@ public class WorldMap {
   public void setInputMultiplexer(InputMultiplexer input_multiplexer) {
     this.input_multiplexer = input_multiplexer;
     for (Entity ent : entities) input_multiplexer.addProcessor(ent);
+    input_multiplexer.addProcessor(this);
   }
 
   public void reloadInputMultiplexer() {
     clearInputMultiplexer();
     for (Entity ent : entities) input_multiplexer.addProcessor(ent);
+    input_multiplexer.addProcessor(this);
   }
 
   public void clearInputMultiplexer() {
     for (Entity ent : entities) input_multiplexer.removeProcessor(ent);
+    input_multiplexer.removeProcessor(this);
   }
 
 // ========================= SETTERS / GETTERS END ========================= //
+
+
+
+
+
+  @Override
+  public boolean keyDown(int keycode) {
+    return false;
+  }
+
+
+  @Override
+  public boolean keyUp(int keycode) {
+    return false;
+  }
+
+
+  @Override
+  public boolean keyTyped(char character) {
+    return false;
+  }
+
+
+  @Override
+  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    return false;
+  }
+
+
+  @Override
+  public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+    Log.d(TAG + ": Map touched.");
+    return true;
+  }
+
+
+  @Override
+  public boolean touchDragged(int screenX, int screenY, int pointer) {
+    return false;
+  }
+
+
+  @Override
+  public boolean mouseMoved(int screenX, int screenY) {
+    return false;
+  }
+
+
+  @Override
+  public boolean scrolled(int amount) {
+    return false;
+  }
+
 
 
 }

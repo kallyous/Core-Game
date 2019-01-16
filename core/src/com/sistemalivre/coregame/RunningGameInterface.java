@@ -37,7 +37,7 @@ public class RunningGameInterface extends UserInterface {
 
       // Overrides the touchDown() input event to generate the desired command
       @Override
-      public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+      public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
           Log.d(TAG + " - Main Menu Button touched, sending OpenMainMenuCommand to manager.");
           CoreGame.command_manager.sendCommand(new OpenMainMenuCommand(this));
@@ -65,7 +65,7 @@ public class RunningGameInterface extends UserInterface {
 
       // Overrides the touchDown() input event to generate the desired command
       @Override
-      public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+      public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
           Log.d(TAG + " - Pass Turn Button touched, setting selection_name text");
           CoreGame.command_manager.sendCommand( new SelectCommand(this) );

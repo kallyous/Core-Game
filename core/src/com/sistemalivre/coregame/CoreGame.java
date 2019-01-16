@@ -111,13 +111,14 @@ public class CoreGame extends ApplicationAdapter {
 		// Sets the multiplexer as the active shit
 		//Gdx.input.setInputProcessor(input_multiplexer);
 
-		// Prepara estado do menu principal do jogo, connectando-o com controladores globais
-		main_menu_state = new MainMenuGameState(command_manager, input_multiplexer);
-		main_menu_state.setScreenbatch(guiBatch);
-
 		// Prepara estado de execução do jogo, conectando-o com controladores globais
 		running_state = new RunningGameState(command_manager, input_multiplexer);
 		running_state.setScreenbatch(guiBatch);
+		running_state.clear(); // Stupid hack to release the input multiplexer. TODO: More elegant solution.
+
+		// Prepara estado do menu principal do jogo, connectando-o com controladores globais
+		main_menu_state = new MainMenuGameState(command_manager, input_multiplexer);
+		main_menu_state.setScreenbatch(guiBatch);
 
 		// Põe jogo em seu estado inicial.
 		main_menu_state.switchTo(main_menu_state);
