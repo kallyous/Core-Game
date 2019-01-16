@@ -42,6 +42,8 @@ public class WorldMap {
 
   private boolean world_running = false;
 
+  private GraphMap graph;
+
 // ========================= DATA END ========================= //
 
 
@@ -67,6 +69,9 @@ public class WorldMap {
 
     // Set initial camera position, relative to the tiled map
     camera.position.set(23*32, 40*32, 0);
+
+    // Prepares graph map
+    graph = new GraphMap(100, 100);
 
     // Loads all creatures from the map's creatures layer
     Array<Creature> lvl_creats = CreatureLoader.LoadCreaturesFromTiledMap(tiled_map);
