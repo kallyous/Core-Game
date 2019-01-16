@@ -117,6 +117,8 @@ public class WorldMap {
     camera.update();
     otm_renderer.render();
 
+    drawGrid();
+
     drawEntities();
 
   }
@@ -170,7 +172,7 @@ public class WorldMap {
           ((Creature)ent).graphic_comp.drawCollBox(shape_rederer);
           break;
         case Entity.PLANT:
-          Log.w(TAG + " - No plants implemetned");
+          Log.w(TAG + " - No plants implemented");
           break;
         case Entity.STRUCTURE:
           Log.w(TAG + " - No structures implemented");
@@ -183,6 +185,21 @@ public class WorldMap {
     shape_rederer.end();
 
 
+  }
+
+
+  private void drawGrid() {
+    shape_rederer.begin(ShapeRenderer.ShapeType.Line);
+    shape_rederer.setColor(Color.GRAY);
+
+    for (int i = 0; i < 101; i++) {
+      shape_rederer.line(0, i*32, 100*32, i*32);
+      for (int j = 0; j < 101; j++) {
+        shape_rederer.line(j*32, 0, j*32, 100*32);
+      }
+    }
+
+    shape_rederer.end();
   }
 
 
