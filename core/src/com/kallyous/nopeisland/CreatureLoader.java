@@ -109,6 +109,9 @@ public class CreatureLoader {
       // build final creature
       applyCreaturePrototype(creature, prototype);
 
+      // Setup creature's sprite offset
+      creature.graphic_comp.setSpriteOffsetX(creature.getWidth()/2);
+
       // Add it to the array to return
       creeps.add(creature);
 
@@ -130,14 +133,28 @@ public class CreatureLoader {
     creature_obj.body_comp.setHealthPtsMax( creature_json.getFloat("health") );
     creature_obj.body_comp.setHealthPtsCurr( creature_json.getFloat("health") );
 
+    creature_obj.setWidth((int)creature_json.getFloat("width"));
+    creature_obj.setHeight((int)creature_json.getFloat("height"));
+
   }
 
 
 
 private static JsonValue protoypeFactory(JsonValue arc_creature) {
 
-    JsonValue creature = arc_creature;
-    JsonValue prototype = NopeIslandGame.asset_manager.creature( creature.getString("prototype") );
+    // TODO: Maybe the asset manager shit should be final
+    JsonValue prototype = NopeIslandGame.asset_manager.creature( arc_creature.getString("prototype") );
+
+    // Pseudo deep copy
+    JsonValue creature = new JsonValue("creature");
+    for (JsonValue val : arc_creature) {
+      // In case of unceonvertible types, print a stacktrace and ignore it
+      try {
+        creature.addChild( val.name, new JsonValue(val.asString()) );
+      } catch (Exception e) {
+        Log.w(TAG + " - " + e.getMessage() + " (" + val.name + ")");
+      }
+    }
 
     if (prototype != null) {
 

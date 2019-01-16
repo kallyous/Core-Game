@@ -7,7 +7,7 @@
     "moves" : 3,
     "damage" : 3,
     "width" : 32,
-    "height" : 32,
+    "height" : 48,
     "default_actions" : [ "Select", "Move", "Attack", "Deffend", "SwitchControl", "Die" ],
     "description" : "This is a living creature. Until it's not. Then it's dead. Or not. Undeads are popular."
   },

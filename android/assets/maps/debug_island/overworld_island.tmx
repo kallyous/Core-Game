@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#000000" nextlayerid="3" nextobjectid="4">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#000000" nextlayerid="3" nextobjectid="6">
  <tileset firstgid="1" name="terrain_atlas.png" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
   <image source="../../graphic/terrain_atlas.png" width="1024" height="1024"/>
  </tileset>
@@ -17,10 +17,26 @@
     <property name="spritesheet" value="HumanBaseMale"/>
    </properties>
   </object>
-  <object id="2" name="arya" type="creature" x="640" y="2080" width="32" height="32">
+  <object id="2" name="arya" type="creature" x="928" y="1952" width="32" height="32">
    <properties>
     <property name="controllable" type="bool" value="true"/>
     <property name="display_name" value="Arya Spark"/>
+    <property name="prototype" value="fighter"/>
+    <property name="spritesheet" value="HumanBaseFemale"/>
+   </properties>
+  </object>
+  <object id="4" name="john" type="creature" x="544" y="1888" width="32" height="32">
+   <properties>
+    <property name="controllable" value="true"/>
+    <property name="display_name" value="John Sow"/>
+    <property name="prototype" value="fighter"/>
+    <property name="spritesheet" value="HumanBaseMale"/>
+   </properties>
+  </object>
+  <object id="5" name="samsa" type="creature" x="768" y="1888" width="32" height="32">
+   <properties>
+    <property name="controllable" type="bool" value="true"/>
+    <property name="display_name" value="Samsa Stump"/>
     <property name="prototype" value="fighter"/>
     <property name="spritesheet" value="HumanBaseFemale"/>
    </properties>

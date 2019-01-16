@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.Hashtable;
 
@@ -105,7 +106,7 @@ public class NopeIslandGame extends ApplicationAdapter {
     // SpriteBach exclusivo para GUI, pois será o únco a não utilizar projeção no mapa
     guiBatch = new SpriteBatch();
     /** Sprite batches takes sprites and prepares them to send to the GPU/CPU for rendering the
-     final image. Very important stuff. Do your worship, human. */
+        final image. Very important stuff. Do your worship, human. */
 
     // Sets the multiplexer as the active shit
     //Gdx.input.setInputProcessor(input_multiplexer);

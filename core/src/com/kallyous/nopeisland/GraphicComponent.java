@@ -3,12 +3,12 @@ package com.kallyous.nopeisland;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 
 
@@ -36,6 +36,9 @@ public class GraphicComponent {
 
   // Size of regions/frames and how much of them there is in the texture sheet
   private int sheet_cols, sheet_rows;
+
+  // Offsets for this component
+  private float x_offset, y_offset;
 
   // Index of the current texture region to be rendered at runtime
   private int region_index;
@@ -117,6 +120,8 @@ public class GraphicComponent {
     Log.d(TAG + " - Entity " + entity.getName() + " created with generic graphics.");
     sheet_cols = 16;
     sheet_rows = 16;
+    x_offset = 0;
+    y_offset = 0;
     region_index = 0;
     setupTextureRegions();
   }
@@ -159,8 +164,24 @@ public class GraphicComponent {
 
 
 
+  public void drawCollBox(ShapeRenderer shape_rederer) {
+    shape_rederer.setColor(Color.GREEN);
+    shape_rederer.rect(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+    shape_rederer.setColor(Color.YELLOW);
+    shape_rederer.rect(sprite.getX() - 32, sprite.getY() - 32,
+        sprite.getWidth() + 64, sprite.getHeight() + 64);
+    shape_rederer.setColor(Color.RED);
+    shape_rederer.rect(sprite.getX() - 64, sprite.getY() - 64,
+        sprite.getWidth() + 128, sprite.getHeight() + 128);
+  }
+
+
+
   public void update(float dt) {
-    sprite.setPosition(entity.getX(), entity.getY());
+    //sprite.setPosition(entity.getX(), entity.getY());
+    //float x_offset = entity.getX() - (entity.getWidth()/2);
+    //float y_offset = entity.getY() - (entity.getHeight()/2);
+    sprite.setPosition(entity.getX() - x_offset, entity.getY() - y_offset);
   }
 
 // ========================= LOGIC END ========================= //
@@ -197,6 +218,17 @@ public class GraphicComponent {
   public int getSheetRows() {
     return sheet_rows;
   }
+
+
+
+  // X Offset
+  public float getSpriteOffsetX() { return x_offset; }
+  public void setSpriteOffsetX(float x) { x_offset = x; }
+
+
+
+  public float getSpriteOffsetY() { return y_offset; }
+  public void setSpriteOffsetY(float y) { y_offset = y; }
 
 // ========================= GETTERS / SETTERS END ========================= //
 

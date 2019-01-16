@@ -2,8 +2,10 @@ package com.kallyous.nopeisland;
 
 
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObjects;
@@ -33,6 +35,8 @@ public class WorldMap {
   public OrthographicCamera camera;
 
   public OrthogonalTiledMapRenderer otm_renderer;
+
+  private ShapeRenderer shape_rederer;
 
   private SpriteBatch entities_batch;
 
@@ -64,6 +68,8 @@ public class WorldMap {
     otm_renderer = new OrthogonalTiledMapRenderer(tiled_map);
     camera = new OrthographicCamera();
     camera.setToOrtho(false, s_width, s_height);
+
+    shape_rederer = new ShapeRenderer();
 
     Entity.setCamera(camera);
 
@@ -111,6 +117,13 @@ public class WorldMap {
     camera.update();
     otm_renderer.render();
 
+    // Implementing debug for collision boxes
+    shape_rederer.setProjectionMatrix(camera.combined);
+    shape_rederer.begin(ShapeRenderer.ShapeType.Line);
+    shape_rederer.setColor(Color.BLUE);
+    shape_rederer.rect(23*32, 40*32, 64, 64);
+    shape_rederer.end();
+
     drawEntities();
 
   }
@@ -151,6 +164,30 @@ public class WorldMap {
 
     // Finishes the batch thing and send the package to the GPU for rendering
     entities_batch.end();
+
+    // Debug collision boxes
+    shape_rederer.setProjectionMatrix(camera.combined);
+    shape_rederer.begin(ShapeRenderer.ShapeType.Line);
+    shape_rederer.setColor(Color.BLUE);
+    // Lets go and check all entities for drawing
+    for (Entity ent : entities) {
+      // Check, for each entity, if it is of a drawable type.
+      switch (ent.type()) {
+        case Entity.CREATURE:
+          ((Creature)ent).graphic_comp.drawCollBox(shape_rederer);
+          break;
+        case Entity.PLANT:
+          Log.w(TAG + " - No plants implemetned");
+          break;
+        case Entity.STRUCTURE:
+          Log.w(TAG + " - No structures implemented");
+          break;
+        case Entity.PICKUP:
+          Log.w(TAG + " - No pickups implemented");
+          break;
+      }
+    }
+    shape_rederer.end();
 
   }
 
