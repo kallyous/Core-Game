@@ -117,13 +117,6 @@ public class WorldMap {
     camera.update();
     otm_renderer.render();
 
-    // Implementing debug for collision boxes
-    shape_rederer.setProjectionMatrix(camera.combined);
-    shape_rederer.begin(ShapeRenderer.ShapeType.Line);
-    shape_rederer.setColor(Color.BLUE);
-    shape_rederer.rect(23*32, 40*32, 64, 64);
-    shape_rederer.end();
-
     drawEntities();
 
   }
@@ -165,10 +158,10 @@ public class WorldMap {
     // Finishes the batch thing and send the package to the GPU for rendering
     entities_batch.end();
 
+
     // Debug collision boxes
     shape_rederer.setProjectionMatrix(camera.combined);
     shape_rederer.begin(ShapeRenderer.ShapeType.Line);
-    shape_rederer.setColor(Color.BLUE);
     // Lets go and check all entities for drawing
     for (Entity ent : entities) {
       // Check, for each entity, if it is of a drawable type.
@@ -188,6 +181,7 @@ public class WorldMap {
       }
     }
     shape_rederer.end();
+
 
   }
 

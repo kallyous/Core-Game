@@ -25,21 +25,5 @@
     <property name="spritesheet" value="HumanBaseFemale"/>
    </properties>
   </object>
-  <object id="4" name="john" type="creature" x="544" y="1888" width="32" height="32">
-   <properties>
-    <property name="controllable" value="true"/>
-    <property name="display_name" value="John Sow"/>
-    <property name="prototype" value="fighter"/>
-    <property name="spritesheet" value="HumanBaseMale"/>
-   </properties>
-  </object>
-  <object id="5" name="samsa" type="creature" x="768" y="1888" width="32" height="32">
-   <properties>
-    <property name="controllable" type="bool" value="true"/>
-    <property name="display_name" value="Samsa Stump"/>
-    <property name="prototype" value="fighter"/>
-    <property name="spritesheet" value="HumanBaseFemale"/>
-   </properties>
-  </object>
  </objectgroup>
 </map>

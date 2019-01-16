@@ -165,14 +165,14 @@ public class GraphicComponent {
 
 
   public void drawCollBox(ShapeRenderer shape_rederer) {
+
     shape_rederer.setColor(Color.GREEN);
-    shape_rederer.rect(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
-    shape_rederer.setColor(Color.YELLOW);
-    shape_rederer.rect(sprite.getX() - 32, sprite.getY() - 32,
-        sprite.getWidth() + 64, sprite.getHeight() + 64);
-    shape_rederer.setColor(Color.RED);
-    shape_rederer.rect(sprite.getX() - 64, sprite.getY() - 64,
-        sprite.getWidth() + 128, sprite.getHeight() + 128);
+    shape_rederer.rect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
+
+    shape_rederer.setColor(Color.LIGHT_GRAY);
+    shape_rederer.rect(sprite.getX(), sprite.getY(),
+        sprite.getWidth(), sprite.getHeight());
+
   }
 
 
