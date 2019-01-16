@@ -4,8 +4,8 @@ gwt {
     minHeapSize="1G"
 
     src = files(file("src/")) // Needs to be in front of "modules" below.
-    modules 'com.kallyous.nopeisland.GdxDefinition'
-    devModules 'com.kallyous.nopeisland.GdxDefinitionSuperdev'
+    modules 'com.sistemalivre.coregame.GdxDefinition'
+    devModules 'com.sistemalivre.coregame.GdxDefinitionSuperdev'
     project.webAppDirName = 'webapp'
 
     compiler {
