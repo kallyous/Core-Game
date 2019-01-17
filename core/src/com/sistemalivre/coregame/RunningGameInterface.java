@@ -30,17 +30,18 @@ public class RunningGameInterface extends UserInterface {
 // ------------------------- UiElement - Main Menu Button -------------------------- //
 
     // Main Menu Button (setup and add)
-    elements.add( new UiElement("btn_main_menu", 8)  {
-
+    elements.add(
+        new UiElement("btn_main_menu", 8)  {
       // Custom debug tag
       private static final String TAG = "MainMenuButton";
-
       // Overrides the touchDown() input event to generate the desired command
       @Override
-      public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+      public boolean touchUp(int screenX, int screenY,
+                             int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
           Log.d(TAG + " - Main Menu Button touched, sending OpenMainMenuCommand to manager.");
-          CoreGame.command_manager.sendCommand(new OpenMainMenuCommand(this));
+          CoreGame.command_manager.sendCommand(
+              new OpenMainMenuCommand(this));
           return true;
         }
         return false;
@@ -76,7 +77,8 @@ public class RunningGameInterface extends UserInterface {
 
     };
 
-    // This entity will process it1s own selection // TODO: 27/12/18 All selections shall be handled somewhere else
+    // This entity will process it1s own selection
+    // TODO: 27/12/18 All selections shall be handled somewhere else
     btn_pass.command_comp.enableCommand("SelectCommand");
 
     // Register in the hash map
@@ -93,7 +95,8 @@ public class RunningGameInterface extends UserInterface {
 // ------------------------- TextElement - Name of Entity -------------------------- //
 
     // Creates a text element to hold the name of the selected entitie
-    TextElement sel_txt = new TextElement("selection_name", "Nada selecionado") {
+    TextElement sel_txt = new TextElement(
+        "selection_name", "Nada selecionado") {
       private static final String TAG = "SelectionTextElement";
       @Override
       public void update(float dt) {

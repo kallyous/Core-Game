@@ -3,6 +3,8 @@ package com.sistemalivre.coregame;
 
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,14 +12,16 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.MathUtils;
 
 
 
-/** ========================= WORLD MAP ========================= **/
+// ========================= WORLD MAP ========================= //
 
-public class WorldMap implements InputProcessor {
+public class WorldMap implements GestureListener, InputProcessor {
 
   private static final String TAG = "WorldMap";
 
@@ -32,7 +36,7 @@ public class WorldMap implements InputProcessor {
 
   public OrthogonalTiledMapRenderer otm_renderer;
 
-  private ShapeRenderer shape_rederer;
+  private ShapeRenderer shape_renderer;
 
   private SpriteBatch entities_batch;
 
@@ -43,6 +47,8 @@ public class WorldMap implements InputProcessor {
   private boolean world_running = false;
 
   private GraphMap graph;
+
+  private GestureDetector gesture_detector;
 
 // ========================= DATA END ========================= //
 
@@ -65,7 +71,7 @@ public class WorldMap implements InputProcessor {
     camera = new OrthographicCamera();
     camera.setToOrtho(false, s_width, s_height);
 
-    shape_rederer = new ShapeRenderer();
+    shape_renderer = new ShapeRenderer();
 
     Entity.setCamera(camera);
 
@@ -81,6 +87,8 @@ public class WorldMap implements InputProcessor {
     // Insert all loaded creatures into the game running world
     for (int i = 0; i < lvl_creats.size; i++)
       this.entities.add(lvl_creats.get(i));
+
+    gesture_detector = new GestureDetector(this);
 
     // Snaps every owned entity into the multiplexer
     setInputMultiplexer(input_multiplexer);
@@ -143,6 +151,9 @@ public class WorldMap implements InputProcessor {
         case Entity.PICKUP:
           Log.w(TAG + " - No pickups implemented");
           break;
+        case Entity.MOVEMARK:
+          ((SupportUIElement)ent).graphic_comp.draw(entities_batch);
+          break;
       }
 
     }
@@ -152,14 +163,14 @@ public class WorldMap implements InputProcessor {
 
 
     // Debug collision boxes
-    shape_rederer.setProjectionMatrix(camera.combined);
-    shape_rederer.begin(ShapeRenderer.ShapeType.Line);
+    shape_renderer.setProjectionMatrix(camera.combined);
+    shape_renderer.begin(ShapeRenderer.ShapeType.Line);
     // Lets go and check all entities for drawing their bounding boxes
     for (Entity ent : entities) {
       // Check, for each entity, if it is of a drawable type.
       switch (ent.type()) {
         case Entity.CREATURE:
-          ((Creature)ent).graphic_comp.drawCollBox(shape_rederer);
+          ((Creature)ent).graphic_comp.drawCollBox(shape_renderer);
           break;
         case Entity.PLANT:
           Log.w(TAG + " - No plants implemented");
@@ -172,26 +183,33 @@ public class WorldMap implements InputProcessor {
           break;
       }
     }
-    shape_rederer.end();
+    shape_renderer.end();
 
 
   }
 
 
+
+  public void addEntity(Entity ent) {
+    this.entities.add(ent);
+  }
+
+
+
   private void drawGrid() {
-    shape_rederer.begin(ShapeRenderer.ShapeType.Line);
-    shape_rederer.setColor(Color.GRAY);
+    shape_renderer.begin(ShapeRenderer.ShapeType.Line);
+    shape_renderer.setColor(Color.GRAY);
 
     for (int i = 0; i < 101; i++) {
-      shape_rederer.line(0, i*Global.tile_size,
+      shape_renderer.line(0, i*Global.tile_size,
           100*Global.tile_size, i*Global.tile_size);
       for (int j = 0; j < 101; j++) {
-        shape_rederer.line(j*Global.tile_size, 0,
+        shape_renderer.line(j*Global.tile_size, 0,
             j*Global.tile_size, 100*Global.tile_size);
       }
     }
 
-    shape_rederer.end();
+    shape_renderer.end();
   }
 
 
@@ -200,6 +218,8 @@ public class WorldMap implements InputProcessor {
     world_running = false;
     clearInputMultiplexer();
   }
+
+
 
   public void resume() {
     world_running = true;
@@ -216,24 +236,127 @@ public class WorldMap implements InputProcessor {
   public void setInputMultiplexer(InputMultiplexer input_multiplexer) {
     this.input_multiplexer = input_multiplexer;
     for (Entity ent : entities) input_multiplexer.addProcessor(ent);
-    input_multiplexer.addProcessor(this);
+    input_multiplexer.addProcessor(this); // That's for InputProcessor
+    input_multiplexer.addProcessor(gesture_detector);
   }
+
+
 
   public void reloadInputMultiplexer() {
     clearInputMultiplexer();
     for (Entity ent : entities) input_multiplexer.addProcessor(ent);
-    input_multiplexer.addProcessor(this);
+    input_multiplexer.addProcessor(this); // That's for InputProcessor
+    input_multiplexer.addProcessor(gesture_detector);
   }
+
+
 
   public void clearInputMultiplexer() {
     for (Entity ent : entities) input_multiplexer.removeProcessor(ent);
-    input_multiplexer.removeProcessor(this);
+    input_multiplexer.removeProcessor(this); // That's for InputProcessor
+    input_multiplexer.removeProcessor(gesture_detector);
   }
 
 // ========================= SETTERS / GETTERS END ========================= //
 
 
 
+
+// ========================= INPUT HANDLING BEGIN ========================= //
+
+  @Override
+  public boolean touchDown(float x, float y, int pointer, int button) {
+    return false;
+  }
+
+
+  @Override
+  public boolean tap(float screenX, float screenY, int count, int button) {
+    Log.d(TAG + ": Map touched.");
+    if (Entity.selected_entity != null) {
+      // Prepares a vector with the coordinates of the touch on the screen.
+      Vector3 target = new Vector3(screenX, screenY, 0);
+      // Using the world camera, unprojects this coordinates from the screen into the world coordinates.
+      camera.unproject(target);
+      switch (Entity.selected_entity.type()) {
+        case Entity.CREATURE:
+          if (Entity.selected_entity.isControllable()) {
+            // Locate entrance vertex
+            GraphMapVertex entrance = graph.getVertexAt(
+                Entity.selected_entity.getTileX(),
+                Entity.selected_entity.getTileY()
+            );
+            // Locate exit vertex
+            GraphMapVertex exit = graph.getVertexAt(
+                (int)(target.x/Global.tile_size),
+                (int)(target.y/Global.tile_size)
+            );
+            // Send the command
+            CoreGame.command_manager.sendCommand(
+                new TracePathCommand(Entity.selected_entity, entrance, exit));
+          }
+          else {
+            Log.d(TAG + ": " + Entity.selected_entity.getName()
+                + " is not controllable.");
+          }
+          break;
+        default:
+          Log.d(TAG + ": No action for the selected entity.");
+          break;
+      }
+    }
+    return true;
+  }
+
+
+  @Override
+  public boolean longPress(float x, float y) {
+    return false;
+  }
+
+
+  @Override
+  public boolean fling(float velocityX, float velocityY, int button) {
+    return false;
+  }
+
+
+  @Override
+  public boolean pan(float x, float y, float deltaX, float deltaY) {
+    float effective_drag_x = deltaX*camera.zoom;
+    float effective_drag_y = deltaY*camera.zoom;
+    Vector3 new_position = new Vector3(
+        camera.position.x - effective_drag_x,
+        camera.position.y + effective_drag_y,
+        0
+    );
+    camera.position.set(new_position);
+    return true;
+  }
+
+
+  @Override
+  public boolean panStop(float x, float y, int pointer, int button) {
+    return false;
+  }
+
+
+  @Override
+  public boolean zoom(float initialDistance, float distance) {
+    return false;
+  }
+
+
+  @Override
+  public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+    return false;
+  }
+
+
+  @Override
+  public void pinchStop() {
+
+  }
 
 
   @Override
@@ -262,29 +385,7 @@ public class WorldMap implements InputProcessor {
 
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-    Log.d(TAG + ": Map touched.");
-    if (Entity.selected_entity != null) {
-      // Prepares a vector with the coordinates of the touch on the screen.
-      Vector3 target = new Vector3(screenX, screenY, 0);
-      // Using the world camera, unprojects this coordinates from the screen into the world coordinates.
-      camera.unproject(target);
-      switch (Entity.selected_entity.type()) {
-        case Entity.CREATURE:
-          if (Entity.selected_entity.isControllable()) {
-            CoreGame.command_manager.sendCommand(
-              new TracePathCommand(Entity.selected_entity, target));
-          }
-          else {
-            Log.d(TAG + ": " + Entity.selected_entity.getName()
-                + " is not controllable.");
-          }
-          break;
-        default:
-          Log.d(TAG + ": No action for the selected entity.");
-          break;
-      }
-    }
-    return true;
+    return false;
   }
 
 
@@ -302,9 +403,12 @@ public class WorldMap implements InputProcessor {
 
   @Override
   public boolean scrolled(int amount) {
-    return false;
+//    int z = MathUtils.clamp(amount, 1, 4);
+    float zoom = camera.zoom + amount;
+    camera.zoom = (float)MathUtils.clamp(zoom, 1.0, 10.0);
+    return true;
   }
 
-
+// ========================= INPUT HANDLING END ========================= //
 
 }

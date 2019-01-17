@@ -1,8 +1,10 @@
 package com.sistemalivre.coregame;
 
 
-
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Queue;
+
+import java.util.Vector;
 
 
 
@@ -30,6 +32,8 @@ abstract public class Command {
   Command(Entity target) {
     this.target = target;
   }
+
+
 
   // Issued for specific entities of known name
   Command(String target_name) {
@@ -88,6 +92,7 @@ class OpenMainMenuCommand extends Command {
   }
 
 
+
   @Override
   public boolean execute() {
     Log.i(TAG + " - Pausando jogo e abrindo menu principal. ");
@@ -130,6 +135,8 @@ class RunGameCommand extends Command {
     return TAG;
   }
 
+
+
   @Override
   public boolean execute() {
     Log.i(TAG + " - Starting/Resuming game. ");
@@ -154,6 +161,7 @@ class ExitCommand extends Command {
 
 
 
+
 // ========================= CONSTRUCTION BEGIN ========================= //
 
   ExitCommand(Entity target) {
@@ -174,6 +182,8 @@ class ExitCommand extends Command {
     return true;
   }
 
+
+
   @Override
   public String getTAG() {
     return TAG;
@@ -193,6 +203,7 @@ class ExitCommand extends Command {
 class SelectCommand extends Command {
 
   private static final String TAG = "SelectCommand";
+
 
 
 
@@ -224,6 +235,8 @@ class SelectCommand extends Command {
 
     return true;
   }
+
+
 
   @Override
   public String getTAG() {
@@ -260,17 +273,12 @@ class SetTextContentCommand extends Command {
 // ========================= CREATION BEGIN ========================= //
 
   SetTextContentCommand(Entity entity, String content) {
-
     super(entity);
-
     this.content = content;
-
   }
 
   SetTextContentCommand(String entity_name, String content) {
-
     super(entity_name);
-
     this.content = content;
 
   }
@@ -286,6 +294,7 @@ class SetTextContentCommand extends Command {
   public String getTAG() {
     return TAG;
   }
+
 
 
   @Override
@@ -339,6 +348,7 @@ class DestroyEntityCommand extends Command {
   }
 
 
+
   @Override
   public boolean execute() {
     Log.i(TAG + " - Destroying " + target.getName());
@@ -367,7 +377,9 @@ class TracePathCommand extends Command {
 
 // ========================= DATA BEGIN ========================= //
 
-  public Vector3 location;
+  public GraphMapVertex entrance;
+
+  public GraphMapVertex exit;
 
 // ========================= DATA END ========================= //
 
@@ -376,10 +388,12 @@ class TracePathCommand extends Command {
 
 // ========================= CREATION BEGIN ========================= //
 
-  TracePathCommand(Entity entity, Vector3 location) {
+  TracePathCommand(Entity entity, GraphMapVertex entrance, GraphMapVertex exit) {
     super(entity);
-    this.location = location;
+    this.entrance = entrance;
+    this.exit = exit;
   }
+
 
 
   @Override
@@ -388,9 +402,22 @@ class TracePathCommand extends Command {
   }
 
 
+
   @Override
   public boolean execute() {
-    Log.d(TAG + ": Tracing path for " + target.getName() + ", to " + location.toString() );
+    Log.d(TAG + ": Tracing path for " + target.getName());
+    Queue<GraphMapVertex> path = breadthFirstSearch(entrance, exit);
+    // TODO: delete all previous movement markers by broadcasting a destroy
+    GraphMapVertex g;
+    for (int i = 0; i < path.size;) {
+      g = path.removeFirst();
+      SupportUIElement element = new SupportUIElement("mov_mark" + path.size);
+      element.setPosition(
+          g.getX()*Global.tile_size,
+          g.getY()*Global.tile_size
+      );
+      GameState.world.addEntity(element);
+    }
     return true;
   }
 
@@ -401,7 +428,90 @@ class TracePathCommand extends Command {
 
 // ========================= LOGIC BEGIN ========================= //
 
+  private Queue<GraphMapVertex> breadthFirstSearch(
+      GraphMapVertex entrance, GraphMapVertex exit) {
 
+    Queue<GraphMapVertex> frontier = new Queue<GraphMapVertex>();
+    Vector<GraphMapVertex> visited = new Vector<GraphMapVertex>();
+
+    Queue<GraphMapVertex> path;
+
+    GraphMapVertex current;
+
+    frontier.addLast(entrance);
+
+    while(frontier.size > 0) {
+      // Pop a vertex from frontier into the current vertex
+      current = frontier.removeFirst();
+
+      // Early exit
+      if (current == exit) {
+        current.visit();
+        visited.add(current);
+        break;
+      }
+
+      // Only process if not visited yet
+      if (!current.isVisited()) {
+        current.visit();
+        // Enqueue all it's neighbors for later parsing
+        for(GraphMapEdge edge : current.getEdges()) {
+          // Skip already visited vertexes
+          if(!edge.getTarget().isVisited()) {
+            // Marks into the parsing neighbor vertex where we came from when we reached it.
+            edge.getTarget().setSourceEdge(edge);
+            // Enqueue at the tail
+            frontier.addLast(edge.getTarget());
+          }
+        }
+        // Throws current parsed vertex into the visited group
+        visited.add(current);
+      }
+      // If curr_vertex is not exit:
+      // For each vertex connect by edges of curr_vertex, add it to frontier if thei're not in parsed.
+      // Add curr_vertex into parsed
+      // Else, return the reverse path
+    }
+    // The final path is in reverse order, so we reverse it so we are left with the desired path for the entity to move through
+    path = reversePath(exit);
+    // The vertexes have to be cleared from data.
+    for (GraphMapVertex vertex : frontier)
+      vertex.clear();
+    for (GraphMapVertex vertex : visited)
+      vertex.clear();
+    // Return the path
+    return path;
+  }
+
+
+
+  private Queue<GraphMapVertex> reversePath(GraphMapVertex exit) {
+
+    Queue<GraphMapVertex> path = new Queue<GraphMapVertex>();
+
+    GraphMapVertex current;
+
+    path.addLast(exit);
+
+    // Crashing with NullPointerException here when attempting to move a single square.
+    try {
+      current = exit.getSourceEdge().getSource();
+      while (current != null) {
+        path.addLast(current);
+        try {
+          current = current.getSourceEdge().getSource();
+        }
+        catch (NullPointerException e) {
+          break;
+        }
+      }
+    }
+    catch (NullPointerException e) {
+      e.printStackTrace();
+    }
+
+    return path;
+  }
 
 // ========================= LOGIC END ========================= //
 

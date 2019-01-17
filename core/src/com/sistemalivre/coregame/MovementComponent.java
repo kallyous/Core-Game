@@ -16,6 +16,10 @@ class MovementComponent {
 
   public Entity entity;
 
+  public GraphMap graph;
+
+  public GraphMapVertex curr_vertex;
+
 // ========================= DATA END ========================= //
 
 

@@ -47,6 +47,9 @@ abstract public class Entity implements InputProcessor {
   // Things creatures can pass over and will trigger something when so
   public static final int PICKUP = 5;
 
+  // Path markers for movement preview
+  public static final int MOVEMARK = 6;
+
 
 
 // ------------------------- Facing Directions -------------------------- //

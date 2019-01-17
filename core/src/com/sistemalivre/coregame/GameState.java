@@ -22,7 +22,7 @@ abstract public class GameState {
   public static GameState previous_state;
 
   // Holds reference to the current game world map or level
-  public WorldMap world;
+  public static WorldMap world;
 
   // Multiplexer to be used within the current state
   protected InputMultiplexer input_multiplexer;
