@@ -406,18 +406,29 @@ class TracePathCommand extends Command {
   @Override
   public boolean execute() {
     Log.d(TAG + ": Tracing path for " + target.getName());
+
     Queue<GraphMapVertex> path = breadthFirstSearch(entrance, exit);
+
     // TODO: delete all previous movement markers by broadcasting a destroy
+
     GraphMapVertex g;
+
     for (int i = 0; i < path.size;) {
+
       g = path.removeFirst();
-      SupportUIElement element = new SupportUIElement("mov_mark" + path.size);
+
+      SupportUIElement element = new SupportUIElement(
+          "mov_mark_" + path.size, 26);
+
       element.setPosition(
           g.getX()*Global.tile_size,
           g.getY()*Global.tile_size
       );
+
       GameState.world.addEntity(element);
+
     }
+
     return true;
   }
 

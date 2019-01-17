@@ -274,26 +274,39 @@ public class WorldMap implements GestureListener, InputProcessor {
   public boolean tap(float screenX, float screenY, int count, int button) {
     Log.d(TAG + ": Map touched.");
     if (Entity.selected_entity != null) {
+
       // Prepares a vector with the coordinates of the touch on the screen.
       Vector3 target = new Vector3(screenX, screenY, 0);
+
       // Using the world camera, unprojects this coordinates from the screen into the world coordinates.
       camera.unproject(target);
+
+      // Enforces grid alignment
+      int rest = (int)target.x % Global.tile_size;
+      target.x = (int)target.x - rest;
+      rest = (int)target.y % Global.tile_size;
+      target.y = (int)target.y - rest;
+
       switch (Entity.selected_entity.type()) {
         case Entity.CREATURE:
           if (Entity.selected_entity.isControllable()) {
+
             // Locate entrance vertex
             GraphMapVertex entrance = graph.getVertexAt(
-                Entity.selected_entity.getTileX(),
-                Entity.selected_entity.getTileY()
+                (int)Entity.selected_entity.getX()/Global.tile_size,
+                (int)Entity.selected_entity.getY()/Global.tile_size
             );
+
             // Locate exit vertex
             GraphMapVertex exit = graph.getVertexAt(
-                (int)(target.x/Global.tile_size),
-                (int)(target.y/Global.tile_size)
+                (int)target.x/Global.tile_size,
+                (int)target.y/Global.tile_size
             );
+
             // Send the command
             CoreGame.command_manager.sendCommand(
                 new TracePathCommand(Entity.selected_entity, entrance, exit));
+
           }
           else {
             Log.d(TAG + ": " + Entity.selected_entity.getName()
@@ -304,6 +317,21 @@ public class WorldMap implements GestureListener, InputProcessor {
           Log.d(TAG + ": No action for the selected entity.");
           break;
       }
+    }
+    else if (button == 1){ // Right button places new fucker aligned ot the grid.
+      Vector3 location = new Vector3(screenX, screenY, 0);
+      camera.unproject(location);
+
+      // Forces grid alignment
+      int rest = (int)location.x % Global.tile_size;
+      location.x = (int)location.x - rest;
+      rest = (int)location.y % Global.tile_size;
+      location.y = (int)location.y - rest;
+
+      Creature pep = new Creature("Fucker_" + screenX + "_" + screenY);
+      pep.setPosition(location.x, location.y);
+
+      CoreGame.running_state.world.addEntity(pep);
     }
     return true;
   }

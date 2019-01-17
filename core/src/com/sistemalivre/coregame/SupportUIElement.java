@@ -32,8 +32,9 @@ public class SupportUIElement extends Entity implements InputProcessor {
 
   @Override
   public void update(float dt) {
-
+    graphic_comp.update(dt);
   }
+
 
 
   @Override
