@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 
@@ -262,6 +263,27 @@ public class WorldMap implements InputProcessor {
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
     Log.d(TAG + ": Map touched.");
+    if (Entity.selected_entity != null) {
+      // Prepares a vector with the coordinates of the touch on the screen.
+      Vector3 target = new Vector3(screenX, screenY, 0);
+      // Using the world camera, unprojects this coordinates from the screen into the world coordinates.
+      camera.unproject(target);
+      switch (Entity.selected_entity.type()) {
+        case Entity.CREATURE:
+          if (Entity.selected_entity.isControllable()) {
+            CoreGame.command_manager.sendCommand(
+              new TracePathCommand(Entity.selected_entity, target));
+          }
+          else {
+            Log.d(TAG + ": " + Entity.selected_entity.getName()
+                + " is not controllable.");
+          }
+          break;
+        default:
+          Log.d(TAG + ": No action for the selected entity.");
+          break;
+      }
+    }
     return true;
   }
 

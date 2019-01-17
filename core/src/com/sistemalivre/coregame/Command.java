@@ -2,6 +2,9 @@ package com.sistemalivre.coregame;
 
 
 
+import com.badlogic.gdx.math.Vector3;
+
+
 
 /** ========================= COMMAND ========================= **/
 
@@ -343,6 +346,62 @@ class DestroyEntityCommand extends Command {
     target.destroy();
     return true;
   }
+
+// ========================= LOGIC END ========================= //
+
+}
+
+
+
+
+
+
+/** ========================= TracePathCommand ========================= **/
+
+class TracePathCommand extends Command {
+
+  private static final String TAG = "TracePathCommand";
+
+
+
+
+// ========================= DATA BEGIN ========================= //
+
+  public Vector3 location;
+
+// ========================= DATA END ========================= //
+
+
+
+
+// ========================= CREATION BEGIN ========================= //
+
+  TracePathCommand(Entity entity, Vector3 location) {
+    super(entity);
+    this.location = location;
+  }
+
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
+
+
+  @Override
+  public boolean execute() {
+    Log.d(TAG + ": Tracing path for " + target.getName() + ", to " + location.toString() );
+    return true;
+  }
+
+// ========================= CREATION END ========================= //
+
+
+
+
+// ========================= LOGIC BEGIN ========================= //
+
+
 
 // ========================= LOGIC END ========================= //
 
