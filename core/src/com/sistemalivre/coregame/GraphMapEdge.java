@@ -1,9 +1,16 @@
 package com.sistemalivre.coregame;
 
 
+
+// ========================== GraphMapEdge ========================== //
+
 public class GraphMapEdge {
 
-  // ========================================== DATA ========================================== //
+  public static final String TAG = "GraphMapEdge";
+
+
+
+// =========================== DATA =========================== //
 
   private GraphMapVertex source_vertex;
   private GraphMapVertex target_vertex;
@@ -11,13 +18,15 @@ public class GraphMapEdge {
 
 
 
-  // ====================================== CREATION ========================================== //
+
+// ======================= CONSTRUCTION =========================== //
 
   GraphMapEdge(GraphMapVertex source, GraphMapVertex target) {
     this.source_vertex = source;
     this.target_vertex = target;
     this.weight = 0;
   }
+
 
   GraphMapEdge(GraphMapVertex source, GraphMapVertex target, int weight) {
     this.source_vertex = source;
@@ -27,7 +36,8 @@ public class GraphMapEdge {
 
 
 
-  // ==================================== GETTERS / SETTERS =================================== //
+
+// ===================== GET / SET ==================== //
 
   // Source Vertex
   public GraphMapVertex getSource() {
@@ -37,6 +47,7 @@ public class GraphMapEdge {
     this.source_vertex = source_vertex;
   }
 
+
   // Target Vertex
   public GraphMapVertex getTarget() {
     return target_vertex;
@@ -45,6 +56,7 @@ public class GraphMapEdge {
     this.target_vertex = target_vertex;
   }
 
+
   // Weight
   public int getWeight() {
     return weight;
@@ -52,4 +64,5 @@ public class GraphMapEdge {
   public void setWeight(int weight) {
     this.weight = weight;
   }
+
 }

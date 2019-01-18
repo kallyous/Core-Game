@@ -1,14 +1,11 @@
 package com.sistemalivre.coregame;
 
 
-
 import com.badlogic.gdx.utils.Array;
 
 
 
-
-
-/** ========================= RUNNING GAME GUI ========================= **/
+// ========================= RUNNING GAME GUI ========================= //
 
 // GUI for the main menu or title screen
 public class RunningGameInterface extends UserInterface {
@@ -17,7 +14,7 @@ public class RunningGameInterface extends UserInterface {
 
 
 
-// ========================= CONSTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   RunningGameInterface(float width, float height) {
 
@@ -27,7 +24,7 @@ public class RunningGameInterface extends UserInterface {
 
 
 
-// ------------------------- UiElement - Main Menu Button -------------------------- //
+// --------------- UiElement - Main Menu Button ---------------- //
 
     // Main Menu Button (setup and add)
     elements.add(
@@ -39,7 +36,8 @@ public class RunningGameInterface extends UserInterface {
       public boolean touchUp(int screenX, int screenY,
                              int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          Log.d(TAG + " - Main Menu Button touched, sending OpenMainMenuCommand to manager.");
+          Log.d(TAG, "Main Menu Button touched," +
+              " sending OpenMainMenuCommand to manager.");
           CoreGame.command_manager.sendCommand(
               new OpenMainMenuCommand(this));
           return true;
@@ -56,7 +54,7 @@ public class RunningGameInterface extends UserInterface {
 
 
 
-// ------------------------- UiElement - Pass Turn Button -------------------------- //
+// --------------- UiElement - Pass Turn Button ---------------- //
 
     // Pass Turn Buttom SetTextContentCommand
     UiElement btn_pass = new UiElement("btn_pass", 4) {
@@ -66,9 +64,10 @@ public class RunningGameInterface extends UserInterface {
 
       // Overrides the touchDown() input event to generate the desired command
       @Override
-      public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+      public boolean touchUp(int screenX, int screenY,
+                             int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          Log.d(TAG + " - Pass Turn Button touched, setting selection_name text");
+          Log.d(TAG, "Pass Turn Button touched, setting selection_name text");
           CoreGame.command_manager.sendCommand( new SelectCommand(this) );
           return true;
         }
@@ -76,6 +75,7 @@ public class RunningGameInterface extends UserInterface {
       }
 
     };
+
 
     // This entity will process it1s own selection
     // TODO: 27/12/18 All selections shall be handled somewhere else
@@ -92,7 +92,7 @@ public class RunningGameInterface extends UserInterface {
 
 
 
-// ------------------------- TextElement - Name of Entity -------------------------- //
+// --------------- TextElement - Name of Entity ---------------- //
 
     // Creates a text element to hold the name of the selected entitie
     TextElement sel_txt = new TextElement(
@@ -123,7 +123,5 @@ public class RunningGameInterface extends UserInterface {
     elements.add(sel_txt);
 
   }
-
-  // ========================= CONSTRUCTION END ========================= //
 
 }

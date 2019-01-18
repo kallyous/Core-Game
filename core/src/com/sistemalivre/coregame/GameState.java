@@ -1,14 +1,13 @@
 package com.sistemalivre.coregame;
 
 
-
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
 
 
-/** ======================== GAME STATES SUPERCLASS - FSM ======================== **/
+// ===================== GAME STATES SUPERCLASS - FSM ===================== //
 
 abstract public class GameState {
 
@@ -16,13 +15,13 @@ abstract public class GameState {
 
 
 
-// ========================= DATA SETUP BEGIN ========================= //
-
-  // For single back actions support
-  public static GameState previous_state;
+// ========================= DATA SETUP ========================= //
 
   // Holds reference to the current game world map or level
-  public static WorldMap world;
+  static WorldMap world;
+
+  // For single back actions support
+  protected static GameState previous_state;
 
   // Multiplexer to be used within the current state
   protected InputMultiplexer input_multiplexer;
@@ -36,24 +35,20 @@ abstract public class GameState {
   // Flags if current state has been initialized, for saving overhead resources
   protected boolean initialized;
 
-// ========================= DATA SETUP END ========================= //
 
 
 
-
-// ========================= CONSTRUCTION BEGIN ========================= //
+// ============================= CONSTRUCTION ============================= //
 
   // Default constructor only needs to create a new input multiplexer
   GameState() {
     initialized = false;
   }
 
-// ========================= CONSTRUCTION END ========================= //
 
 
 
-
-// ========================= ABSTRACTION BEGIN ========================= //
+// ============================== ABSTRACTION ============================== //
 
   // Deve ajustar as paradas
   abstract public void init();
@@ -64,16 +59,13 @@ abstract public class GameState {
   // Libera os recursos para próximo estado
   abstract public void clear();
 
-// ========================= ABSTRACTION END ========================= //
 
 
 
-
-// ========================= LOGIC BEGIN ========================= //
+// ================================ LOGIC ================================ //
 
   // Each state may have many other things to draw beyond the GUI
   protected void drawAll() {}
-
 
 
   public void switchTo(GameState new_state) {
@@ -93,7 +85,6 @@ abstract public class GameState {
   }
 
 
-
   public void render() {
 
     // Draw everything that goes below the GUI
@@ -107,12 +98,9 @@ abstract public class GameState {
   }
 
 
-
   public void setScreenbatch(SpriteBatch batch) {
     screen_batch = batch;
   }
-
-// ========================= LOGIC END ========================= //
 
 }
 
@@ -120,7 +108,7 @@ abstract public class GameState {
 
 
 
-/** ========================= RUNNING STATE ========================= **/
+// ============================ RUNNING STATE ============================ //
 
 class RunningGameState extends GameState {
 
@@ -128,9 +116,10 @@ class RunningGameState extends GameState {
 
 
 
-// ========================= CONSTRUCTION BEGIN ========================= //
+// ============================= CONSTRUCTION ============================= //
 
-  RunningGameState(CommandManager cmd_manager, InputMultiplexer input_multiplexer) {
+  RunningGameState(CommandManager cmd_manager,
+                   InputMultiplexer input_multiplexer) {
 
     // Creates a new interface
     gui = new RunningGameInterface(
@@ -144,21 +133,20 @@ class RunningGameState extends GameState {
     gui.setCommandManager(cmd_manager);
 
     // Initializes the world map.
-    world = new WorldMap( new SpriteBatch(), new Array<Entity>(), input_multiplexer );
+    world = new WorldMap( new SpriteBatch(),
+        new Array<Entity>(), input_multiplexer );
 
   }
 
-// ========================= CONSTRUCTION END ========================= //
 
 
 
-
-// ========================= LOGIC BEGIN ========================= //
+// ================================ LOGIC ================================ //
 
   @Override
   public void init() {
 
-    Log.d(TAG + " - init() ");
+    Log.d(TAG, "init() ");
 
     gui.setInputMultiplexer(input_multiplexer);
 
@@ -166,16 +154,19 @@ class RunningGameState extends GameState {
 
   }
 
+
   @Override
   public void update(float dt) {
     world.update(dt);
     gui.update(dt);
   }
 
+
   @Override
   protected void drawAll() {
     world.render();
   }
+
 
   @Override
   public void clear() {
@@ -183,15 +174,13 @@ class RunningGameState extends GameState {
     world.suspend();
   }
 
-// ========================= LOGIC END ========================= //
-
 }
 
 
 
 
 
-/** ========================= MAIN MENU STATE ========================= **/
+// =========================== MAIN MENU STATE =========================== //
 
 class MainMenuGameState extends GameState {
 
@@ -199,18 +188,17 @@ class MainMenuGameState extends GameState {
 
 
 
-// ========================= DATA SETUP BEGIN ========================= //
+// ============================== DATA SETUP ============================== //
 
   private InputMultiplexer input_multiplexer;
-
-// ========================= DATA SETUP END ========================= //
 
 
 
 
 // ========================= CONSTRUCTION BEGIN ========================= //
 
-  MainMenuGameState(CommandManager cmd_manager, InputMultiplexer input_multiplexer) {
+  MainMenuGameState(CommandManager cmd_manager,
+                    InputMultiplexer input_multiplexer) {
 
     gui = new MainMenuInterface(
         CoreGame.game_window_width,
@@ -224,8 +212,6 @@ class MainMenuGameState extends GameState {
 
   }
 
-// ========================= CONSTRUCTION END ========================= //
-
 
 
 
@@ -234,21 +220,21 @@ class MainMenuGameState extends GameState {
   @Override
   public void init() {
     // Each game state handles input it's own way.
-    Log.d(TAG + " - init() ");
+    Log.d(TAG, "init() ");
     gui.setInputMultiplexer(input_multiplexer);
   }
+
 
   @Override
   public void update(float dt) {
     gui.update(dt);
   }
 
+
   @Override
   public void clear() {
     gui.unsetInputMultiplexer(input_multiplexer);
   }
-
-// ========================= LOGIC END ========================= //
 
 }
 

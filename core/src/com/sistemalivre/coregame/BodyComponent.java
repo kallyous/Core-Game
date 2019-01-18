@@ -2,8 +2,7 @@ package com.sistemalivre.coregame;
 
 
 
-
-/** ========================= BodyComponent ========================= **/
+// ========================= BodyComponent ========================= //
 
 class BodyComponent {
 
@@ -11,8 +10,7 @@ class BodyComponent {
 
 
 
-
-// ========================= DATA BEGIN ========================= //
+// ========================= DATA ========================= //
 
   public Entity owner;
   
@@ -22,12 +20,10 @@ class BodyComponent {
   private boolean acted_this_turn = false;
   private boolean acted_last_turn = false;
 
-// ========================= DATA END ========================= //
 
 
 
-
-// ========================= CREATION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   BodyComponent(Entity owner) {
     this.owner = owner;
@@ -39,22 +35,11 @@ class BodyComponent {
     action_pts_curr = action_pts_max;
 
   }
-  
-  // ========================= CREATION END ========================= //
 
 
 
 
-// ========================= LOGIC BEGIN ========================= //
-
-
-
-// ========================= LOGIC END ========================= //
-  
-  
-  
-  
-// ========================= GETTERS / SETTERS BEGIN ========================= //
+// ========================= GET / SET ========================= //
 
   public float getHealthPtsMax() {
     return health_pts_max;
@@ -114,8 +99,5 @@ class BodyComponent {
   public void setActedLastTurn(boolean acted_last_turn) {
     this.acted_last_turn = acted_last_turn;
   }
-
-// ========================= GETTERS / SETTERS END ========================= //
-
 
 }

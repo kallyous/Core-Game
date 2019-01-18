@@ -1,12 +1,11 @@
 package com.sistemalivre.coregame;
 
 
-
 import java.util.Vector;
 
 
 
-/** ========================= COMMAND CONSUMING COMPONENT ========================= **/
+// ==================== CommandComponent ==================== //
 
 public class CommandComponent {
 
@@ -14,7 +13,7 @@ public class CommandComponent {
 
 
 
-// ========================= DATA SETUP BEGIN ========================= //
+// ========================= DATA ========================= //
 
   // Entity owning the current instance of CommandComponent
   public Entity owner;
@@ -22,12 +21,10 @@ public class CommandComponent {
   // Vector holding references to all commands the entity can follow
   protected Vector<String> commands;
 
-// ========================= DATA SETUP END ========================= //
 
 
 
-
-// ========================= CONSTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   // Must have a owner
   CommandComponent(Entity owner) {
@@ -35,29 +32,30 @@ public class CommandComponent {
     commands = new Vector<String>();
   }
 
-// ========================= CONSTRUCTION END ========================= //
 
 
 
-
-// ------------------------- Logic -------------------------- //
+// ========================== LOGIC ========================== //
 
   protected boolean isItForMe(Command command) {
-    if (command.target == this.owner && commands.contains(command.getTAG()) ) {
+    if (command.target == this.owner && commands.contains(command.getTAG())) {
       return true;
     }
     return false;
   }
+
 
   // Add a command to the list of available commands
   public void enableCommand(String command_name) {
     commands.add(command_name);
   }
 
+
   // Remove a command to the list of available commands
   public void disableCommand(String command_name) {
     commands.remove(command_name);
   }
+
 
   // Check if command is for current entity and try to run int if so
   public boolean execute(Command command) {
@@ -66,7 +64,5 @@ public class CommandComponent {
     }
     return false;
   }
-
-// ---------------------------------------------------------- //
 
 }

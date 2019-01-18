@@ -5,25 +5,37 @@ import java.util.Vector;
 
 
 
+// ========================== GraphMapVertex ========================== //
+
 public class GraphMapVertex {
 
-  // ========================================== DATA ========================================== //
+  public static final String TAG = "GraphMapVertex";
 
-  // These are the same for the vertex location in both the graph and the tiled map matrix
+
+
+  // =========================== DATA =========================== //
+
+  /** These are the same for the vertex location in both the graph
+    and the tiled map matrix. **/
   private int x, y;
+
   // Edges originating from this vertex
   private Vector<GraphMapEdge> edges;
+
   // Terrain and Feature (usually a wall or nothing)
   private int terrain, feature;
+
   // Reference to a entity, case there is one occupying the square.
   public Entity entity_on;
+
   // For algorithms
   private boolean visited = false;
   private GraphMapEdge source_edge;
 
 
 
-  // ====================================== CONSTRUCTION ====================================== //
+
+  // ======================= CONSTRUCTION ======================= //
 
   GraphMapVertex() {
     terrain = 0;
@@ -31,6 +43,7 @@ public class GraphMapVertex {
     entity_on = null;
     edges = new Vector<GraphMapEdge>();
   }
+
 
   GraphMapVertex(int x, int y) {
     this.x = x;
@@ -41,6 +54,7 @@ public class GraphMapVertex {
     edges = new Vector<GraphMapEdge>();
   }
 
+
   GraphMapVertex(int x, int y, int terrain, int feature) {
     this.x = x;
     this.y = y;
@@ -50,31 +64,42 @@ public class GraphMapVertex {
     edges = new Vector<GraphMapEdge>();
   }
 
+
   public void addEdge(GraphMapEdge edge) {
     edges.add(edge);
   }
 
 
 
-  // ======================================= GETTERS / SETTERS ================================= //
+
+  // ======================== GET / SET ================== //
 
   // Algorithm Processing
   public void clear() {
     visited = false;
     source_edge = null;
   }
+
+
   public boolean isVisited() {
     return visited;
   }
+
+
   public GraphMapEdge getSourceEdge() {
     return source_edge;
   }
+
+
   public void visit() {
     visited = true;
   }
+
+
   public void setSourceEdge(GraphMapEdge edge) {
     source_edge = edge;
   }
+
 
   // X
   public int getX() {
@@ -84,6 +109,7 @@ public class GraphMapVertex {
     this.x = x;
   }
 
+
   // Y
   public int getY() {
     return y;
@@ -92,10 +118,12 @@ public class GraphMapVertex {
     this.y = y;
   }
 
+
   // Edges
   public Vector<GraphMapEdge> getEdges() {
     return edges;
   }
+
 
   // Entity
   public Entity getEntityOn() {
@@ -106,6 +134,7 @@ public class GraphMapVertex {
   }
   public void clearEntity() { entity_on = null; }
 
+
   // Terrain
   public int getTerrain() {
     return terrain;
@@ -113,6 +142,7 @@ public class GraphMapVertex {
   public void setTerrain(int terrain_id) {
     this.terrain = terrain;
   }
+
 
   // Feature
   public int getFeature() {

@@ -2,8 +2,7 @@ package com.sistemalivre.coregame;
 
 
 
-
-/** ========================= MovementComponent ========================= **/
+// ========================= MovementComponent ========================= //
 
 class MovementComponent {
 
@@ -11,8 +10,7 @@ class MovementComponent {
 
 
 
-
-// ========================= DATA BEGIN ========================= //
+// ========================= DATA ========================= //
 
   public Entity entity;
 
@@ -20,31 +18,25 @@ class MovementComponent {
 
   public GraphMapVertex curr_vertex;
 
-// ========================= DATA END ========================= //
 
 
 
-
-// ========================= CREATION BEGIN ========================= //
+// ========================= COSNTRUCTION ========================= //
 
   MovementComponent(Entity entity) {
     this.entity = entity;
   }
 
-// ========================= CREATION END ========================= //
 
 
 
-
-// ========================= LOGIC BEGIN ========================= //
+// ========================= LOGIC ========================= //
 
   public void moveToTileAt(float x, float y) {
     int tile_x = (int)(x/Global.tile_size);
     int tile_y = (int)(y/Global.tile_size);
     Pathfinder.findPath();
   }
-
-// ========================= LOGIC END ========================= //
 
 }
 

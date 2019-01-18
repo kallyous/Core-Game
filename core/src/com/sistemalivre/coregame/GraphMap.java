@@ -5,9 +5,15 @@ import java.util.Vector;
 
 
 
+// ========================== GraphMap ========================== //
+
 public class GraphMap {
 
-  // ========================================= DATA =========================================== //
+  private static final String TAG = "GraphMap";
+
+
+
+  // ===================== DATA ======================= //
 
   private GraphMapVertex[][] vertexes;
   private Vector<GraphMapEdge> edges;
@@ -15,7 +21,8 @@ public class GraphMap {
 
 
 
-  // ========================================= CREATION ======================================= //
+
+  // ===================== CONSTRUCTION =================== //
 
   GraphMap(int width, int height) {
     this.width = width;
@@ -34,9 +41,10 @@ public class GraphMap {
       vertexes[y] = new GraphMapVertex[width];
       for (x = 0; x < width; x++) {
         // Adds new vertex
-        vertexes[y][x] = new GraphMapVertex(x,y); // TODO: 03/01/19 Potencial Error ?
-        /** If X > 0, we create a edge connecting this vertex with the one at it's left
-         *  and one coming from that too. */
+        // TODO: 03/01/19 Potencial Error ?
+        vertexes[y][x] = new GraphMapVertex(x,y);
+        /** If X > 0, we create a edge connecting this vertex with the
+          one at it's left and one coming from that too. **/
         if (x > 0) {
           edge = new GraphMapEdge(vertexes[y][x], vertexes[y][x - 1]);
           edges.add(edge);
@@ -45,8 +53,8 @@ public class GraphMap {
           vertexes[y][x-1].addEdge(edge);
           edges.add(edge);
         }
-        /** If Y > 0, we create a edge connecting this vertex with the one above it and
-         *  one coming from that too. */
+        /** If Y > 0, we create a edge connecting this vertex with the
+          one above it and one coming from that too. **/
         if (y > 0) {
           edge = new GraphMapEdge(vertexes[y][x], vertexes[y-1][x]);
           vertexes[y][x].addEdge(edge);
@@ -62,19 +70,21 @@ public class GraphMap {
   public void test() {
     int i = 0;
     for (GraphMapEdge e : edges) {
-      Log.d("edge" + i + ":");
-      Log.d("\tsource: x" + e.getSource().getX() + "y" + e.getSource().getY());
-      Log.d("\ttarget: x" + e.getTarget().getX() + "y" + e.getTarget().getY());
-      Log.d("");
+      Log.d(TAG, "edge" + i + ":");
+      Log.d(TAG, "\tsource: x" + e.getSource().getX()
+          + "y" + e.getSource().getY());
+      Log.d(TAG, "\ttarget: x" + e.getTarget().getX()
+          + "y" + e.getTarget().getY());
       i++;
     }
   }
 
 
 
-  // ==================================== GETTERS / SETTERS =================================== //
+  // ===================== GET / SET ==================== //
 
   public GraphMapVertex getVertexAt(int x, int y) {
     return vertexes[y][x];
   }
+
 }

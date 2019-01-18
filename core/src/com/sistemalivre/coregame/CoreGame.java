@@ -11,7 +11,7 @@ import java.util.Hashtable;
 
 
 
-/** ========================= GAME STARTS ========================= **/
+// ========================= CORE GAME STARTS ========================= //
 
 public class CoreGame extends ApplicationAdapter {
 
@@ -19,54 +19,72 @@ public class CoreGame extends ApplicationAdapter {
 
 
 
-// ========================= DATA SETUP BEGIN ========================= //
+// ============================== DATA SETUP ============================== //
 
-  // Game running flag
+  /** This flag is used within the main loop to keep then game running and
+    stop it when exit command has been issued. */
   public static boolean game_running = true;
 
-  // Service locator (pseudo)
+  /** This is a pseudo-service locator for the game static assets. For any class
+    to have access to images, sounds, fonts and etc, it just needs a reference
+    to this object. */
   public static AssetManager asset_manager;
 
-  // Finite State Machine
+  /** Finite State Machine - This one holds the current game state.
+    The game is actually split into states. Each state holds almost everything
+    related to it's doings. Things that are shared among game states are either
+    held by the superclass GameState or the CoreGame itself. */
   public static GameState game;
+
+  // Available Game States
+  static MainMenuGameState main_menu_state;
+  static RunningGameState running_state;
 
   // Window and Viewport dimensions
   public static float game_window_width, game_window_height;
 
-  // Input Multiplexer
+  /** Input Multiplexer for managing all different input source types.
+    All input handling objects shall register to this multiplexer.
+    No exceptions. Also, each game state swap must perform two things: The
+    leaving game state must remove itself and childrens from the multiplexer,
+    and the entering state must register itself and childrens in this
+    multiplexer. */
   public static InputMultiplexer input_multiplexer;
 
-  // Pra facilitar o acesso/comunicação entre entidades
+  /** Keeps all game entities organized and accessible. To any class to have
+    access to every entity, it only needs a reference to this hashtable.
+    Entities register themselves in this hashtable automatically,
+    when they are created. */
   public static Hashtable<String, Entity> entities;
 
-  // Game States
-  static MainMenuGameState main_menu_state;
-  static RunningGameState running_state;
-
-  // Commands Manager
+  /** Command Manager - One to rule them all.
+    No input goes straight into the controlled entity. All input generate
+    commands and sends those commands to te Command Manager.
+    The command manager flushes, executes and boradcasts all commands every
+    cycle, at the beggining.
+    When initialized, CommandManager declares one entity, for running no-target
+    commands. Because of this, command_manager MUST be initialized AFTER the
+    entities hashtable is initialized. */
   static CommandManager command_manager;
 
   // Tracks time for animations and other time based events
   float state_time;
 
-  // Batch render for the GUI
+  /** Batch render for the GUI
+   We use a separate sprite batch's for game world stuff and UI elements,
+   because of projection.
+   While all stuff are draw relative to the world coordinates, UI elements
+   are draw relative to the screen coordinates, for obvious reasons (you don't
+   want to drag menu buttons out of the screen when panning the world, do you?).
+   Also, is worth to remember that UI shall be rendered/draw after everything
+   else, so it is always at the top/front of all other things. */
   SpriteBatch guiBatch;
-  /** We use a separate sprite batch's for game world stuff and UI elements because of projection.
-       While all stuff are draw relative to the world coordinates, UI elements are draw relative
-       to the screen coordinates, for obvious reasons (you don't want drag menu buttons out of the
-       screen when panning the world, do you?).
-       Also, is worth to remember that UI shall be rendered/draw after everything else, so it is always
-       at the top/front of all other things. */
-
-// Input Processor
-  GameInput game_input_adapter;
-
-// ========================= DATA SETUP END ========================= //
 
 
 
 
-  // ========================= STARTUP BEGIN ========================= //
+
+// ============================ STARTUP BEGIN ============================ //
   @Override
   public void create() {
 
@@ -79,49 +97,45 @@ public class CoreGame extends ApplicationAdapter {
     game_window_width = Gdx.graphics.getWidth();
     game_window_height = Gdx.graphics.getHeight();
 
-    // Assets loader and manager
     asset_manager = new AssetManager();
 
-    // Initializes InputProcessor
-    game_input_adapter = new GameInput();
-
-    // Initializes InputMultiplexer
     input_multiplexer = new InputMultiplexer();
+
+    entities = new Hashtable<String, Entity>();
+
+    command_manager = new CommandManager();
 
     // Sets active input multiplexer
     Gdx.input.setInputProcessor(input_multiplexer);
 
-    // Prepares the Command Manager
-    command_manager = new CommandManager();
-
-    // Entities Hash Table using default values, for locating entities by their names
-    entities = new Hashtable<String, Entity>();
-
-    // SpriteBach exclusivo para GUI, pois será o únco a não utilizar projeção no mapa
+    /** Sprite Batch exclusive for GUI, since it doesn't uses camera projection.
+     Sprite batches takes sprites and prepares them to send to the GPU/CPU
+     for rendering the final image.
+     Very important stuff. Do your worship, human. */
     guiBatch = new SpriteBatch();
-    /** Sprite batches takes sprites and prepares them to send to the GPU/CPU for rendering the
-        final image. Very important stuff. Do your worship, human. */
 
-    // Prepara estado de execução do jogo, conectando-o com controladores globais
+    // Prepares the running game state, by making several connections.
     running_state = new RunningGameState(command_manager, input_multiplexer);
     running_state.setScreenbatch(guiBatch);
-    running_state.clear(); // Stupid hack to release the input multiplexer. TODO: More elegant solution.
+    running_state.clear(); // Stupid hack to clean the input multiplexer.
+    // TODO: Set a more elegant solution.
 
-    // Prepara estado do menu principal do jogo, connectando-o com controladores globais
+    // Prepares the main menu game state, by making several connections.
     main_menu_state = new MainMenuGameState(command_manager, input_multiplexer);
     main_menu_state.setScreenbatch(guiBatch);
+    /** Since the game actually starts at the main menu, we don't have to
+     clean the input multiplexer. */
 
-    // Põe jogo em seu estado inicial.
+    // Sets game to the initial game state, Main Menu
     main_menu_state.switchTo(main_menu_state);
 
   }
 
-// ========================= STARTUP END ========================= //
 
 
 
 
-// ========================= MAIN LOOP BEGIN ========================= //
+// =============================== MAIN LOOP =============================== //
 
   @Override
   public void render() {
@@ -130,7 +144,8 @@ public class CoreGame extends ApplicationAdapter {
     glActions();
 
 
-// ------------------------- LOGIC / RENDER START ------------------------- //
+
+  // ------------------------- LOGIC / RENDER START ------------------------- //
 
     // Increment elapsed time
     state_time += Gdx.graphics.getDeltaTime();
@@ -147,15 +162,13 @@ public class CoreGame extends ApplicationAdapter {
     // Triggers game shutdown if it's flag has been raised
     if (!game_running) gameShutdown();
 
-// ------------------------- LOGIC / RENDER END ------------------------- //
   }
 
-// ========================= MAIN LOOP END ========================= //
 
 
 
 
-// -------------------------  glActions ------------------------- //
+// ------------------------------  glActions ------------------------------ //
 
   private void glActions() {
     Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -163,22 +176,16 @@ public class CoreGame extends ApplicationAdapter {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
   }
 
-// -------------------------------------------------------------- //
 
 
-
-
-// ------------------------- GameShutdown ------------------------- //
+// ----------------------------- GameShutdown ----------------------------- //
 
   private void gameShutdown() {
-    Log.i(TAG + " - Game no longer running. Shutting down. ");
+    Log.i(TAG, "Game no longer running. Shutting down. ");
     pause();
     dispose();
     System.exit(0);
   }
-
-// -------------------------------------------------------------- //
-
 
 }
 

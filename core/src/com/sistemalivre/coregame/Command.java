@@ -1,14 +1,13 @@
 package com.sistemalivre.coregame;
 
 
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
 
 import java.util.Vector;
 
 
 
-/** ========================= COMMAND ========================= **/
+// ========================= COMMAND ========================= //
 
 abstract public class Command {
 
@@ -16,17 +15,16 @@ abstract public class Command {
 
 
 
-// ========================= DATA SETUP BEGIN ========================= //
+// ========================= DATA ========================= //
 
   // The superclass only has a target and uses its class name as keyword
   public Entity target;
-
-// ========================= DATA SETUP END ========================= //
-
+  public int entity_type = -1;
 
 
 
-// ========================= CONSTRUCTION BEGIN ========================= //
+
+// ========================= CONSTRUCTION ========================= //
 
   // Mostly used for entities issuing commands to themselves
   Command(Entity target) {
@@ -34,21 +32,25 @@ abstract public class Command {
   }
 
 
-
   // Issued for specific entities of known name
   Command(String target_name) {
     this.target = CoreGame.entities.get(target_name);
     if (this.target == null) {
-      Log.w(TAG + " - Falha ao localizar " + target_name + " na hash table.");
+      Log.w(TAG, "Falha ao localizar " + target_name + " na hash table.");
     }
   }
 
-// ========================= CONSTRUCTION END ========================= //
+
+  // Issued for commands to be run against all of a kind
+  Command(int entity_type) {
+    this.target = null;
+    this.entity_type = entity_type;
+  }
 
 
 
 
-// ========================= ABSTRACT BEGIN ========================= //
+// ========================= ABSTRACT ========================= //
 
   // Return the command TAG
   abstract public String getTAG();
@@ -56,15 +58,13 @@ abstract public class Command {
   // The core of all commands
   abstract public boolean execute();
 
-// ========================= ABSTRACT END ========================= //
-
 }
 
 
 
 
 
-/** ========================= OPEN MAIN MENU ========================= **/
+// ========================= OpenMainMenuCommand ========================= //
 
 // Pause game and bring in the title screen with the main menu
 class OpenMainMenuCommand extends Command {
@@ -73,18 +73,16 @@ class OpenMainMenuCommand extends Command {
 
 
 
-// ========================= CONSTRUCTOR BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   OpenMainMenuCommand(Entity target) {
     super(target);
   }
 
-// ========================= CONSTRUCTOR END ========================= //
 
 
 
-
-// ------------------------- Logic -------------------------- //
+// ========================== LOGIC ========================== //
 
   @Override
   public String getTAG() {
@@ -92,15 +90,12 @@ class OpenMainMenuCommand extends Command {
   }
 
 
-
   @Override
   public boolean execute() {
-    Log.i(TAG + " - Pausando jogo e abrindo menu principal. ");
+    Log.i(TAG, "Pausando jogo e abrindo menu principal. ");
     CoreGame.game.switchTo(CoreGame.main_menu_state);
     return true;
   }
-
-// ---------------------------------------------------------------- //
 
 }
 
@@ -108,7 +103,7 @@ class OpenMainMenuCommand extends Command {
 
 
 
-/** ========================= RUN GAME ========================= **/
+// ========================= RunGameCommand ========================= //
 
 // Start/Resume the game
 class RunGameCommand extends Command {
@@ -117,18 +112,16 @@ class RunGameCommand extends Command {
 
 
 
-// ========================= COSNTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION  ========================= //
 
   RunGameCommand(Entity target) {
     super(target);
   }
 
-// ========================= COSNTRUCTION END ========================= //
 
 
 
-
-// ------------------------- Logic -------------------------- //
+// ========================== LOGIC ========================== //
 
   @Override
   public String getTAG() {
@@ -136,15 +129,12 @@ class RunGameCommand extends Command {
   }
 
 
-
   @Override
   public boolean execute() {
-    Log.i(TAG + " - Starting/Resuming game. ");
+    Log.i(TAG, "Starting/Resuming game. ");
     CoreGame.game.switchTo(CoreGame.running_state);
     return true;
   }
-
-// ---------------------------------------------------------------- //
 
 }
 
@@ -152,7 +142,7 @@ class RunGameCommand extends Command {
 
 
 
-/** ========================= EXIT GAME ========================= **/
+// ========================= ExitCommand ========================= //
 
 // Exit/Close the game
 class ExitCommand extends Command {
@@ -161,27 +151,23 @@ class ExitCommand extends Command {
 
 
 
-
-// ========================= CONSTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   ExitCommand(Entity target) {
     super(target);
   }
 
-// ========================= CONSTRUCTION END ========================= //
 
 
 
-
-// ------------------------- Logic -------------------------- //
+// ========================== LOGIC ========================== //
 
   @Override
   public boolean execute() {
-    Log.i(TAG + " - Issuing shutdow flag. Game is about to exit.");
+    Log.i(TAG, "Issuing shutdow flag. Game is about to exit.");
     CoreGame.game_running = false;
     return true;
   }
-
 
 
   @Override
@@ -189,53 +175,46 @@ class ExitCommand extends Command {
     return TAG;
   }
 
-// ---------------------------------------------------------------- //
-
 }
 
 
 
 
 
-/** ========================= SELECT ENTITY ========================= **/
+// ========================= SelectCommand ========================= //
 
-// A subclass for testing
 class SelectCommand extends Command {
 
   private static final String TAG = "SelectCommand";
 
 
 
-
-// ========================= CONSTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   SelectCommand(Entity entity) {
     super(entity);
   }
 
-// ========================= CONSTRUCTION END ========================= //
 
 
 
-
-// ------------------------- Logic -------------------------- //
+// ========================== LOGIC ========================== //
 
   @Override
   public boolean execute() {
 
     if (this.target == Entity.selected_entity) {
-      Log.i(TAG + " - Unselecting " + this.target.getName() );
+      Log.i(TAG, "Unselecting " + this.target.getName() );
       Entity.selected_entity = null;
     }
     else {
-      Log.i(TAG + " - Selecting " + this.target.getName());
+      Log.i(TAG, "Selecting " + this.target.getName());
       Entity.selected_entity = this.target;
-      Log.d( TAG + " - Info on selected entity:\n" + this.target.info() );
+      Log.d( TAG, "Info on selected entity:\n" + this.target.info() );
     }
 
     return true;
   }
-
 
 
   @Override
@@ -243,16 +222,13 @@ class SelectCommand extends Command {
     return TAG;
   }
 
-// ---------------------------------------------------------------- //
-
 }
 
 
 
 
 
-
-/** ========================= SET TEXT CONTENT COMMAND ========================= **/
+// ======================= SetTextContentCommand ======================= //
 
 class SetTextContentCommand extends Command {
 
@@ -260,22 +236,20 @@ class SetTextContentCommand extends Command {
 
 
 
-
-// ========================= DATA BEGIN ========================= //
+// ========================= DATA ========================= //
 
   public String content;
 
-// ========================= DATA END ========================= //
 
 
 
-
-// ========================= CREATION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   SetTextContentCommand(Entity entity, String content) {
     super(entity);
     this.content = content;
   }
+
 
   SetTextContentCommand(String entity_name, String content) {
     super(entity_name);
@@ -283,18 +257,15 @@ class SetTextContentCommand extends Command {
 
   }
 
-// ========================= CREATION END ========================= //
 
 
 
-
-// ========================= LOGIC BEGIN ========================= //
+// ========================= LOGIC ========================= //
 
   @Override
   public String getTAG() {
     return TAG;
   }
-
 
 
   @Override
@@ -305,13 +276,11 @@ class SetTextContentCommand extends Command {
       target_te.label.setText(content);
       return true;
     } catch (Exception e) {
-      Log.e(TAG + " - Comando gerou um erro durante a execução.");
+      Log.e(TAG, "Comando gerou um erro durante a execução.");
       e.printStackTrace();
       return false;
     }
   }
-
-// ========================= LOGIC END ========================= //
 
 }
 
@@ -319,8 +288,7 @@ class SetTextContentCommand extends Command {
 
 
 
-
-/** ========================= DESTROY ENTITY COMMAND ========================= **/
+// ========================= DestroyEntityCommand ========================= //
 
 class DestroyEntityCommand extends Command {
 
@@ -328,19 +296,16 @@ class DestroyEntityCommand extends Command {
 
 
 
-
-// ========================= CREATION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   DestroyEntityCommand(Entity target) {
     super(target);
   }
 
-// ========================= CREATION END ========================= //
 
 
 
-
-// ========================= LOGIC BEGIN ========================= //
+// ========================= LOGIC ========================= //
 
   @Override
   public String getTAG() {
@@ -348,16 +313,13 @@ class DestroyEntityCommand extends Command {
   }
 
 
-
   @Override
   public boolean execute() {
-    Log.i(TAG + " - Destroying " + target.getName());
-    Log.i(TAG + " - Object is  " + target.toString());
+    Log.i(TAG, "Destroying " + target.getName());
+    Log.i(TAG, "Object is  " + target.toString());
     target.destroy();
     return true;
   }
-
-// ========================= LOGIC END ========================= //
 
 }
 
@@ -365,8 +327,7 @@ class DestroyEntityCommand extends Command {
 
 
 
-
-/** ========================= TracePathCommand ========================= **/
+// ========================= TracePathCommand ========================= //
 
 class TracePathCommand extends Command {
 
@@ -374,21 +335,20 @@ class TracePathCommand extends Command {
 
 
 
-
-// ========================= DATA BEGIN ========================= //
+// ========================= DATA ========================= //
 
   public GraphMapVertex entrance;
 
   public GraphMapVertex exit;
 
-// ========================= DATA END ========================= //
 
 
 
+// ========================= CONSTRUCTION ========================= //
 
-// ========================= CREATION BEGIN ========================= //
-
-  TracePathCommand(Entity entity, GraphMapVertex entrance, GraphMapVertex exit) {
+  TracePathCommand(Entity entity,
+                   GraphMapVertex entrance,
+                   GraphMapVertex exit) {
     super(entity);
     this.entrance = entrance;
     this.exit = exit;
@@ -396,16 +356,12 @@ class TracePathCommand extends Command {
 
 
 
-  @Override
-  public String getTAG() {
-    return TAG;
-  }
 
-
+// ========================== LOGIC ========================== //
 
   @Override
   public boolean execute() {
-    Log.d(TAG + ": Tracing path for " + target.getName());
+    Log.d(TAG, "Tracing path for " + target.getName());
 
     Queue<GraphMapVertex> path = breadthFirstSearch(entrance, exit);
 
@@ -432,18 +388,12 @@ class TracePathCommand extends Command {
     return true;
   }
 
-// ========================= CREATION END ========================= //
-
-
-
-
-// ========================= LOGIC BEGIN ========================= //
 
   private Queue<GraphMapVertex> breadthFirstSearch(
       GraphMapVertex entrance, GraphMapVertex exit) {
 
-    Queue<GraphMapVertex> frontier = new Queue<GraphMapVertex>();
-    Vector<GraphMapVertex> visited = new Vector<GraphMapVertex>();
+    Queue<GraphMapVertex> frontier = new Queue<>();
+    Vector<GraphMapVertex> visited = new Vector<>();
 
     Queue<GraphMapVertex> path;
 
@@ -495,7 +445,6 @@ class TracePathCommand extends Command {
   }
 
 
-
   private Queue<GraphMapVertex> reversePath(GraphMapVertex exit) {
 
     Queue<GraphMapVertex> path = new Queue<GraphMapVertex>();
@@ -524,6 +473,78 @@ class TracePathCommand extends Command {
     return path;
   }
 
-// ========================= LOGIC END ========================= //
+
+
+
+// ========================== GET / SET ========================== //
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
+
+}
+
+
+
+
+
+// ======================== DestroyAllOfTypeCommand ======================== //
+
+class DestroyWorldEntitiesByTypeCommand extends Command {
+
+  private static final String TAG = "DestroyWorldEntitiesByTypeCommand";
+
+
+
+// ========================= CREATION BEGIN ========================= //
+
+  DestroyWorldEntitiesByTypeCommand(int entity_type) {
+    super(entity_type);
+  }
+
+
+
+
+// ========================= LOGIC BEGIN ========================= //
+
+  @Override
+  public boolean execute() {
+    int amount = 0;
+
+    // How many of those there is within the world ?
+    for (int a=0; a < GameState.world.entities.size; a++)
+      if (GameState.world.entities.get(a).type() == this.entity_type) amount++;
+
+    // If none, then whatever.
+    if (amount == 0) return false;
+
+    // For this many times, we will cycle through everything.
+    for (int b=0; b < amount; b++) {
+      // Each time, we remove and destroy a entity matching the type
+      for (int i=0; i < GameState.world.entities.size; i++) {
+        Entity ent = GameState.world.entities.get(i);
+        if (ent.type() == this.entity_type) {
+          GameState.world.entities.removeIndex(i);
+          ent.destroy();
+          break;
+        }
+      }
+    }
+
+    System.gc();
+
+    return true;
+  }
+
+
+
+
+// ========================= GET / SET ========================= //
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
 
 }

@@ -1,7 +1,6 @@
 package com.sistemalivre.coregame;
 
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,25 +8,20 @@ import com.badlogic.gdx.math.Vector3;
 
 
 
-
-
-/** ========================= ENTITY SUPERCLASS ========================= **/
+// ========================= ENTITY SUPERCLASS ========================= //
 
 abstract public class Entity implements InputProcessor {
 
   private static final String TAG = "Entity";
 
 
+
+// ========================== DATA ========================== //
+
+  // Game world camera
   protected static OrthographicCamera world_camera;
 
-  public static void setCamera(OrthographicCamera new_cam) {
-    world_camera = new_cam;
-  }
-
-
-// ========================= DATA SETUP BEGIN ========================= //
-
-// ------------------------- Entity Types -------------------------- //
+// --------------- Entity Types ---------------- //
 
   // For undefined and/or invisible entities
   public static final int GENERIC = 0;
@@ -64,9 +58,11 @@ abstract public class Entity implements InputProcessor {
 
 // ------------------------- Variables -------------------------- //
 
-  /* ID tracker: While using unique internal names is pretty convenient, string operations are slow.
-   * For later optimizations, we will work out a way to map the entities ID's to their objects and
-   * use integer operations on the hash tables when doing lookups. */
+  /** ID tracker
+    While using unique internal names is pretty convenient, string
+    operations are slow. For later optimizations, we will work out a
+    way to map the entities ID's to their objects and use integer
+    operations on the hash tables when doing lookups. **/
   private static long last_used_id = 0;
 
   // Entity ID
@@ -96,18 +92,17 @@ abstract public class Entity implements InputProcessor {
   // Facing direction (default bottom)
   private int facing_direction = FACING_BOT;
 
-  /* Commands: There is two unifying features to all entities - They all have a location in the
-   * game world and they all at least CAN receive commands to perform or be targets of actions.
-   * Therefore, all entities have (X,Y) coordinates and a CommandComponent. */
+  /** Commands:
+    There are two unifying features to all entities - They all have a location
+    in the game world and they all at least CAN receive commands, to perform
+    or be targets of actions. Therefore, all entities have (X,Y) coordinates
+    and a CommandComponent. **/
   CommandComponent command_comp;
 
 
-// ========================= DATA SETUP END ========================= //
 
 
-
-
-// ========================= CONSTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   // General constructor
   Entity(String name) {
@@ -115,14 +110,15 @@ abstract public class Entity implements InputProcessor {
     // While not at use yet, we will keep record of id's for later use.
     id = ++last_used_id;
 
-    /* Internal names must be unique. If the name is duplicated, the entity creation won't actually
-     * fail. The new entity just won't be registered to the hash table and will call it's own
-     * destruction method right after it's creation. */
+    /** Internal names must be unique.
+      If the name is duplicated, the entity creation won't actuall fail.
+      The new entity just won't be registered to the hash table and will
+      call it's owndestruction method right after it's creation. **/
     this.name = name;
 
-    /* Event if the entity creation fails due to duplicated name, we need to setup the
-     * CommandComponent for receiving the self destruction command.
-     * This ensures proper assets disposal. */
+    /** Event if the entity creation fails due to duplicated name, we need
+      to setup the CommandComponent for receiving the self destruction
+      command. This ensures proper assets disposal. **/
     command_comp = new CommandComponent(this);
 
     // By default we use a 32x32 pixels size.
@@ -132,23 +128,25 @@ abstract public class Entity implements InputProcessor {
     if (CoreGame.entities.containsKey(name)) {
 
       // Debug warnings
-      Log.d(TAG + " - Entidade com nome " + name + " já existe. É o objeto "
+      Log.d(TAG, "Entidade com nome " + name + " já existe. É o objeto "
           + CoreGame.entities.get(name).toString() );
-      Log.d(TAG + " - Duplicatas não são permitidas, emitindo comando de autodestruição");
+      Log.d(TAG, "Duplicatas não são permitidas," +
+          " emitindo comando de autodestruição");
 
       // Issue self destruct command
       CoreGame.command_manager.sendCommand( new DestroyEntityCommand(this) );
 
     }
 
-    // If name is free, register self into the hash table and proceed to the initial creation
+    /** If name is free, register self into the hash table and proceed
+      to the initial creation. **/
     else {
 
       // Hash table registration
       CoreGame.entities.put(name, this);
 
       // Debug notification
-      Log.i(TAG + " - Adicionado " + name + " à Hashtable de entidades.");
+      Log.i(TAG, "Adicionado " + name + " à Hashtable de entidades.");
 
     }
 
@@ -160,8 +158,6 @@ abstract public class Entity implements InputProcessor {
     height = 32;
   }
 
-// ========================= CONSTRUCTION END ========================= //
-
 
 
 
@@ -170,10 +166,9 @@ abstract public class Entity implements InputProcessor {
   // Update entity status
   abstract public void update(float dt);
 
-  // Dispose of any resources and/or unplug from any trackers for entity destruction
+  /** Dispose of any resources and/or unplug from any trackers
+    for entity destruction. **/
   abstract public void dispose();
-
-// ========================= ABSTRACTION END ========================= //
 
 
 
@@ -186,7 +181,6 @@ abstract public class Entity implements InputProcessor {
   }
 
 
-
   // Collision Detection (from camera/world)
   public boolean worldTouched(Vector3 point) {
 
@@ -194,55 +188,47 @@ abstract public class Entity implements InputProcessor {
 
     if ( (point.x > x_location && point.x < x_location + width) &&
         (point.y > y_location && point.y < y_location + height) ) {
-      Log.d(TAG + " - worldTouched() detected world collision on " + name);
+      Log.d(TAG, "worldTouched() detected world collision on " + name);
       return true;
     }
 
     return false;
   }
-
 
 
   // Collision Detection from Screen
   public boolean collidedScreen(int screenX, int screenY) {
     int h = Gdx.graphics.getHeight();
-    if ( (screenX > x_location && screenX < x_location + width) &&
-        ( (screenY > h - y_location - height) && (screenY < h - y_location) ) ) {
-      Log.d(TAG + " - collidedScreen() detected screen collision on " + name);
+    if ((screenX > x_location && screenX < x_location + width) &&
+        ((screenY > h - y_location - height) && (screenY < h - y_location))){
+      Log.d(TAG, "collidedScreen() detected screen collision on " + name);
       return true;
     }
     return false;
   }
 
 
-  /* Destruction: After calling the dispose() method, which shall dispose of all allocated assets
-   * and/or unplug the entity of any records/trackers, the method destroy() will finally unplug
-   * the entity from the hash table. */
+  /** Destruction:
+    After calling the dispose() method, which shall dispose of all allocated
+    assets and/or unplug the entity of any records/trackers, the method
+    destroy() will finally unplug the entity from the hash table. **/
   public void destroy() {
-    Log.i(TAG + " - Destroying " + this.toString() + "(" + name + ")");
+    Log.i(TAG, "Destroying " + this.toString() + "(" + name + ")");
+    if (selected_entity == this) selected_entity = null;
+    this.command_comp = null;
     this.dispose();
     CoreGame.entities.remove(this);
   }
 
-// ========================= LOGIC END ========================= //
 
 
 
+// ========================= GET / SET ========================= //
 
-// ========================= ACTIONS BEGIN ========================= //
+  public static void setCamera(OrthographicCamera new_cam) {
+    world_camera = new_cam;
+  }
 
-  // Default Entity's Action
-  public void defaultAction(Entity target_entity){}
-
-  // Default Interaction with this entity
-  public void defaultInteraction(Entity source_entity) {}
-
-// ========================= ACTIONS END ========================= //
-
-
-
-
-// ========================= SETTERS/GETTERS BEGIN ========================= //
 
   // Facing Direction
   public int getFaceDirection() {
@@ -251,7 +237,6 @@ abstract public class Entity implements InputProcessor {
   public void setFaceDirection(int val) {
     facing_direction = val;
   }
-
 
 
   // ID
@@ -265,6 +250,7 @@ abstract public class Entity implements InputProcessor {
     return getDisplayName();
   }
 
+
   // Entity Type
   public int type() {
     return entity_type;
@@ -272,7 +258,6 @@ abstract public class Entity implements InputProcessor {
   public void setType(int entity_type) {
     this.entity_type = entity_type;
   }
-
 
 
   // Control Over Entity
@@ -284,7 +269,6 @@ abstract public class Entity implements InputProcessor {
   }
 
 
-
   // X
   public float getX() {
     return x_location;
@@ -292,7 +276,6 @@ abstract public class Entity implements InputProcessor {
   public void setX(float new_x) {
     x_location = new_x;
   }
-
 
 
   // Y
@@ -304,7 +287,6 @@ abstract public class Entity implements InputProcessor {
   }
 
 
-
   // Tile X (Defaults assumes a 32*32 tiles. TODO: Make this value dynamic.
   public int getTileX() {
     return (int)(getX()/32);
@@ -312,7 +294,6 @@ abstract public class Entity implements InputProcessor {
   public void setTileX(int x) {
     setX(x*32);
   }
-
 
 
   // Tile Y (Defaults assumes a 32*32 tiles. TODO: Make this value dynamic.
@@ -324,13 +305,11 @@ abstract public class Entity implements InputProcessor {
   }
 
 
-
   // Full Positioning
   public void setPosition(float new_x, float new_y){
     setX(new_x);
     setY(new_y);
   }
-
 
 
   // Width
@@ -342,7 +321,6 @@ abstract public class Entity implements InputProcessor {
   }
 
 
-
   // Height
   public int getHeight() {
     return height;
@@ -350,7 +328,6 @@ abstract public class Entity implements InputProcessor {
   public void setHeight(int new_height) {
     height = new_height;
   }
-
 
 
   // Name
@@ -362,7 +339,6 @@ abstract public class Entity implements InputProcessor {
   }
 
 
-
   // Display Name
   public String getDisplayName() {
     return display_name;
@@ -371,22 +347,22 @@ abstract public class Entity implements InputProcessor {
     display_name = name;
   }
 
-// ========================= SETTERS/GETTERS END ========================= //
 
 
 
-
-// ========================= INPUT BEGIN ========================= //
+// ========================= INPUT ========================= //
 
   @Override
   public boolean keyDown(int keycode) {
     return false;
   }
 
+
   @Override
   public boolean keyUp(int keycode) {
     return false;
   }
+
 
   @Override
   public boolean keyTyped(char character) {
@@ -395,36 +371,40 @@ abstract public class Entity implements InputProcessor {
 
 
   @Override
-  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+  public boolean touchDown(int screenX, int screenY,
+                           int pointer, int button) {
     return false;
   }
 
 
   @Override
-  public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+  public boolean touchUp(int screenX, int screenY,
+                         int pointer, int button) {
     if (collidedScreen(screenX, screenY)) {
-      Log.d(TAG + " - " + this.getName() + " touched.");
+      Log.d(TAG, this.getName() + " touched.");
       return true;
     }
     return false;
   }
 
+
   @Override
-  public boolean touchDragged(int screenX, int screenY, int pointer) {
+  public boolean touchDragged(int screenX, int screenY,
+                              int pointer) {
     return false;
   }
+
 
   @Override
   public boolean mouseMoved(int screenX, int screenY) {
     return false;
   }
 
+
   @Override
   public boolean scrolled(int amount) {
     return false;
   }
-
-// ========================= INPUT END ========================= //
 
 }
 

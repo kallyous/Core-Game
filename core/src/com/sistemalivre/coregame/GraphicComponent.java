@@ -1,7 +1,6 @@
 package com.sistemalivre.coregame;
 
 
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -11,7 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 
 
-/** ========================= GRAPHIC COMPONENT ========================= **/
+// ========================= GRAPHIC COMPONENT ========================= //
 
 public class GraphicComponent {
 
@@ -19,7 +18,7 @@ public class GraphicComponent {
 
 
 
-// ========================= DATA SETUP BEGIN ========================= //
+// ========================= DATA ========================= //
 
   // Sprite holding all crazy transformation stuff
   public Sprite sprite;
@@ -42,12 +41,10 @@ public class GraphicComponent {
   // Index of the current texture region to be rendered at runtime
   private int region_index;
 
-// ========================= DATA SETUP END ========================= //
 
 
 
-
-// ========================= CONSTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   // Default constructor assumes the GUI texture and (?) symbol
   GraphicComponent(Entity entity) {
@@ -55,7 +52,6 @@ public class GraphicComponent {
     this.texture = CoreGame.asset_manager.textures.get("DefaultInterface");
     setupDefaultGraphics();
   }
-
 
 
   // This additional one just takes also a name and texture region index
@@ -66,7 +62,9 @@ public class GraphicComponent {
     setRegionIndex(region_index);
   }
 
-  // Here we take the name of a Texture inside the AssetManager's textures hash table
+
+  /** Here we take the name of a Texture inside the AssetManager's
+    textures hash table. **/
   GraphicComponent(Entity entity, String spritesheet_name,
                    int sheet_cols, int sheet_rows,  int region_index) {
     this.entity = entity;
@@ -77,7 +75,6 @@ public class GraphicComponent {
     setupTextureRegions();
     setRegionIndex(region_index);
   }
-
 
 
   // Makes a graphic component from an arbitrary region of a given texture
@@ -99,7 +96,7 @@ public class GraphicComponent {
 
     sprite = new Sprite(texture_region[region_index]);
 
-    Log.d(TAG + " - " + entity.getName() +
+    Log.d(TAG, entity.getName() +
       " created with custom graphics and a single region.");
 
   // ------------------------- Entity Size Setup -------------------------- //
@@ -113,10 +110,9 @@ public class GraphicComponent {
   }
 
 
-
   // Default graphics loads the '?' symbol from the GUI texture
   private void setupDefaultGraphics() {
-    Log.d(TAG + " - Entity " + entity.getName() + " created with generic graphics.");
+    Log.d(TAG, "Entity " + entity.getName() + " created with generic graphics.");
     sheet_cols = 16;
     sheet_rows = 16;
     x_offset = 0;
@@ -124,7 +120,6 @@ public class GraphicComponent {
     region_index = 0;
     setupTextureRegions();
   }
-
 
 
   // Texture Regions Setup
@@ -150,8 +145,6 @@ public class GraphicComponent {
 
   }
 
-// ========================= CONSTRUCTION END ========================= //
-
 
 
 
@@ -162,37 +155,31 @@ public class GraphicComponent {
   }
 
 
+  public void drawCollBox(ShapeRenderer shape_renderer) {
 
-  public void drawCollBox(ShapeRenderer shape_rederer) {
+    shape_renderer.setColor(Color.GREEN);
+    shape_renderer.rect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
 
-    shape_rederer.setColor(Color.GREEN);
-    shape_rederer.rect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
-
-    shape_rederer.setColor(Color.LIGHT_GRAY);
-    shape_rederer.rect(sprite.getX(), sprite.getY(),
+    shape_renderer.setColor(Color.LIGHT_GRAY);
+    shape_renderer.rect(sprite.getX(), sprite.getY(),
         sprite.getWidth(), sprite.getHeight());
 
   }
 
 
-
   public void update(float dt) {
-    //sprite.setPosition(entity.getX(), entity.getY());
-    //float x_offset = entity.getX() - (entity.getWidth()/2);
-    //float y_offset = entity.getY() - (entity.getHeight()/2);
-    sprite.setPosition(entity.getX() - x_offset, entity.getY() - y_offset);
+    sprite.setPosition(
+        entity.getX() - x_offset,
+        entity.getY() - y_offset);
   }
 
-// ========================= LOGIC END ========================= //
 
 
 
-
-// ========================= GETTERS / SETTERS BEGIN ========================= //
+// ========================= GET / SET ========================= //
 
   // Texture
   public Texture getTexture() { return texture; }
-
 
 
   // Region Index (Frame)
@@ -205,12 +192,10 @@ public class GraphicComponent {
   }
 
 
-
   // Sheet Columns
   public int getSheetCols() {
     return sheet_cols;
   }
-
 
 
   // Sheet Rows
@@ -219,17 +204,12 @@ public class GraphicComponent {
   }
 
 
-
   // X Offset
   public float getSpriteOffsetX() { return x_offset; }
   public void setSpriteOffsetX(float x) { x_offset = x; }
 
 
-
   public float getSpriteOffsetY() { return y_offset; }
   public void setSpriteOffsetY(float y) { y_offset = y; }
-
-// ========================= GETTERS / SETTERS END ========================= //
-
 
 }

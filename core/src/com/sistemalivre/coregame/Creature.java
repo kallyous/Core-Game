@@ -1,12 +1,11 @@
 package com.sistemalivre.coregame;
 
 
-
 import com.badlogic.gdx.math.Vector3;
 
 
 
-/** ========================= Creature ========================= **/
+// ========================= Creature ========================= //
 
 public class Creature extends Entity {
 
@@ -14,8 +13,7 @@ public class Creature extends Entity {
 
 
 
-
-// ========================= DATA BEGIN ========================= //
+// ========================= DATA ========================= //
 
   // Possui recursos gráficos
   public GraphicComponent graphic_comp;
@@ -28,12 +26,10 @@ public class Creature extends Entity {
 
   public MovementComponent move_comp;
 
-// ========================= DATA END ========================= //
 
 
 
-
-// ========================= CREATION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   Creature(String name) {
     super(name);
@@ -57,12 +53,10 @@ public class Creature extends Entity {
     this.setType(CREATURE);
   }
 
-// ========================= CREATION END ========================= //
 
 
 
-
-// ========================= LOGIC BEGIN ========================= //
+// ========================= LOGIC ========================= //
 
   @Override
   public void update(float dt) {
@@ -73,15 +67,18 @@ public class Creature extends Entity {
   @Override
   public void dispose() {}
 
-  @Override
-  public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 
-    // Converts touched location into Vector3, for OrthographicCamera consuming it
+  @Override
+  public boolean touchUp(int screenX, int screenY,
+                         int pointer, int button) {
+
+    /** Converts touched location into Vector3,
+      for OrthographicCamera consuming it. **/
     Vector3 touched_spot = new Vector3(screenX, screenY, 0);
 
     // Tests world collision for the touched point
     if ( worldTouched(touched_spot) ) {
-      Log.d(TAG + " - We got a collision with the touch.");
+      Log.d(TAG, "We got a collision with the touch.");
       CoreGame.command_manager.sendCommand( new SelectCommand(this) );
       return true;
     }
@@ -89,15 +86,16 @@ public class Creature extends Entity {
     return false;
   }
 
+
   @Override
   public String info() {
     String info = ("Info on " + this.getDisplayName() + "\n"
         + "\tlocation " + this.getX() + " " + this.getY() + "\n"
-        + "\tHP " + body_comp.getHealthPtsCurr()  + "/" + body_comp.getHealthPtsMax() + "\n"
-        + "\tAP " + body_comp.getActionPtsCurr() + "/" + body_comp.getActionPtsMax() );
+        + "\tHP " + body_comp.getHealthPtsCurr()  + "/"
+        + body_comp.getHealthPtsMax() + "\n"
+        + "\tAP " + body_comp.getActionPtsCurr()
+        + "/" + body_comp.getActionPtsMax() );
     return info;
   }
-
-// ========================= LOGIC END ========================= //
 
 }

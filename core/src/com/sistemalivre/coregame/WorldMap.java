@@ -27,8 +27,7 @@ public class WorldMap implements GestureListener, InputProcessor {
 
 
 
-
-// ========================= DATA BEGIN ========================= //
+// ========================= DATA ========================= //
 
   public TiledMap tiled_map;
 
@@ -36,11 +35,11 @@ public class WorldMap implements GestureListener, InputProcessor {
 
   public OrthogonalTiledMapRenderer otm_renderer;
 
+  public Array<Entity> entities;
+
   private ShapeRenderer shape_renderer;
 
   private SpriteBatch entities_batch;
-
-  private Array<Entity> entities;
 
   private InputMultiplexer input_multiplexer;
 
@@ -50,14 +49,14 @@ public class WorldMap implements GestureListener, InputProcessor {
 
   private GestureDetector gesture_detector;
 
-// ========================= DATA END ========================= //
 
 
 
+// ========================= CONSTRUCTION ========================= //
 
-// ========================= CREATION BEGIN ========================= //
-
-  WorldMap(SpriteBatch entities_batch, Array<Entity> entities, InputMultiplexer input_multiplexer) {
+  WorldMap(
+      SpriteBatch entities_batch, Array<Entity> entities,
+      InputMultiplexer input_multiplexer) {
 
     int s_width = (int)CoreGame.game_window_width;
     int s_height = (int)CoreGame.game_window_height;
@@ -66,8 +65,11 @@ public class WorldMap implements GestureListener, InputProcessor {
 
     this.entities = entities;
 
-    tiled_map = new TmxMapLoader().load("maps/debug_island/overworld_island.tmx");
+    tiled_map = new TmxMapLoader().load(
+        "maps/debug_island/overworld_island.tmx");
+
     otm_renderer = new OrthogonalTiledMapRenderer(tiled_map);
+
     camera = new OrthographicCamera();
     camera.setToOrtho(false, s_width, s_height);
 
@@ -82,7 +84,8 @@ public class WorldMap implements GestureListener, InputProcessor {
     graph = new GraphMap(100, 100);
 
     // Loads all creatures from the map's creatures layer
-    Array<Creature> lvl_creats = CreatureLoader.LoadCreaturesFromTiledMap(tiled_map);
+    Array<Creature> lvl_creats =
+        CreatureLoader.LoadCreaturesFromTiledMap(tiled_map);
 
     // Insert all loaded creatures into the game running world
     for (int i = 0; i < lvl_creats.size; i++)
@@ -95,18 +98,15 @@ public class WorldMap implements GestureListener, InputProcessor {
 
   }
 
-// ========================= CREATION END ========================= //
 
 
 
-
-// ========================= LOGIC BEGIN ========================= //
+// ========================= LOGIC ========================= //
 
   public void update(float dt) {
     if (world_running)
       for (Entity ent : entities) ent.update(dt);
   }
-
 
 
   public void render() {
@@ -122,16 +122,16 @@ public class WorldMap implements GestureListener, InputProcessor {
   }
 
 
-
   private void drawEntities() {
 
     // Start the batch thing
     entities_batch.begin();
 
-    /* Camera Projection: This projects the objects position into the camera
-     * point of view. It means that things will be rendered with their sprites positions
-     * projected into the game world matrix or coordinate system, instead of
-     * relative to the screen coordinates. */
+    /** Camera Projection:
+      This projects the objects position into the camera point of view.
+      It means that things will be rendered with their sprites positions
+      projected into the game world matrix or coordinate system, instead of
+      relative to the screen coordinates. **/
     entities_batch.setProjectionMatrix(camera.combined);
 
     // Lets go and check all entities for drawing
@@ -143,13 +143,13 @@ public class WorldMap implements GestureListener, InputProcessor {
           ((Creature)ent).graphic_comp.draw(entities_batch);
           break;
         case Entity.PLANT:
-          Log.w(TAG + " - No plants implemetned");
+          Log.w(TAG, "No plants implemetned");
           break;
         case Entity.STRUCTURE:
-          Log.w(TAG + " - No structures implemented");
+          Log.w(TAG, "No structures implemented");
           break;
         case Entity.PICKUP:
-          Log.w(TAG + " - No pickups implemented");
+          Log.w(TAG, "No pickups implemented");
           break;
         case Entity.MOVEMARK:
           ((SupportUIElement)ent).graphic_comp.draw(entities_batch);
@@ -173,27 +173,24 @@ public class WorldMap implements GestureListener, InputProcessor {
           ((Creature)ent).graphic_comp.drawCollBox(shape_renderer);
           break;
         case Entity.PLANT:
-          Log.w(TAG + " - No plants implemented");
+          Log.w(TAG, "No plants implemented");
           break;
         case Entity.STRUCTURE:
-          Log.w(TAG + " - No structures implemented");
+          Log.w(TAG, "No structures implemented");
           break;
         case Entity.PICKUP:
-          Log.w(TAG + " - No pickups implemented");
+          Log.w(TAG, "No pickups implemented");
           break;
       }
     }
     shape_renderer.end();
 
-
   }
-
 
 
   public void addEntity(Entity ent) {
     this.entities.add(ent);
   }
-
 
 
   private void drawGrid() {
@@ -213,12 +210,10 @@ public class WorldMap implements GestureListener, InputProcessor {
   }
 
 
-
   public void suspend() {
     world_running = false;
     clearInputMultiplexer();
   }
-
 
 
   public void resume() {
@@ -226,12 +221,10 @@ public class WorldMap implements GestureListener, InputProcessor {
     reloadInputMultiplexer();
   }
 
-// ========================= LOGIC END ========================= //
 
 
 
-
-// ========================= SETTERS / GETTERS BEGIN ========================= //
+// ========================= GET / SET ========================= //
 
   public void setInputMultiplexer(InputMultiplexer input_multiplexer) {
     this.input_multiplexer = input_multiplexer;
@@ -239,7 +232,6 @@ public class WorldMap implements GestureListener, InputProcessor {
     input_multiplexer.addProcessor(this); // That's for InputProcessor
     input_multiplexer.addProcessor(gesture_detector);
   }
-
 
 
   public void reloadInputMultiplexer() {
@@ -250,35 +242,40 @@ public class WorldMap implements GestureListener, InputProcessor {
   }
 
 
-
   public void clearInputMultiplexer() {
     for (Entity ent : entities) input_multiplexer.removeProcessor(ent);
     input_multiplexer.removeProcessor(this); // That's for InputProcessor
     input_multiplexer.removeProcessor(gesture_detector);
   }
 
-// ========================= SETTERS / GETTERS END ========================= //
 
 
 
-
-// ========================= INPUT HANDLING BEGIN ========================= //
+// ========================= INPUT ========================= //
 
   @Override
-  public boolean touchDown(float x, float y, int pointer, int button) {
+  public boolean touchDown(float x, float y,
+                           int pointer, int button) {
     return false;
   }
 
 
   @Override
-  public boolean tap(float screenX, float screenY, int count, int button) {
-    Log.d(TAG + ": Map touched.");
+  public boolean tap(float screenX, float screenY,
+                     int count, int button) {
+    Log.d(TAG, "Map touched.");
+
+    // Screen touch/click always clear the scene from any support ui elements.
+    CoreGame.command_manager.sendCommand(
+        new DestroyWorldEntitiesByTypeCommand(Entity.MOVEMARK) );
+
     if (Entity.selected_entity != null) {
 
       // Prepares a vector with the coordinates of the touch on the screen.
       Vector3 target = new Vector3(screenX, screenY, 0);
 
-      // Using the world camera, unprojects this coordinates from the screen into the world coordinates.
+      /** Using the world camera, unprojects this coordinates from the screen
+        into the world coordinates. **/
       camera.unproject(target);
 
       // Enforces grid alignment
@@ -309,16 +306,16 @@ public class WorldMap implements GestureListener, InputProcessor {
 
           }
           else {
-            Log.d(TAG + ": " + Entity.selected_entity.getName()
+            Log.d(TAG, Entity.selected_entity.getName()
                 + " is not controllable.");
           }
           break;
         default:
-          Log.d(TAG + ": No action for the selected entity.");
+          Log.d(TAG, "No action for the selected entity.");
           break;
       }
     }
-    else if (button == 1){ // Right button places new fucker aligned ot the grid.
+    else if (button == 1){ // Right button. Places fucker aligned to the grid.
       Vector3 location = new Vector3(screenX, screenY, 0);
       camera.unproject(location);
 
@@ -344,13 +341,15 @@ public class WorldMap implements GestureListener, InputProcessor {
 
 
   @Override
-  public boolean fling(float velocityX, float velocityY, int button) {
+  public boolean fling(float velocityX, float velocityY,
+                       int button) {
     return false;
   }
 
 
   @Override
-  public boolean pan(float x, float y, float deltaX, float deltaY) {
+  public boolean pan(float x, float y,
+                     float deltaX, float deltaY) {
     float effective_drag_x = deltaX*camera.zoom;
     float effective_drag_y = deltaY*camera.zoom;
     Vector3 new_position = new Vector3(
@@ -364,7 +363,8 @@ public class WorldMap implements GestureListener, InputProcessor {
 
 
   @Override
-  public boolean panStop(float x, float y, int pointer, int button) {
+  public boolean panStop(float x, float y,
+                         int pointer, int button) {
     return false;
   }
 
@@ -376,7 +376,8 @@ public class WorldMap implements GestureListener, InputProcessor {
 
 
   @Override
-  public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+  public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2,
+                       Vector2 pointer1, Vector2 pointer2) {
     return false;
   }
 
@@ -406,13 +407,15 @@ public class WorldMap implements GestureListener, InputProcessor {
 
 
   @Override
-  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+  public boolean touchDown(int screenX, int screenY,
+                           int pointer, int button) {
     return false;
   }
 
 
   @Override
-  public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+  public boolean touchUp(int screenX, int screenY,
+                         int pointer, int button) {
     return false;
   }
 
@@ -436,7 +439,5 @@ public class WorldMap implements GestureListener, InputProcessor {
     camera.zoom = (float)MathUtils.clamp(zoom, 1.0, 10.0);
     return true;
   }
-
-// ========================= INPUT HANDLING END ========================= //
 
 }

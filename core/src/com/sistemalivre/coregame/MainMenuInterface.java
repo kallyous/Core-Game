@@ -1,12 +1,11 @@
 package com.sistemalivre.coregame;
 
 
-
 import com.badlogic.gdx.utils.Array;
 
 
 
-/** ========================= MAIN MENU GUI ========================= **/
+// ========================= MAIN MENU GUI ========================= //
 
 // GUI for the main menu or title screen
 public class MainMenuInterface extends UserInterface {
@@ -15,7 +14,7 @@ public class MainMenuInterface extends UserInterface {
 
 
 
-// ========================= CONSTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   MainMenuInterface(float width, float height) {
 
@@ -23,7 +22,8 @@ public class MainMenuInterface extends UserInterface {
 
     elements = new Array<UiElement>(2);
 
-// ------------------------- UiElement - Start Button -------------------------- //
+
+// --------------- UiElement - Start Button ---------------- //
 
     // New Anonymous UiElement Sub-Class
     UiElement start_btn = new UiElement(
@@ -36,15 +36,17 @@ public class MainMenuInterface extends UserInterface {
 
       // Overrides the touchDown() input event to generate the desired command
       @Override
-      public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+      public boolean touchUp(int screenX, int screenY,
+                             int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          Log.i(TAG + " - Play game touched, sending RunGameCommand to manager.");
+          Log.i(TAG, "Play game touched, sending RunGameCommand to manager.");
           CoreGame.command_manager.sendCommand(new RunGameCommand(this));
           return true;
         }
         return false;
       }
     };
+
 
     // Register button on hash table
     CoreGame.entities.put(start_btn.getName(), start_btn);
@@ -66,8 +68,7 @@ public class MainMenuInterface extends UserInterface {
     elements.add(start_btn);
 
 
-
-// ------------------------- UiElement - Exit Game Button -------------------------- //
+// --------------- UiElement - Exit Game Button ---------------- //
 
     // New Anonymous UiElement Sub-Class
     UiElement exit_game_btn = new UiElement(
@@ -80,9 +81,10 @@ public class MainMenuInterface extends UserInterface {
 
       // Overrides the touchDown() input event to generate the desired command
       @Override
-      public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+      public boolean touchUp(int screenX, int screenY,
+                             int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          Log.i(TAG + " - Exit game touched, sending ExitCommand to manager.");
+          Log.i(TAG, "Exit game touched, sending ExitCommand to manager.");
           CoreGame.command_manager.sendCommand(new ExitCommand(this));
           return true;
         }
@@ -90,6 +92,7 @@ public class MainMenuInterface extends UserInterface {
       }
 
     };
+
 
     // Register button on hash table
     CoreGame.entities.put(exit_game_btn.getName(), exit_game_btn);
@@ -111,10 +114,10 @@ public class MainMenuInterface extends UserInterface {
     elements.add(exit_game_btn);
 
 
-
 // ------------------------- Game Title Test -------------------------- //
 
-    TextElement game_title = new TextElement("game_title_main","Nope Island Game");
+    TextElement game_title = new TextElement(
+        "game_title_main","Nope Island Game");
 
     CoreGame.entities.put(game_title.getName(), game_title);
 
@@ -125,7 +128,5 @@ public class MainMenuInterface extends UserInterface {
     elements.add(game_title);
 
   }
-
-// ========================= CONSTRUCTION END ========================= //
 
 }

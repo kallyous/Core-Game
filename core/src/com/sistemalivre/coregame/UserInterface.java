@@ -1,7 +1,6 @@
 package com.sistemalivre.coregame;
 
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
@@ -13,7 +12,7 @@ import com.badlogic.gdx.utils.Array;
 
 
 
-/** ========================= GUI SUPERCLASS ========================= **/
+// ========================= GUI SUPERCLASS ========================= //
 
 // Superclass on top of what all GUI shall be built
 public class UserInterface {
@@ -22,8 +21,7 @@ public class UserInterface {
 
 
 
-
-// ========================= DATA SETUP BEGIN ========================= //
+// ========================= DATA ========================= //
 
   // Screen Dimensions
   protected static float screen_width, screen_height;
@@ -34,12 +32,10 @@ public class UserInterface {
   // Array holding the UI elements
   public Array<UiElement> elements;
 
-// ========================= DATA SETUP END ========================= //
 
 
 
-
-// ========================= CONSTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   // Main Constructor
   UserInterface(float width, float height) {
@@ -53,40 +49,40 @@ public class UserInterface {
 
   }
 
-// ========================= CONSTRUCTION END ========================= //
 
 
 
-
-// ========================= LOGIC BEGIN ========================= //
+// ========================= LOGIC ========================= //
 
   // Update all elements based on game sate
   public void update(float dt) {
     for (UiElement elem : elements) elem.update(dt);
   }
 
+
   // Draw All UiElement's
   public void draw(SpriteBatch batch) {
     for (UiElement elem : elements) elem.draw(batch);
   }
 
+
   // Sets all UiElements' input connections
   public void setInputMultiplexer(InputMultiplexer multiplexer) {
-    Log.i(TAG + ": Setting InputMultiplexer to "
+    Log.i(TAG, "Setting InputMultiplexer to "
         + multiplexer.toString() );
     for (UiElement elem : elements) multiplexer.addProcessor(elem);
   }
+
 
   // Remove elementos from InputMultiplexer
   public void unsetInputMultiplexer(InputMultiplexer multiplexer) {
     for (UiElement elem : elements) multiplexer.removeProcessor(elem);
   }
 
+
   public void setCommandManager(CommandManager manager) {
     for (UiElement elem : elements) manager.addListenner(elem);
   }
-
-// ========================= LOGIC END ========================= //
 
 }
 
@@ -94,7 +90,7 @@ public class UserInterface {
 
 
 
-/** ========================= GUI ELEMENT ========================= **/
+// ========================= GUI ELEMENT ========================= //
 
 // Superclass on top of what all GUI's elements shall be built
 class UiElement extends Entity {
@@ -103,17 +99,14 @@ class UiElement extends Entity {
 
 
 
-
-// ========================= DATA SETUP BEGIN ========================= //
+// ========================= DATA ========================= //
 
   GraphicComponent graphic_comp;
 
-// ========================= DATA SETUP END ========================= //
 
 
 
-
-// ========================= CONSTRUCTION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   // Default constructor spans a (?) button
   UiElement(String name) {
@@ -123,7 +116,6 @@ class UiElement extends Entity {
   }
 
 
-
   // This one spans a button using the default GUI texture
   UiElement(String name, int region_index) {
     super(name);
@@ -131,7 +123,9 @@ class UiElement extends Entity {
     command_comp = new CommandComponent(this);
   }
 
-  // Cosntructor that optionally does not initializes a graphic component, mostly for texts
+
+  /** Cosntructor that optionally does not initializes a graphic
+    component, mostly for texts. **/
   UiElement(String name, boolean has_graphic_comp) {
     super(name);
     if (has_graphic_comp) graphic_comp = new GraphicComponent(this, 0);
@@ -155,12 +149,10 @@ class UiElement extends Entity {
 
   }
 
-// ========================= CONSTRUCTION END ========================= //
 
 
 
-
-// ========================= LOGIC BEGIN ========================= //
+// ========================= LOGIC ========================= //
 
   // Updates graphic component
   @Override
@@ -168,25 +160,27 @@ class UiElement extends Entity {
     graphic_comp.update(dt);
   }
 
+
   // Draw whatever is int graphic component
   public void draw(SpriteBatch batch) {
     graphic_comp.draw(batch);
   }
 
-  // By default, each button just issues a SelectCommand to itself (potentially useless)
+
+  /** By default, each button just issues a SelectCommand
+    to itself. (potentially useless) **/
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
     if (collidedScreen(screenX, screenY)) {
-      Log.i(TAG + ": Sending a SelectCommand. ");
+      Log.i(TAG, "Sending a SelectCommand. ");
       CoreGame.command_manager.sendCommand( new SelectCommand(this) );
     }
     return false;
   }
 
+
   @Override
   public void dispose() {}
-
-// ========================= LOGIC END ========================= //
 
 }
 
@@ -195,7 +189,7 @@ class UiElement extends Entity {
 
 
 
-/** ========================= TextElement ========================= **/
+// ========================= TextElement ========================= //
 
 class TextElement extends UiElement {
 
@@ -203,8 +197,7 @@ class TextElement extends UiElement {
 
 
 
-
-// ========================= DATA BEGIN ========================= //
+// ========================= DATA ========================= //
 
   public static final BitmapFont default_font = new BitmapFont(
       Gdx.files.internal("graphic/def-bitmap-font.fnt") );
@@ -213,12 +206,10 @@ class TextElement extends UiElement {
 
   protected Label.LabelStyle label_style;
 
-// ========================= DATA END ========================= //
 
 
 
-
-// ========================= CREATION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
   TextElement(String name, String content) {
 
@@ -241,27 +232,25 @@ class TextElement extends UiElement {
 
   }
 
-// ========================= CREATION END ========================= //
 
 
 
-
-// ========================= LOGIC BEGIN ========================= //
+// ========================= LOGIC ========================= //
 
   @Override
   public void update(float dt) {}
+
 
   @Override
   public void draw(SpriteBatch batch) {
     label.draw(batch, 1);
   }
 
+
   @Override
   public void setPosition(float x, float y) {
     this.label.setPosition(x, y);
     super.setPosition(x, y);
   }
-
-// ========================= LOGIC END ========================= //
 
 }
