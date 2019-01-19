@@ -38,8 +38,11 @@ public class Creature extends Entity {
     body_comp = new BodyComponent(this);
     combat_comp = new CombatComponent(this);
     move_comp = new MovementComponent(this);
-    this.command_comp.enableCommand("SelectCommand");
-    this.setType(CREATURE);
+    command_comp.enableCommand("SelectCommand");
+    command_comp.addState( new IdleState() );
+    command_comp.addState( new MovingState() );
+    setState("IdleState");
+    setType(CREATURE);
   }
 
   Creature(String name, String spritesheet_name,
@@ -51,8 +54,11 @@ public class Creature extends Entity {
     body_comp = new BodyComponent(this);
     combat_comp = new CombatComponent(this);
     move_comp = new MovementComponent(this);
-    this.command_comp.enableCommand("SelectCommand");
-    this.setType(CREATURE);
+    command_comp.enableCommand("SelectCommand");
+    command_comp.addState( new IdleState() );
+    command_comp.addState( new MovingState() );
+    setState("IdleState");
+    setType(CREATURE);
   }
 
 

@@ -234,6 +234,14 @@ abstract public class Entity implements InputProcessor {
     world_camera = new_cam;
   }
 
+  EntityState getState() {
+    return command_comp.getState();
+  }
+  boolean setState(String state_name) {
+    if (command_comp.setState(state_name))
+      return true;
+    return false;
+  }
 
   // Facing Direction
   public int getFaceDirection() {

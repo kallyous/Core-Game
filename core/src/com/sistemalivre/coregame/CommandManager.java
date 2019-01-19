@@ -42,7 +42,8 @@ public class CommandManager {
     // This entity accepts and try to run anything
     commander.command_comp = new CommandComponent(commander) {
       @Override
-      protected boolean isItForMe(Command command) {
+      public boolean execute(Command command) {
+        command.execute();
         return true;
       }
     };

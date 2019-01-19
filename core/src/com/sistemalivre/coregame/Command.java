@@ -420,7 +420,7 @@ class TracePathCommand extends Command {
             // Tests world collision for the touched point
             if ( worldTouched(touched_spot) ) {
               Log.d(TAG, "We got a collision with the touch.");
-              CommandManager.sendCommand( new SelectCommand(this) );
+              CommandManager.sendCommand( new MoveToCommand(target) );
               return true;
             }
 
@@ -748,6 +748,97 @@ class LoadAndPlaceCreatureCommand extends Command {
   @Override
   public String getTAG() {
     return TAG;
+  }
+
+}
+
+
+
+
+
+// ========================== MoveToCommand ========================== //
+
+class MoveToCommand extends Command {
+
+  private static final String TAG = "MoveToCommand";
+
+
+
+// ========================== DATA ========================== //
+
+
+
+
+
+
+// ========================== CREATE ========================== //
+
+  MoveToCommand(Entity target) {
+    super(target, null);
+  }
+
+  MoveToCommand(String name) {
+    super(name, null);
+  }
+
+
+
+
+// ========================== LOGIC ========================== //
+
+  @Override
+  public boolean execute() {
+    Log.w(TAG, "Command not yet implemented. Updating entity state to MovingState.");
+    target.setState("MovingState");
+    return true;
+  }
+
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
+
+}
+
+
+
+
+
+// ========================== StopMovingCommand ========================== //
+
+class StopMovingCommand extends Command {
+
+  private static final String TAG = "StopMovingCommand";
+
+
+
+// ========================== CREATE ========================== //
+
+  StopMovingCommand(Entity target) {
+    super(target, null);
+  }
+
+  StopMovingCommand(String name) {
+    super(name, null);
+  }
+
+
+
+
+// ========================== LOGIC ========================== //
+
+  @Override
+  public boolean execute() {
+    Log.w(TAG, "Not implemented yet.");
+    target.setState("IdleState");
+    return true;
+  }
+
+
+  @Override
+  public String getTAG() {
+    return null;
   }
 
 }

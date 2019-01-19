@@ -78,7 +78,7 @@ public class CoreGame extends ApplicationAdapter {
   @Override
   public void create() {
 
-    Log.LOG_LEVEL = Log.INFO;
+    Log.LOG_LEVEL = Log.VERBOSE;
 
     // Starts timer
     state_time = 0f;
