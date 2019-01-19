@@ -5,6 +5,7 @@ package com.sistemalivre.coregame;
 // ========================== EntityState ========================== //
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Queue;
 
 
 
@@ -16,13 +17,18 @@ abstract public class EntityState {
 
 // ========================== DATA ========================== //
 
+  // All available commands for current State
   protected Array<String> enabled_commands;
+
+  // Entity owning the current instance
+  public Entity owner;
 
 
 
 // ========================== CREATE ========================== //
 
-  EntityState() {
+  EntityState(Entity owner) {
+    this.owner = owner;
     enabled_commands = new Array<>(4);
     enabled_commands.add("DestroyEntityCommand");
   }
@@ -38,14 +44,7 @@ abstract public class EntityState {
 
   abstract void leave();
 
-  boolean enterState(Entity target, String state_name) {
-    if (target.setState(state_name)) {
-      leave();
-      target.getState().init();
-      return true;
-    }
-    return false;
-  }
+  void update(float dt) {}
 
   boolean execute(Command command) {
 
@@ -79,7 +78,9 @@ class InactiveState extends EntityState{
 
 // ========================== CREATE ========================== //
 
-  InactiveState() {}
+  InactiveState(Entity entity) {
+    super(entity);
+  }
 
 
 
@@ -124,7 +125,8 @@ class IdleState extends EntityState {
 
 // ========================== CREATE ========================== //
 
-  IdleState() {
+  IdleState(Entity entity) {
+    super(entity);
     enabled_commands.add("MoveToCommand");
     enabled_commands.add("SelectCommand");
     enabled_commands.add("TracePathCommand");
@@ -159,11 +161,17 @@ class MovingState extends EntityState {
 
   private static final String TAG = "MovingState";
 
-
+  Queue<GraphMapVertex> path;
 
 // ========================== CREATE ========================== //
 
-  MovingState() {
+  MovingState(Entity entity) {
+    super(entity);
+    enabled_commands.add("StopMovingCommand");
+  }
+
+  MovingState(Entity entity, Queue<GraphMapVertex> path) {
+    super(entity);
     enabled_commands.add("StopMovingCommand");
   }
 
@@ -172,8 +180,14 @@ class MovingState extends EntityState {
 
 // ========================== LOGIC ========================== //
 
+
+
   void init() {
-    Log.w(TAG, "init() not implemented");
+    Log.d(TAG, "Entity is now moving. (" + owner.getName() + ")");
+  }
+
+  void update(float dt) {
+    System.out.print("o ");
   }
 
   void leave() {

@@ -34,20 +34,15 @@ public class CommandManager {
     // Cosntructos a entity to run target-less commands
     commander = new Entity("GameCommander") {
       @Override
-      public void update(float dt) {}
-      @Override
-      public void dispose() {}
-    };
-
-    // This entity accepts and try to run anything
-    commander.command_comp = new CommandComponent(commander) {
-      @Override
-      public boolean execute(Command command) {
+      boolean executeCommand(Command command) {
         command.execute();
         return true;
       }
+      @Override
+      public void updateExtra(float dt) {}
+      @Override
+      public void dispose() {}
     };
-
   }
 
 

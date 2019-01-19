@@ -38,16 +38,12 @@ public class RunningGameInterface extends UserInterface {
         if (collidedScreen(screenX, screenY)) {
           Log.d(TAG, "Main Menu Button touched," +
               " sending OpenMainMenuCommand to manager.");
-          CommandManager.sendCommand(
-              new OpenMainMenuCommand());
+          CommandManager.sendCommand(new OpenMainMenuCommand());
           return true;
         }
         return false;
       }
     });
-
-    // Enable de desired command for this UiElement to consume.
-    elements.get(0).command_comp.enableCommand("OpenMainMenuCommand");
 
     // Set the entity/button location on the screen
     elements.get(0).setPosition(10, screen_height - 42);
@@ -67,19 +63,14 @@ public class RunningGameInterface extends UserInterface {
       public boolean touchUp(int screenX, int screenY,
                              int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          Log.d(TAG, "Pass Turn Button touched, setting selection_name text");
-          CommandManager.sendCommand( new SelectCommand(this) );
+          Log.d(TAG, "Pass Turn Button touched.");
+          Log.w(TAG, "Turns not implemented.");
           return true;
         }
         return false;
       }
 
     };
-
-
-    // This entity will process it1s own selection
-    // TODO: 27/12/18 All selections shall be handled somewhere else
-    btn_pass.command_comp.enableCommand("SelectCommand");
 
     // Register in the hash map
     CoreGame.entities.put(btn_pass.getName(), btn_pass);
@@ -97,7 +88,9 @@ public class RunningGameInterface extends UserInterface {
     // Creates a text element to hold the name of the selected entitie
     TextElement sel_txt = new TextElement(
         "selection_name", "Nada selecionado") {
+
       private static final String TAG = "SelectionTextElement";
+
       @Override
       public void update(float dt) {
         if (Entity.selected_entity == null)
@@ -105,13 +98,31 @@ public class RunningGameInterface extends UserInterface {
         else
           this.label.setText( Entity.selected_entity.getDisplayName() );
       }
+
     };
+
+    EntityState state = new EntityState(sel_txt) {
+
+      private static final String TAG = "DynamicTextState";
+
+      @Override
+      String getName() {
+        return TAG;
+      }
+
+      @Override
+      void init() {}
+
+      @Override
+      void leave() {}
+    };
+
+    state.enabled_commands.add("SetTextContentCommand");
+
+    sel_txt.states.add(state);
 
     // Register the element in the hash map
     CoreGame.entities.put(sel_txt.getName(), sel_txt);
-
-    // Enable the desired command
-    sel_txt.command_comp.enableCommand("SetTextContentCommand");
 
     // Scale down the font
     sel_txt.label.setFontScale(.6f);

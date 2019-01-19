@@ -392,8 +392,7 @@ class TracePathCommand extends Command {
     Log.d(TAG, "Tracing path for " + target.getName());
 
     Queue<GraphMapVertex> path = breadthFirstSearch(entrance, exit);
-
-    // TODO: delete all previous movement markers by broadcasting a destroy
+    Queue<GraphMapVertex> reverse = new Queue<>();
 
     GraphMapVertex g;
 
@@ -401,8 +400,8 @@ class TracePathCommand extends Command {
 
     for (int i = 0; i < path.size;) {
 
-      //g = path.removeFirst();
       g = path.removeLast();
+      reverse.addLast(g);
 
       if (path.size == 0) {
 
@@ -419,8 +418,17 @@ class TracePathCommand extends Command {
 
             // Tests world collision for the touched point
             if ( worldTouched(touched_spot) ) {
+
               Log.d(TAG, "We got a collision with the touch.");
-              CommandManager.sendCommand( new MoveToCommand(target) );
+
+              CommandManager.sendCommand(
+                  new MoveToCommand(target, reverse) );
+
+              // Screen touch/click always clear the scene from any support ui elements.
+              CommandManager.sendCommand(
+                  new DestroyWorldEntitiesByTypeCommand(Entity.MOVEMARK)
+              );
+
               return true;
             }
 
@@ -430,7 +438,6 @@ class TracePathCommand extends Command {
         };
 
         element.setDisplayName("Path Destination");
-        element.command_comp.enableCommand("SelectCommand");
 
         element.setPosition(
             g.getX()*Global.tile_size,
@@ -766,19 +773,21 @@ class MoveToCommand extends Command {
 
 // ========================== DATA ========================== //
 
-
+  Queue<GraphMapVertex> path;
 
 
 
 
 // ========================== CREATE ========================== //
 
-  MoveToCommand(Entity target) {
+  MoveToCommand(Entity target, Queue<GraphMapVertex> path) {
     super(target, null);
+    this.path = path;
   }
 
-  MoveToCommand(String name) {
+  MoveToCommand(String name, Queue<GraphMapVertex> path) {
     super(name, null);
+    this.path = path;
   }
 
 
@@ -788,8 +797,7 @@ class MoveToCommand extends Command {
 
   @Override
   public boolean execute() {
-    Log.w(TAG, "Command not yet implemented. Updating entity state to MovingState.");
-    target.setState("MovingState");
+    target.setState( new MovingState(target, path) );
     return true;
   }
 

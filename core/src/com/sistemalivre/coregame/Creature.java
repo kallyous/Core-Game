@@ -38,9 +38,8 @@ public class Creature extends Entity {
     body_comp = new BodyComponent(this);
     combat_comp = new CombatComponent(this);
     move_comp = new MovementComponent(this);
-    command_comp.enableCommand("SelectCommand");
-    command_comp.addState( new IdleState() );
-    command_comp.addState( new MovingState() );
+    states.add(new IdleState(this));
+    states.add(new MovingState(this));
     setState("IdleState");
     setType(CREATURE);
   }
@@ -54,9 +53,8 @@ public class Creature extends Entity {
     body_comp = new BodyComponent(this);
     combat_comp = new CombatComponent(this);
     move_comp = new MovementComponent(this);
-    command_comp.enableCommand("SelectCommand");
-    command_comp.addState( new IdleState() );
-    command_comp.addState( new MovingState() );
+    states.add(new IdleState(this));
+    states.add(new MovingState(this));
     setState("IdleState");
     setType(CREATURE);
   }
@@ -67,7 +65,7 @@ public class Creature extends Entity {
 // ========================= LOGIC ========================= //
 
   @Override
-  public void update(float dt) {
+  public void updateExtra(float dt) {
     graphic_comp.update(dt);
   }
 

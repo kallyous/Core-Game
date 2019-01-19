@@ -107,7 +107,6 @@ class UiElement extends Entity {
   UiElement(String name) {
     super(name);
     graphic_comp = new GraphicComponent(this, 0);
-    command_comp = new CommandComponent(this);
   }
 
 
@@ -115,7 +114,6 @@ class UiElement extends Entity {
   UiElement(String name, int region_index) {
     super(name);
     graphic_comp = new GraphicComponent(this, region_index);
-    command_comp = new CommandComponent(this);
   }
 
 
@@ -125,7 +123,6 @@ class UiElement extends Entity {
     super(name);
     if (has_graphic_comp) graphic_comp = new GraphicComponent(this, 0);
     else graphic_comp = null;
-    command_comp = new CommandComponent(this);
   }
 
 
@@ -140,8 +137,6 @@ class UiElement extends Entity {
         region_x, region_y, width, height
     );
 
-    command_comp = new CommandComponent(this);
-
   }
 
 
@@ -151,7 +146,7 @@ class UiElement extends Entity {
 
   // Updates graphic component
   @Override
-  public void update(float dt) {
+  public void updateExtra(float dt) {
     graphic_comp.update(dt);
   }
 
@@ -233,7 +228,7 @@ class TextElement extends UiElement {
 // ========================= LOGIC ========================= //
 
   @Override
-  public void update(float dt) {}
+  public void updateExtra(float dt) {}
 
 
   @Override

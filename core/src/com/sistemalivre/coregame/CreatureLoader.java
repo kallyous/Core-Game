@@ -109,11 +109,6 @@ public class CreatureLoader {
       // Setup creature's sprite offset
       //creature.graphic_comp.setSpriteOffsetX(creature.getWidth()/2);
 
-      // If creature is player owned, enable moving it
-      if (creature.isControllable()) {
-        creature.command_comp.enableCommand("TracePathCommand");
-      }
-
       // Add it to the array to return
       creeps.add(creature);
 

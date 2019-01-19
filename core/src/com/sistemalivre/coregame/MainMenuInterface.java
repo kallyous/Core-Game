@@ -51,10 +51,6 @@ public class MainMenuInterface extends UserInterface {
     // Register button on hash table
     CoreGame.entities.put(start_btn.getName(), start_btn);
 
-    // Enable de desired command for this UiElement to consume.
-    start_btn.command_comp.enableCommand( "RunGameCommand" );
-    // TODO: 25/12/18 Set the RunGameCommand to be consumed by other entity
-
     // Set the entity/button location on the screen
     start_btn.setPosition(
         (screen_width - start_btn.getWidth()) / 2,
@@ -97,10 +93,6 @@ public class MainMenuInterface extends UserInterface {
     // Register button on hash table
     CoreGame.entities.put(exit_game_btn.getName(), exit_game_btn);
 
-    // Enable de desired command for this UiElement to consume.
-    exit_game_btn.command_comp.enableCommand( "ExitCommand" );
-    // TODO: 25/12/18 Set the ExitCommand to be consumed by other entity
-
     // Set the entity/button location on the screen
     exit_game_btn.setPosition(
         (screen_width - start_btn.getWidth()) / 2,
@@ -120,8 +112,6 @@ public class MainMenuInterface extends UserInterface {
         "game_title_main","Nope Island Game");
 
     CoreGame.entities.put(game_title.getName(), game_title);
-
-    game_title.command_comp.enableCommand("SetTextContentCommand");
 
     game_title.setPosition(margin, screen_height - margin - 24);
 

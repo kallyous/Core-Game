@@ -5,8 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-
-
+import com.badlogic.gdx.utils.Array;
 
 // ========================= ENTITY SUPERCLASS ========================= //
 
@@ -96,8 +95,12 @@ abstract public class Entity implements InputProcessor {
     There are two unifying features to all entities - They all have a location
     in the game world and they all at least CAN receive commands, to perform
     or be targets of actions. Therefore, all entities have (X,Y) coordinates
-    and a CommandComponent. **/
-  CommandComponent command_comp;
+    and a Finite State Machine setup. Each state has a set of commands it can
+    perform. **/
+  Array<EntityState> states;
+
+  // Holds the current state
+  EntityState current_state;
 
 
 
@@ -116,10 +119,10 @@ abstract public class Entity implements InputProcessor {
       call it's owndestruction method right after it's creation. **/
     this.name = name;
 
-    /** Event if the entity creation fails due to duplicated name, we need
-      to setup the CommandComponent for receiving the self destruction
-      command. This ensures proper assets disposal. **/
-    command_comp = new CommandComponent(this);
+    states = new Array<>(4);
+    EntityState s = new InactiveState(this);
+    states.add(s);
+    current_state = s;
 
     // By default we use a 32x32 pixels size.
     setDefaultDimensions();
@@ -164,8 +167,7 @@ abstract public class Entity implements InputProcessor {
 
 // ========================= ABSTRACTION BEGIN ========================= //
 
-  // Update entity status
-  abstract public void update(float dt);
+  abstract void updateExtra(float dt);
 
   /** Dispose of any resources and/or unplug from any trackers
     for entity destruction. **/
@@ -176,14 +178,19 @@ abstract public class Entity implements InputProcessor {
 
 // ========================= LOGIC BEGIN ========================= //
 
-  // Pipes commands to it's command component
-  public boolean executeCommand(Command command) {
-    return command_comp.execute(command);
+  void update(float dt) {
+    current_state.update(dt);
+    updateExtra(dt);
+  }
+
+  // Pipes commands to current_state
+  boolean executeCommand(Command command) {
+    return current_state.execute(command);
   }
 
 
   // Collision Detection (from camera/world)
-  public boolean worldTouched(Vector3 point) {
+  boolean worldTouched(Vector3 point) {
 
     world_camera.unproject(point);
 
@@ -198,7 +205,7 @@ abstract public class Entity implements InputProcessor {
 
 
   // Collision Detection from Screen
-  public boolean collidedScreen(int screenX, int screenY) {
+  boolean collidedScreen(int screenX, int screenY) {
     int h = Gdx.graphics.getHeight();
     if ((screenX > x_location && screenX < x_location + width) &&
         ((screenY > h - y_location - height) && (screenY < h - y_location))){
@@ -213,12 +220,41 @@ abstract public class Entity implements InputProcessor {
     After calling the dispose() method, which shall dispose of all allocated
     assets and/or unplug the entity of any records/trackers, the method
     destroy() will finally unplug the entity from the hash table. **/
-  public void destroy() {
+  void destroy() {
     Log.i(TAG, "Destroying " + this.toString() + "(" + name + ")");
     if (selected_entity == this) selected_entity = null;
-    this.command_comp = null;
     this.dispose();
+    for (EntityState state : states)
+      state = null;
+    states = null;
     CoreGame.entities.remove(this);
+  }
+
+  boolean setState(String state_name) {
+    for (EntityState available_state : states) {
+      if (available_state.getName().equals(state_name)) {
+        enterState(available_state);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  boolean setState(EntityState new_state) {
+    for (EntityState state : states) {
+      if (state.getName().equals(new_state.getName())) {
+        state = new_state;
+        enterState(state);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  protected void enterState(EntityState state) {
+    current_state.leave();
+    current_state = state;
+    current_state.init();
   }
 
 
@@ -235,12 +271,7 @@ abstract public class Entity implements InputProcessor {
   }
 
   EntityState getState() {
-    return command_comp.getState();
-  }
-  boolean setState(String state_name) {
-    if (command_comp.setState(state_name))
-      return true;
-    return false;
+    return current_state;
   }
 
   // Facing Direction
