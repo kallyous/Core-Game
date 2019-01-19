@@ -330,22 +330,86 @@ abstract public class Entity implements InputProcessor {
     y_location = new_y;
   }
 
-
-  // Tile X (Defaults assumes a 32*32 tiles. TODO: Make this value dynamic.
-  public int getTileX() {
-    return (int)(getX()/Global.tile_size);
+  void alignToGrid() {
+    alignX();
+    alignY();
   }
+
+  void alignX() {
+
+    int full_x = (int)getX();
+    int excess = full_x % Global.tile_size;
+    int flat_x = full_x - excess;
+
+    if (excess >= Global.tile_size/2)
+      setX(flat_x + Global.tile_size);
+    else
+      setX(flat_x);
+
+  }
+
+  void alignY() {
+
+    int full_y = (int)getY();
+    int excess = full_y % Global.tile_size;
+    int flat_y = full_y - excess;
+
+    if (excess >= Global.tile_size/2)
+      setY(flat_y + Global.tile_size);
+    else
+      setY(flat_y);
+
+  }
+
+  public int getTileX() {
+
+    // Get integer version of X
+    int world_x = (int)getX();
+
+    // Gets how much it exceeds the current tile X
+    int ex = world_x % Global.tile_size;
+
+    // Removes excess, leaving us with a multiple of tile_size,
+    // Then divides by tile_size, getting the current tile location.
+    int x = (world_x - ex) / Global.tile_size;
+
+    return x;
+  }
+
   public void setTileX(int x) {
     setX(x*Global.tile_size);
   }
 
-
-  // Tile Y (Defaults assumes a 32*32 tiles. TODO: Make this value dynamic.
-  public int getTileY() {
-    return (int)(getY()/Global.tile_size);
+  public void setTileX(float x) {
+    int world_x = (int)x;
+    int ex = world_x % Global.tile_size;
+    setTileX( (world_x - ex)/Global.tile_size );
   }
+
+
+  public int getTileY() {
+
+    // Get integer version of X
+    int world_y = (int)getY();
+
+    // Gets how much it exceeds the current tile X
+    int ex = world_y % Global.tile_size;
+
+    // Removes excess, leaving us with a multiple of tile_size,
+    // Then divides by tile_size, getting the current tile location.
+    int y = (world_y - ex) / Global.tile_size;
+
+    return y;
+  }
+
   public void setTileY(int y) {
     setY(y*Global.tile_size);
+  }
+
+  public void setTileY(float y) {
+    int world_y = (int)y;
+    int ex = world_y % Global.tile_size;
+    setTileY( (world_y - ex)/Global.tile_size );
   }
 
 

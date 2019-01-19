@@ -342,9 +342,6 @@ public class WorldMap implements GestureListener, InputProcessor {
 
       CommandManager.sendCommand( new LoadAndPlaceCreatureCommand(args) );
 
-      /*Creature pep = new Creature("Fucker_" + screenX + "_" + screenY);
-      pep.setPosition(location.x, location.y);
-      CoreGame.running_state.world.addEntity(pep);*/
     }
     return true;
   }

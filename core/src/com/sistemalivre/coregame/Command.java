@@ -406,7 +406,8 @@ class TracePathCommand extends Command {
       if (path.size == 0) {
 
         SupportUIElement element = new SupportUIElement(
-            "mov_mark_" + path.size, 13) {
+            "mov_mark_" + Entity.getLastUsedID(),
+            13) {
 
           @Override
           public boolean touchUp(int screenX, int screenY,
@@ -507,13 +508,16 @@ class TracePathCommand extends Command {
       // Add curr_vertex into parsed
       // Else, return the reverse path
     }
-    // The final path is in reverse order, so we reverse it so we are left with the desired path for the entity to move through
+
+    // Travel back from exit until entrance and return the path
     path = reversePath(exit);
+
     // The vertexes have to be cleared from data.
     for (GraphMapVertex vertex : frontier)
       vertex.clear();
     for (GraphMapVertex vertex : visited)
       vertex.clear();
+
     // Return the path
     return path;
   }
@@ -846,7 +850,7 @@ class StopMovingCommand extends Command {
 
   @Override
   public String getTAG() {
-    return null;
+    return TAG;
   }
 
 }

@@ -7,6 +7,8 @@ package com.sistemalivre.coregame;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Queue;
 
+import java.util.NoSuchElementException;
+
 
 
 abstract public class EntityState {
@@ -161,18 +163,42 @@ class MovingState extends EntityState {
 
   private static final String TAG = "MovingState";
 
+
+
+// ========================== DATA ========================== //
+
   Queue<GraphMapVertex> path;
+
+  GraphMapVertex destination;
+
+  int dest_tile_x, dest_tile_y;
+
+  int dest_x, dest_y;
+
+  float speed;
+
+  boolean arrived;
+
+  boolean broken;
 
 // ========================== CREATE ========================== //
 
   MovingState(Entity entity) {
     super(entity);
     enabled_commands.add("StopMovingCommand");
+    speed = 4;
+    broken = false;
+    destination = null;
   }
 
   MovingState(Entity entity, Queue<GraphMapVertex> path) {
     super(entity);
+    this.path = path;
+    this.path.removeFirst();
     enabled_commands.add("StopMovingCommand");
+    speed = 4;
+    broken = false;
+    destination = null;
   }
 
 
@@ -187,15 +213,132 @@ class MovingState extends EntityState {
   }
 
   void update(float dt) {
-    System.out.print("o ");
+
+    if (broken) return;
+
+    if (destination == null) {
+      try {
+        Log.v(TAG, "Path size: " + path.size);
+        if (path.size > 0) {
+          destination = path.removeFirst();
+          faceDestination();
+        }
+        else {
+          Log.v(TAG, "Entity arrived at destination.");
+          owner.alignToGrid();
+          CommandManager.sendCommand(new StopMovingCommand(owner));
+          broken = true;
+          return;
+        }
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+        CommandManager.sendCommand(new StopMovingCommand(owner));
+        broken = true;
+        return;
+      }
+    }
+
+    arrived = false;
+
+    if (owner.getFaceDirection() == Entity.FACING_TOP) {
+      Log.v(TAG, "Moving up");
+      advanceY(speed);
+      if (owner.getY() > destination.getY()*Global.tile_size)
+        arrived = true;
+    }
+    else if (owner.getFaceDirection() == Entity.FACING_RIGHT) {
+      Log.v(TAG, "Moving right");
+      advanceX(speed);
+      if (owner.getX() > destination.getX()*Global.tile_size)
+        arrived = true;
+    }
+    else if (owner.getFaceDirection() == Entity.FACING_BOT) {
+      Log.v(TAG, "Moving bot");
+      advanceY(-speed);
+      if (owner.getY() < destination.getY()*Global.tile_size)
+        arrived = true;
+    }
+    else { // FACING_LEFT
+      Log.v(TAG, "Moving left");
+      advanceX(-speed);
+      if (owner.getX() < destination.getX()*Global.tile_size)
+        arrived = true;
+    }
+
+    if (arrived) {
+      Log.v(TAG, "Entity arrived at next tile.");
+      try {
+        if (path.size > 0) {
+          destination = path.removeFirst();
+          int prev_facing_direction = owner.getFaceDirection();
+          Log.v(TAG, "curr_x = " + owner.getX());
+          Log.v(TAG, "curr_y = " + owner.getY());
+          owner.alignToGrid();
+          Log.v(TAG, "alig_x = " + owner.getX());
+          Log.v(TAG, "alig_y = " + owner.getY());
+          faceDestination();
+        }
+        else
+          destination = null;
+      }
+      catch (Exception e) {
+        Log.e(TAG, "Shit on destination update.");
+        e.printStackTrace();
+        CommandManager.sendCommand(new StopMovingCommand(owner));
+        broken = true;
+        return;
+      }
+    }
+
+  }
+
+  void faceDestination() {
+    try {
+      int dx = destination.getX() * Global.tile_size;
+      int dy = destination.getY() * Global.tile_size;
+      if (dy > owner.getY()) {
+        owner.setFaceDirection(Entity.FACING_TOP);
+        Log.v(TAG, "Facing evaluated to TOP");
+      }
+      else if (dy < owner.getY()) {
+        owner.setFaceDirection(Entity.FACING_BOT);
+      Log.v(TAG, "Facing evaluated to BOT");
+    }
+      else if (dx > owner.getX()) {
+        owner.setFaceDirection(Entity.FACING_RIGHT);
+    Log.v(TAG, "Facing evaluated to RIGHT");
+  }
+      else if (dx < owner.getX()) {
+        owner.setFaceDirection(Entity.FACING_LEFT);
+        Log.v(TAG, "Facing evaluated to LEFT");
+}
+      else
+        Log.w(TAG, "faceDestination() called when standing on destination.");
+    }
+    catch (Exception e) {
+      Log.e(TAG, "Shit inside faceDestination()");
+      e.printStackTrace();
+    }
   }
 
   void leave() {
     Log.w(TAG, "leave() not implemented");
+    broken = false;
+    destination = null;
+    path = null;
   }
 
   String getName() {
     return TAG;
+  }
+
+  void advanceY(float speed) {
+    owner.setY( owner.getY() + speed );
+  }
+
+  void advanceX(float speed) {
+    owner.setX( owner.getX() + speed );
   }
 
 }
