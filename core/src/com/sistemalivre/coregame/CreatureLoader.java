@@ -107,7 +107,7 @@ public class CreatureLoader {
       applyCreaturePrototype(creature, prototype);
 
       // Setup creature's sprite offset
-      creature.graphic_comp.setSpriteOffsetX(creature.getWidth()/2);
+      //creature.graphic_comp.setSpriteOffsetX(creature.getWidth()/2);
 
       // If creature is player owned, enable moving it
       if (creature.isControllable()) {
@@ -222,14 +222,18 @@ public class CreatureLoader {
 
     JsonValue creature_json = protoypeFactory(prototype);
 
+
+
     Log.d(TAG, "JsonValue of build creature:\n"
         + creature_json.toString());
 
     String internal_name = prototype_name + "_" + (Entity.getLastUsedID() + 1);
+
     Creature creature_obj = new Creature(
         internal_name,
-        "HumanBaseFemale",
-        13, 21, 131
+        creature_json.getString("spritesheet"),
+        13, 21, // TODO: Get dynamically
+        creature_json.getInt("init_frame")
     );
 
     creature_obj.body_comp.setHealthPtsMax(

@@ -34,6 +34,7 @@ public class Creature extends Entity {
   Creature(String name) {
     super(name);
     graphic_comp = new GraphicComponent(this);
+    graphic_comp.setSpriteOffsetX(this.getWidth()/2);
     body_comp = new BodyComponent(this);
     combat_comp = new CombatComponent(this);
     move_comp = new MovementComponent(this);
@@ -46,6 +47,7 @@ public class Creature extends Entity {
     super(name);
     graphic_comp = new GraphicComponent(this, spritesheet_name,
         sheet_cols, sheet_rows, region_index);
+    graphic_comp.setSpriteOffsetX(this.getWidth()/2);
     body_comp = new BodyComponent(this);
     combat_comp = new CombatComponent(this);
     move_comp = new MovementComponent(this);

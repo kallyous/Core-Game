@@ -14,6 +14,8 @@
   
   "fighter" : {
     "prototype" : "creature",
+    "spritesheet" : "HumanBaseMale",
+    "init_frame" : 131,
     "health" : 5,
     "description" : "This creature has been trained for fights. It has extra health."
   }

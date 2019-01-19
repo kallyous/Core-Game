@@ -542,7 +542,7 @@ class DestroyWorldEntitiesByTypeCommand extends Command {
     Vector<Entity> to_destroy = new Vector<>();
 
     // Collects all entities of given type into holder
-    for (Entity entity : GameState.world.entities) {
+    for (Entity entity : GameState.world.entities()) {
       if (entity.type() == this.entity_type)
         to_destroy.add(entity);
     }
@@ -695,7 +695,7 @@ class LoadAndPlaceCreatureCommand extends Command {
     creature.setDisplayName(args[0]);
     creature.setX(Float.parseFloat(args[3]));
     creature.setY(Float.parseFloat(args[4]));
-    GameState.world.entities.add(creature);
+    GameState.world.addEntity(creature);
 
     return true;
   }

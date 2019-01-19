@@ -35,7 +35,7 @@ public class WorldMap implements GestureListener, InputProcessor {
 
   OrthogonalTiledMapRenderer otm_renderer;
 
-  Array<Entity> entities;
+  private Array<Entity> entities;
 
   private ShapeRenderer shape_renderer;
 
@@ -55,6 +55,10 @@ public class WorldMap implements GestureListener, InputProcessor {
 // ========================= CONSTRUCTION ========================= //
 
   WorldMap(InputMultiplexer input_multiplexer) {
+
+    gesture_detector = new GestureDetector(this);
+
+    setInputMultiplexer(input_multiplexer);
 
     int s_width = (int)CoreGame.game_window_width;
     int s_height = (int)CoreGame.game_window_height;
@@ -87,12 +91,7 @@ public class WorldMap implements GestureListener, InputProcessor {
 
     // Insert all loaded creatures into the game running world
     for (int i = 0; i < lvl_creats.size; i++)
-      this.entities.add(lvl_creats.get(i));
-
-    gesture_detector = new GestureDetector(this);
-
-    // Snaps every owned entity into the multiplexer
-    setInputMultiplexer(input_multiplexer);
+      addEntity(lvl_creats.get(i));
 
   }
 
@@ -101,13 +100,13 @@ public class WorldMap implements GestureListener, InputProcessor {
 
 // ========================= LOGIC ========================= //
 
-  public void update(float dt) {
+  void update(float dt) {
     if (world_running)
       for (Entity ent : entities) ent.update(dt);
   }
 
 
-  public void render() {
+  void render() {
 
     otm_renderer.setView(camera);
     camera.update();
@@ -120,16 +119,40 @@ public class WorldMap implements GestureListener, InputProcessor {
   }
 
 
+  void suspend() {
+    world_running = false;
+    clearInputMultiplexer();
+  }
+
+
+  void resume() {
+    world_running = true;
+    reloadInputMultiplexer();
+  }
+
+
+  void addEntity(Entity ent) {
+    input_multiplexer.addProcessor(ent);
+    entities.add(ent);
+  }
+
+
+  void remEntity(Entity ent) {
+    input_multiplexer.removeProcessor(ent);
+    entities.removeValue(ent, true);
+  }
+
+
   private void drawEntities() {
 
     // Start the batch thing
     entities_batch.begin();
 
     /** Camera Projection:
-      This projects the objects position into the camera point of view.
-      It means that things will be rendered with their sprites positions
-      projected into the game world matrix or coordinate system, instead of
-      relative to the screen coordinates. **/
+     This projects the objects position into the camera point of view.
+     It means that things will be rendered with their sprites positions
+     projected into the game world matrix or coordinate system, instead of
+     relative to the screen coordinates. **/
     entities_batch.setProjectionMatrix(camera.combined);
 
     // Lets go and check all entities for drawing
@@ -186,15 +209,6 @@ public class WorldMap implements GestureListener, InputProcessor {
   }
 
 
-  public void addEntity(Entity ent) {
-    this.entities.add(ent);
-  }
-
-  public void remEntity(Entity ent) {
-    this.entities.removeValue(ent, true);
-  }
-
-
   private void drawGrid() {
     shape_renderer.begin(ShapeRenderer.ShapeType.Line);
     shape_renderer.setColor(Color.GRAY);
@@ -212,31 +226,18 @@ public class WorldMap implements GestureListener, InputProcessor {
   }
 
 
-  public void suspend() {
-    world_running = false;
-    clearInputMultiplexer();
-  }
-
-
-  public void resume() {
-    world_running = true;
-    reloadInputMultiplexer();
-  }
-
-
 
 
 // ========================= GET / SET ========================= //
 
-  public void setInputMultiplexer(InputMultiplexer input_multiplexer) {
+  void setInputMultiplexer(InputMultiplexer input_multiplexer) {
     this.input_multiplexer = input_multiplexer;
-    for (Entity ent : entities) input_multiplexer.addProcessor(ent);
     input_multiplexer.addProcessor(this); // That's for InputProcessor
     input_multiplexer.addProcessor(gesture_detector);
   }
 
 
-  public void reloadInputMultiplexer() {
+  void reloadInputMultiplexer() {
     clearInputMultiplexer();
     for (Entity ent : entities) input_multiplexer.addProcessor(ent);
     input_multiplexer.addProcessor(this); // That's for InputProcessor
@@ -244,10 +245,15 @@ public class WorldMap implements GestureListener, InputProcessor {
   }
 
 
-  public void clearInputMultiplexer() {
+  void clearInputMultiplexer() {
     for (Entity ent : entities) input_multiplexer.removeProcessor(ent);
     input_multiplexer.removeProcessor(this); // That's for InputProcessor
     input_multiplexer.removeProcessor(gesture_detector);
+  }
+
+
+  Array<Entity> entities() {
+    return entities;
   }
 
 
