@@ -29,13 +29,13 @@ public class WorldMap implements GestureListener, InputProcessor {
 
 // ========================= DATA ========================= //
 
-  public TiledMap tiled_map;
+  TiledMap tiled_map;
 
-  public OrthographicCamera camera;
+  OrthographicCamera camera;
 
-  public OrthogonalTiledMapRenderer otm_renderer;
+  OrthogonalTiledMapRenderer otm_renderer;
 
-  public Array<Entity> entities;
+  Array<Entity> entities;
 
   private ShapeRenderer shape_renderer;
 
@@ -190,6 +190,10 @@ public class WorldMap implements GestureListener, InputProcessor {
 
   public void addEntity(Entity ent) {
     this.entities.add(ent);
+  }
+
+  public void remEntity(Entity ent) {
+    this.entities.removeValue(ent, true);
   }
 
 

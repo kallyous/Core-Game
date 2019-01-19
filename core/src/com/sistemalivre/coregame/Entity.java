@@ -134,7 +134,8 @@ abstract public class Entity implements InputProcessor {
           " emitindo comando de autodestruição");
 
       // Issue self destruct command
-      CoreGame.command_manager.sendCommand( new DestroyEntityCommand(this) );
+      CoreGame.command_manager.sendCommand(
+          new DestroyEntityCommand(this) );
 
     }
 
@@ -289,19 +290,19 @@ abstract public class Entity implements InputProcessor {
 
   // Tile X (Defaults assumes a 32*32 tiles. TODO: Make this value dynamic.
   public int getTileX() {
-    return (int)(getX()/32);
+    return (int)(getX()/Global.tile_size);
   }
   public void setTileX(int x) {
-    setX(x*32);
+    setX(x*Global.tile_size);
   }
 
 
   // Tile Y (Defaults assumes a 32*32 tiles. TODO: Make this value dynamic.
   public int getTileY() {
-    return (int)(getY()/32);
+    return (int)(getY()/Global.tile_size);
   }
   public void setTileY(int y) {
-    setY(y*32);
+    setY(y*Global.tile_size);
   }
 
 

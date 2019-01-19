@@ -129,9 +129,6 @@ class RunningGameState extends GameState {
     // Creates new input multiplexer
     this.input_multiplexer = input_multiplexer;
 
-    // Sets it's command manager
-    gui.setCommandManager(cmd_manager);
-
     // Initializes the world map.
     world = new WorldMap( new SpriteBatch(),
         new Array<Entity>(), input_multiplexer );
@@ -197,7 +194,7 @@ class MainMenuGameState extends GameState {
 
 // ========================= CONSTRUCTION BEGIN ========================= //
 
-  MainMenuGameState(CommandManager cmd_manager,
+  MainMenuGameState(CommandManager command_manager,
                     InputMultiplexer input_multiplexer) {
 
     gui = new MainMenuInterface(
@@ -206,9 +203,6 @@ class MainMenuGameState extends GameState {
 
     // Cretes new input multiplexer
     this.input_multiplexer = input_multiplexer;
-
-    // Sets it's command manager
-    gui.setCommandManager(cmd_manager);
 
   }
 

@@ -21,10 +21,10 @@ public class GraphicComponent {
 // ========================= DATA ========================= //
 
   // Sprite holding all crazy transformation stuff
-  public Sprite sprite;
+  Sprite sprite;
 
   // Entity owning this instance of GraphicComponent
-  public Entity entity;
+  Entity entity;
 
   // Texture to be split and used
   Texture texture;

@@ -39,7 +39,7 @@ public class RunningGameInterface extends UserInterface {
           Log.d(TAG, "Main Menu Button touched," +
               " sending OpenMainMenuCommand to manager.");
           CoreGame.command_manager.sendCommand(
-              new OpenMainMenuCommand(this));
+              new OpenMainMenuCommand());
           return true;
         }
         return false;

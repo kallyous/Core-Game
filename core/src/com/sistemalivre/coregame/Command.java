@@ -17,35 +17,81 @@ abstract public class Command {
 
 // ========================= DATA ========================= //
 
-  // The superclass only has a target and uses its class name as keyword
-  public Entity target;
-  public int entity_type = -1;
+  public static final int TARGET_WIDE = -1;
+  public static final int TARGET_NONE = 0;
+  public static final int TARGET_SINGLE = 1;
+  public static final int TARGET_ENTITY_TYPE = 2;
+
+  // Informs the targeting method.
+  int command_target_type = TARGET_NONE;
+
+  // For single target commands. Points to the target.
+  Entity target = null;
+
+  // For entity type targets. Informs the type of entity targeted.
+  int entity_type = -1;
+
+  // Array of argumetns for complex shit
+  String args[];
 
 
 
 
 // ========================= CONSTRUCTION ========================= //
 
-  // Mostly used for entities issuing commands to themselves
-  Command(Entity target) {
-    this.target = target;
+  // This kind of command are usually simple internal system stuff
+  Command() {
+    this.command_target_type = TARGET_NONE;
   }
 
 
-  // Issued for specific entities of known name
-  Command(String target_name) {
+  // Internal but rather complex stuff that needs extra arguments
+  Command(String args[]) {
+    this.command_target_type = TARGET_NONE;
+    this.args = args;
+  }
+
+  // Mostly used for entities issuing commands to themselves
+  Command(Entity target, String args[]) {
+    this.command_target_type = TARGET_SINGLE;
+    if (target == null)
+      Log.w(TAG, "Null target received.");
+    else
+      this.target = target;
+      this.args = args;
+  }
+
+
+  // Issued for specific entities with known name
+  Command(String target_name, String args[]) {
+    this.command_target_type = TARGET_SINGLE;
     this.target = CoreGame.entities.get(target_name);
-    if (this.target == null) {
+    if (this.target == null)
       Log.w(TAG, "Falha ao localizar " + target_name + " na hash table.");
-    }
+    else
+      this.args = args;
   }
 
 
   // Issued for commands to be run against all of a kind
-  Command(int entity_type) {
-    this.target = null;
-    this.entity_type = entity_type;
+  Command(int target_or_entity_type, String args[]) {
+    /** Delivering multi-targeted commands:
+      All entity types are non-negative numbers.
+      If the first argument of a command is a number, it will first be
+      evaluated for if it matches TARGET_WIDE(-1). If it does, the command is
+      wide targeted, and shall be broadcast to everyone.
+      Now if the value is not -1 (TARGET_WIDE), it must match one entity type.
+      Therefore, if the number doesn't matches TARGET_WIDE, then we simply
+      use it as the entity type to boradcast the command to. **/
+    if (target_or_entity_type == TARGET_WIDE)
+      this.command_target_type = TARGET_WIDE;
+    else {
+      this.command_target_type = TARGET_ENTITY_TYPE;
+      this.entity_type = target_or_entity_type;
+    }
+    this.args = args;
   }
+
 
 
 
@@ -57,6 +103,15 @@ abstract public class Command {
 
   // The core of all commands
   abstract public boolean execute();
+
+
+
+
+// ========================== GET / SET ========================== //
+
+  int type() {
+    return command_target_type;
+  }
 
 }
 
@@ -70,15 +125,6 @@ abstract public class Command {
 class OpenMainMenuCommand extends Command {
 
   private static final String TAG = "OpenMainMenuCommand";
-
-
-
-// ========================= CONSTRUCTION ========================= //
-
-  OpenMainMenuCommand(Entity target) {
-    super(target);
-  }
-
 
 
 
@@ -112,15 +158,6 @@ class RunGameCommand extends Command {
 
 
 
-// ========================= CONSTRUCTION  ========================= //
-
-  RunGameCommand(Entity target) {
-    super(target);
-  }
-
-
-
-
 // ========================== LOGIC ========================== //
 
   @Override
@@ -148,15 +185,6 @@ class RunGameCommand extends Command {
 class ExitCommand extends Command {
 
   private static final String TAG = "ExitCommand";
-
-
-
-// ========================= CONSTRUCTION ========================= //
-
-  ExitCommand(Entity target) {
-    super(target);
-  }
-
 
 
 
@@ -192,7 +220,7 @@ class SelectCommand extends Command {
 // ========================= CONSTRUCTION ========================= //
 
   SelectCommand(Entity entity) {
-    super(entity);
+    super(entity, null);
   }
 
 
@@ -246,15 +274,14 @@ class SetTextContentCommand extends Command {
 // ========================= CONSTRUCTION ========================= //
 
   SetTextContentCommand(Entity entity, String content) {
-    super(entity);
+    super(entity, null);
     this.content = content;
   }
 
 
   SetTextContentCommand(String entity_name, String content) {
-    super(entity_name);
+    super(entity_name, null);
     this.content = content;
-
   }
 
 
@@ -299,7 +326,7 @@ class DestroyEntityCommand extends Command {
 // ========================= CONSTRUCTION ========================= //
 
   DestroyEntityCommand(Entity target) {
-    super(target);
+    super(target, null);
   }
 
 
@@ -349,7 +376,7 @@ class TracePathCommand extends Command {
   TracePathCommand(Entity entity,
                    GraphMapVertex entrance,
                    GraphMapVertex exit) {
-    super(entity);
+    super(entity, null);
     this.entrance = entrance;
     this.exit = exit;
   }
@@ -500,7 +527,7 @@ class DestroyWorldEntitiesByTypeCommand extends Command {
 // ========================= CREATION BEGIN ========================= //
 
   DestroyWorldEntitiesByTypeCommand(int entity_type) {
-    super(entity_type);
+    super(entity_type, null);
   }
 
 
@@ -510,31 +537,28 @@ class DestroyWorldEntitiesByTypeCommand extends Command {
 
   @Override
   public boolean execute() {
-    int amount = 0;
 
-    // How many of those there is within the world ?
-    for (int a=0; a < GameState.world.entities.size; a++)
-      if (GameState.world.entities.get(a).type() == this.entity_type) amount++;
+    // Prepares a holder for entities reference
+    Vector<Entity> to_destroy = new Vector<>();
 
-    // If none, then whatever.
-    if (amount == 0) return false;
-
-    // For this many times, we will cycle through everything.
-    for (int b=0; b < amount; b++) {
-      // Each time, we remove and destroy a entity matching the type
-      for (int i=0; i < GameState.world.entities.size; i++) {
-        Entity ent = GameState.world.entities.get(i);
-        if (ent.type() == this.entity_type) {
-          GameState.world.entities.removeIndex(i);
-          ent.destroy();
-          break;
-        }
-      }
+    // Collects all entities of given type into holder
+    for (Entity entity : GameState.world.entities) {
+      if (entity.type() == this.entity_type)
+        to_destroy.add(entity);
     }
 
+    // Destroy them all. Entities must make sure they are removed from World.
+    for (Entity entity : to_destroy)
+      entity.destroy();
+
+    // Makes sure there is no reference for the objects being destroyed
+    to_destroy = null;
+
+    // Hints Java Garbage Collector to do it's job
     System.gc();
 
     return true;
+
   }
 
 

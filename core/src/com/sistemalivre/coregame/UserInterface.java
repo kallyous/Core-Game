@@ -79,11 +79,6 @@ public class UserInterface {
     for (UiElement elem : elements) multiplexer.removeProcessor(elem);
   }
 
-
-  public void setCommandManager(CommandManager manager) {
-    for (UiElement elem : elements) manager.addListenner(elem);
-  }
-
 }
 
 

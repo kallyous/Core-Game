@@ -40,7 +40,7 @@ public class MainMenuInterface extends UserInterface {
                              int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
           Log.i(TAG, "Play game touched, sending RunGameCommand to manager.");
-          CoreGame.command_manager.sendCommand(new RunGameCommand(this));
+          CoreGame.command_manager.sendCommand(new RunGameCommand());
           return true;
         }
         return false;
@@ -85,7 +85,7 @@ public class MainMenuInterface extends UserInterface {
                              int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
           Log.i(TAG, "Exit game touched, sending ExitCommand to manager.");
-          CoreGame.command_manager.sendCommand(new ExitCommand(this));
+          CoreGame.command_manager.sendCommand(new ExitCommand());
           return true;
         }
         return false;

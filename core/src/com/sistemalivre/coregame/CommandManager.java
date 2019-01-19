@@ -1,8 +1,8 @@
 package com.sistemalivre.coregame;
 
 
+import java.util.Enumeration;
 import java.util.LinkedList;
-import java.util.Vector;
 
 
 
@@ -19,9 +19,7 @@ public class CommandManager {
   // Queue with all commands to broadcast each game cycle
   private LinkedList<Command> pending_commands;
 
-  // List with everyone listening to commands in the game
-  private Vector<Entity> listeners;
-
+  // Entity for running target-less commands.
   private Entity commander;
 
 
@@ -30,18 +28,25 @@ public class CommandManager {
 // ========================= CONSTRUCTION ========================= //
 
   CommandManager() {
-    pending_commands = new LinkedList<Command>();
-    listeners = new Vector<Entity>();
+    // Prepares the holder for received commands
+    pending_commands = new LinkedList<>();
+
+    // Cosntructos a entity to run target-less commands
     commander = new Entity("GameCommander") {
       @Override
-      public void update(float dt) {
-      }
-
-
+      public void update(float dt) {}
       @Override
-      public void dispose() {
+      public void dispose() {}
+    };
+
+    // This entity accepts and try to run anything
+    commander.command_comp = new CommandComponent(commander) {
+      @Override
+      protected boolean isItForMe(Command command) {
+        return true;
       }
     };
+
   }
 
 
@@ -58,42 +63,29 @@ public class CommandManager {
       // Get and remove a command from the queue
       command = pending_commands.poll();
 
-      // If the command is single targeted, we simple execute it
-      if (command.target != null) {
-
-        // Debug message about this shit.
-        Log.i(TAG, "Flushing " + command.getTAG() + " for "
-            + command.target.getName() );
-
-        if ( command.target.executeCommand(command) )
-          Log.i(TAG, "Comando aceito e executado ");
-        else
-          Log.i(TAG, "Comando rejeitado. ");
-
-      }
-
-      // Commands targeted for all of a certain type have (entity_type > -1)
-      if (command.entity_type > -1) {
-        // Commander executes this type of commands.
+      // If it has no target, the commander execute it
+      if (command.type() == Command.TARGET_NONE) {
         commander.executeCommand(command);
       }
-
-      /** If target is null but there is not a category selector,
-        like entity_type, then broadcast to whoever is listening. **/
+      // If it is single target, the target execute it
+      else if (command.type() == Command.TARGET_SINGLE) {
+        command.target.executeCommand(command);
+      }
+      /** If it is directed to a specific type of entities, it has it's own
+        logic, those entities are within the world and the commander
+        runs it. **/
+      else if(command.type() == Command.TARGET_ENTITY_TYPE) {
+        commander.executeCommand(command);
+      }
+      /** If it isn't none of the previous type, it is a wide target.
+        We make an enumeration of all current entities within the game, and
+        send the command to all of them. Slow but effective. **/
       else {
-
-        // We travel all listening entities and try to run int for each and all
-        for (Entity entity : listeners) {
-
-          // Send a debug message for each entity which execute the command
-          if ( entity.executeCommand(command) ) {
-            Log.d(TAG, entity.getName() + " executou "
-                + command.getTAG() );
-          }
-        }
-
-        // Shout out if command was flushed to several fuckers
-        Log.i(TAG, "Flushed " + command.getTAG() + " by broadcast");
+        // Builds enumeration with all entities
+        Enumeration<Entity> entities = CoreGame.entities.elements();
+        // Cycles through them all and let them know about the command
+        while(entities.hasMoreElements())
+          entities.nextElement().executeCommand(command);
       }
 
     }
@@ -111,25 +103,6 @@ public class CommandManager {
       Log.i(TAG, "Enfileirando comando " + command.getTAG());
     }
     return pending_commands.offer(command);
-  }
-
-
-  // Adiciona nova entidade a ser commandada
-  public boolean addListenner(Entity entity) {
-    if ( !(listeners.contains(entity)) ) {
-      Log.i(TAG, "Adicionando " + entity.getName() + " em " + TAG);
-      return listeners.add(entity);
-    }
-    Log.i(TAG, entity.getName() + " já presente em "
-        + TAG + ", nada a fazer");
-    return false;
-  }
-
-
-  public boolean remListenner(Entity entity) {
-    Log.i(TAG, "Removendo " + entity.getName() + " de "
-        + TAG + ", se presente");
-    return listeners.remove(entity);
   }
 
 }
