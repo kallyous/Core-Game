@@ -1,6 +1,7 @@
 package com.sistemalivre.coregame;
 
 
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Queue;
 
 import java.util.Vector;
@@ -396,19 +397,58 @@ class TracePathCommand extends Command {
 
     GraphMapVertex g;
 
+    boolean first =  true;
+
     for (int i = 0; i < path.size;) {
 
-      g = path.removeFirst();
+      //g = path.removeFirst();
+      g = path.removeLast();
 
-      SupportUIElement element = new SupportUIElement(
-          "mov_mark_" + path.size, 26);
+      if (path.size == 0) {
 
-      element.setPosition(
-          g.getX()*Global.tile_size,
-          g.getY()*Global.tile_size
-      );
+        SupportUIElement element = new SupportUIElement(
+            "mov_mark_" + path.size, 13) {
 
-      GameState.world.addEntity(element);
+          @Override
+          public boolean touchUp(int screenX, int screenY,
+                                 int pointer, int button) {
+
+            /** Converts touched location into Vector3,
+             for OrthographicCamera consuming it. **/
+            Vector3 touched_spot = new Vector3(screenX, screenY, 0);
+
+            // Tests world collision for the touched point
+            if ( worldTouched(touched_spot) ) {
+              Log.d(TAG, "We got a collision with the touch.");
+              CommandManager.sendCommand( new SelectCommand(this) );
+              return true;
+            }
+
+            return false;
+          }
+
+        };
+
+        element.setDisplayName("Path Destination");
+        element.command_comp.enableCommand("SelectCommand");
+
+        element.setPosition(
+            g.getX()*Global.tile_size,
+            g.getY()*Global.tile_size
+        );
+        GameState.world.addEntity(element);
+      }
+      else if (!first) {
+        SupportUIElement element = new SupportUIElement(
+            "mov_mark_" + path.size, 12);
+        element.setPosition(
+            g.getX()*Global.tile_size,
+            g.getY()*Global.tile_size
+        );
+        GameState.world.addEntity(element);
+      }
+      else
+        first = false;
 
     }
 
