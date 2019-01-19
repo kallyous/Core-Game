@@ -572,3 +572,146 @@ class DestroyWorldEntitiesByTypeCommand extends Command {
   }
 
 }
+
+
+
+
+
+// ========================== LoadCreatureCommand ========================== //
+
+class LoadCreatureCommand extends Command {
+
+  private static final String TAG = "LoadCreatureCommand";
+
+
+
+// ========================== CONSTRUCTION ========================== //
+
+  LoadCreatureCommand(String args[]) {
+    // This command is target-less.
+    super(args);
+  }
+
+
+
+
+
+
+
+// ========================== LOGIC ========================== //
+
+  @Override
+  public boolean execute() {
+    for (int i=0; i < args.length; i++)
+      Log.v(TAG,"Arg" + i + ": " + args[i]);
+    return true;
+  }
+
+
+
+
+// ========================== GET / SET ========================== //
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
+
+}
+
+
+
+
+
+// ========================== PlaceCreatureCommand ========================== //
+
+class PlaceCreatureCommand extends Command {
+
+  private static final String TAG = "PlaceCreatureCommand";
+
+
+
+// ========================== CONSTRUCTION ========================== //
+
+  PlaceCreatureCommand(String args[]) {
+    // This command is target-less.
+    super(args);
+  }
+
+
+
+
+// ========================== LOGIC ========================== //
+
+  @Override
+  public boolean execute() {
+    for (int i=0; i < args.length; i++)
+      Log.v(TAG,"Arg" + i + ": " + args[i]);
+    return true;
+  }
+
+
+
+
+// ========================== GET / SET ========================== //
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
+
+}
+
+
+
+
+
+// ========================== LoadAndPlaceCreatureCommand ========================== //
+
+class LoadAndPlaceCreatureCommand extends Command {
+
+  private static final String TAG = "LoadAndPlaceCreatureCommand";
+
+
+
+// ========================== CONSTRUCTION ========================== //
+
+  LoadAndPlaceCreatureCommand(String args[]) {
+    // This command is target-less.
+    super(args);
+  }
+
+
+
+
+// ========================== LOGIC ========================== //
+
+  @Override
+  public boolean execute() {
+    for (int i=0; i < args.length; i++)
+      Log.v(TAG,"Arg" + i + ": " + args[i]);
+
+    Creature creature = CreatureLoader.loadBaseCreature(args[1]);
+    creature.setDisplayName(args[0]);
+    creature.setX(Float.parseFloat(args[3]));
+    creature.setY(Float.parseFloat(args[4]));
+    GameState.world.entities.add(creature);
+
+    return true;
+  }
+
+
+
+
+// ========================== GET / SET ========================== //
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
+
+}
+
+
+
+

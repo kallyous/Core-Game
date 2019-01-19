@@ -54,16 +54,14 @@ public class WorldMap implements GestureListener, InputProcessor {
 
 // ========================= CONSTRUCTION ========================= //
 
-  WorldMap(
-      SpriteBatch entities_batch, Array<Entity> entities,
-      InputMultiplexer input_multiplexer) {
+  WorldMap(InputMultiplexer input_multiplexer) {
 
     int s_width = (int)CoreGame.game_window_width;
     int s_height = (int)CoreGame.game_window_height;
 
-    this.entities_batch = entities_batch;
+    this.entities_batch = new SpriteBatch();
 
-    this.entities = entities;
+    this.entities = new Array<>();
 
     tiled_map = new TmxMapLoader().load(
         "maps/debug_island/overworld_island.tmx");
@@ -271,7 +269,8 @@ public class WorldMap implements GestureListener, InputProcessor {
 
     // Screen touch/click always clear the scene from any support ui elements.
     CommandManager.sendCommand(
-        new DestroyWorldEntitiesByTypeCommand(Entity.MOVEMARK) );
+        new DestroyWorldEntitiesByTypeCommand(Entity.MOVEMARK)
+    );
 
     if (Entity.selected_entity != null) {
 
@@ -329,10 +328,17 @@ public class WorldMap implements GestureListener, InputProcessor {
       rest = (int)location.y % Global.tile_size;
       location.y = (int)location.y - rest;
 
-      Creature pep = new Creature("Fucker_" + screenX + "_" + screenY);
-      pep.setPosition(location.x, location.y);
+      String args[] = {
+          "Rodrigo Macarone", "fighter", "true",
+          String.valueOf(location.x),
+          String.valueOf(location.y)
+      };
 
-      CoreGame.running_state.world.addEntity(pep);
+      CommandManager.sendCommand( new LoadAndPlaceCreatureCommand(args) );
+
+      /*Creature pep = new Creature("Fucker_" + screenX + "_" + screenY);
+      pep.setPosition(location.x, location.y);
+      CoreGame.running_state.world.addEntity(pep);*/
     }
     return true;
   }

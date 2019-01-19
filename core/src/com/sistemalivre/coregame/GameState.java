@@ -129,8 +129,7 @@ class RunningGameState extends GameState {
     this.input_multiplexer = input_multiplexer;
 
     // Initializes the world map.
-    world = new WorldMap( new SpriteBatch(),
-        new Array<Entity>(), input_multiplexer );
+    world = new WorldMap(input_multiplexer);
 
   }
 

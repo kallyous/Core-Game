@@ -10,8 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 
 import java.util.Iterator;
-
-
+import java.util.Map;
 
 //========================= CreatureLoader ========================= //
 
@@ -28,7 +27,7 @@ public class CreatureLoader {
     // First we isolate our desired layer
     MapLayer creat_layer = tiled_map.getLayers().get("creatures");
 
-    // Nothing to to if layer not present
+    // Nothing to do if layer not present
     if (creat_layer == null) {
       Log.w(TAG, "no creatures layer found");
       return null;
@@ -53,7 +52,7 @@ public class CreatureLoader {
   private static Array<Creature> loadCreaturesFromMapObjects(MapObjects objects) {
 
     // We need an array at least the size of found entries in the map objects
-    Array<Creature> creeps = new Array<Creature>(objects.getCount());
+    Array<Creature> creeps = new Array<>(objects.getCount());
 
     // Prepare an Iterator for cycling through all map objects
     Iterator<MapObject> itr_mobj = objects.iterator();
@@ -148,9 +147,8 @@ public class CreatureLoader {
   }
 
 
-private static JsonValue protoypeFactory(JsonValue arc_creature) {
+  private static JsonValue protoypeFactory(JsonValue arc_creature) {
 
-    // TODO: Maybe the asset manager shit should be final
     JsonValue prototype = CoreGame.asset_manager.creature(
         arc_creature.getString("prototype") );
 
@@ -215,6 +213,37 @@ private static JsonValue protoypeFactory(JsonValue arc_creature) {
     // Retorna o resultado da operação
     return creature;
 }
+
+
+  public static Creature loadBaseCreature(String prototype_name) {
+
+    // Gets current prototype data
+    JsonValue prototype = CoreGame.asset_manager.creature(prototype_name);
+
+    JsonValue creature_json = protoypeFactory(prototype);
+
+    Log.d(TAG, "JsonValue of build creature:\n"
+        + creature_json.toString());
+
+    String internal_name = prototype_name + "_" + (Entity.getLastUsedID() + 1);
+    Creature creature_obj = new Creature(
+        internal_name,
+        "HumanBaseFemale",
+        13, 21, 131
+    );
+
+    creature_obj.body_comp.setHealthPtsMax(
+        creature_json.getFloat("health") );
+
+    creature_obj.body_comp.setHealthPtsCurr(
+        creature_json.getFloat("health") );
+
+    creature_obj.setWidth((int)creature_json.getFloat("width"));
+    creature_obj.setHeight((int)creature_json.getFloat("height"));
+
+    return creature_obj;
+
+  }
 
 
   // TODO: 03/01/19 Usar esta função para desemaranhar o processo de

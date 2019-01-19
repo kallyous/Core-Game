@@ -226,6 +226,10 @@ abstract public class Entity implements InputProcessor {
 
 // ========================= GET / SET ========================= //
 
+  public static long getLastUsedID() {
+    return last_used_id;
+  }
+
   public static void setCamera(OrthographicCamera new_cam) {
     world_camera = new_cam;
   }
