@@ -168,7 +168,7 @@ class UiElement extends Entity {
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
     if (collidedScreen(screenX, screenY)) {
       Log.i(TAG, "Sending a SelectCommand. ");
-      CoreGame.command_manager.sendCommand( new SelectCommand(this) );
+      CommandManager.sendCommand( new SelectCommand(this) );
     }
     return false;
   }

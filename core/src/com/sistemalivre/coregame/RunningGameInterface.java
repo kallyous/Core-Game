@@ -38,7 +38,7 @@ public class RunningGameInterface extends UserInterface {
         if (collidedScreen(screenX, screenY)) {
           Log.d(TAG, "Main Menu Button touched," +
               " sending OpenMainMenuCommand to manager.");
-          CoreGame.command_manager.sendCommand(
+          CommandManager.sendCommand(
               new OpenMainMenuCommand());
           return true;
         }
@@ -68,7 +68,7 @@ public class RunningGameInterface extends UserInterface {
                              int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
           Log.d(TAG, "Pass Turn Button touched, setting selection_name text");
-          CoreGame.command_manager.sendCommand( new SelectCommand(this) );
+          CommandManager.sendCommand( new SelectCommand(this) );
           return true;
         }
         return false;

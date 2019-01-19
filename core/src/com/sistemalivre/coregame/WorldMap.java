@@ -270,7 +270,7 @@ public class WorldMap implements GestureListener, InputProcessor {
     Log.d(TAG, "Map touched.");
 
     // Screen touch/click always clear the scene from any support ui elements.
-    CoreGame.command_manager.sendCommand(
+    CommandManager.sendCommand(
         new DestroyWorldEntitiesByTypeCommand(Entity.MOVEMARK) );
 
     if (Entity.selected_entity != null) {
@@ -305,7 +305,7 @@ public class WorldMap implements GestureListener, InputProcessor {
             );
 
             // Send the command
-            CoreGame.command_manager.sendCommand(
+            CommandManager.sendCommand(
                 new TracePathCommand(Entity.selected_entity, entrance, exit));
 
           }

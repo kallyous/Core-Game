@@ -118,8 +118,7 @@ class RunningGameState extends GameState {
 
 // ============================= CONSTRUCTION ============================= //
 
-  RunningGameState(CommandManager cmd_manager,
-                   InputMultiplexer input_multiplexer) {
+  RunningGameState(InputMultiplexer input_multiplexer) {
 
     // Creates a new interface
     gui = new RunningGameInterface(
@@ -194,8 +193,7 @@ class MainMenuGameState extends GameState {
 
 // ========================= CONSTRUCTION BEGIN ========================= //
 
-  MainMenuGameState(CommandManager command_manager,
-                    InputMultiplexer input_multiplexer) {
+  MainMenuGameState(InputMultiplexer input_multiplexer) {
 
     gui = new MainMenuInterface(
         CoreGame.game_window_width,

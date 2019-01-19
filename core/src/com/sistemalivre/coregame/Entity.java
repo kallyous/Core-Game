@@ -134,7 +134,7 @@ abstract public class Entity implements InputProcessor {
           " emitindo comando de autodestruição");
 
       // Issue self destruct command
-      CoreGame.command_manager.sendCommand(
+      CommandManager.sendCommand(
           new DestroyEntityCommand(this) );
 
     }

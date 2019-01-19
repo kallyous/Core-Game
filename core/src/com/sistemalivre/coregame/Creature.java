@@ -79,7 +79,7 @@ public class Creature extends Entity {
     // Tests world collision for the touched point
     if ( worldTouched(touched_spot) ) {
       Log.d(TAG, "We got a collision with the touch.");
-      CoreGame.command_manager.sendCommand( new SelectCommand(this) );
+      CommandManager.sendCommand( new SelectCommand(this) );
       return true;
     }
 

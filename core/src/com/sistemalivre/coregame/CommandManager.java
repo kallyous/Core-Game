@@ -17,17 +17,17 @@ public class CommandManager {
 // ========================= DATA ========================= //
 
   // Queue with all commands to broadcast each game cycle
-  private LinkedList<Command> pending_commands;
+  private static LinkedList<Command> pending_commands;
 
   // Entity for running target-less commands.
-  private Entity commander;
+  private static Entity commander;
 
 
 
 
 // ========================= CONSTRUCTION ========================= //
 
-  CommandManager() {
+  public static void setup() {
     // Prepares the holder for received commands
     pending_commands = new LinkedList<>();
 
@@ -54,7 +54,7 @@ public class CommandManager {
 
 // ========================== LOGIC ========================== //
 
-  public void flushCommands() {
+  public static void flushCommands() {
 
     Command command;
 
@@ -94,7 +94,7 @@ public class CommandManager {
 
 
   // Insere commando na fila
-  public boolean sendCommand(Command command) {
+  public static boolean sendCommand(Command command) {
     try {
       Log.i(TAG, "Enfileirando commando " + command.getTAG()
           + " para " + command.target.getName());

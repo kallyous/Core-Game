@@ -57,16 +57,6 @@ public class CoreGame extends ApplicationAdapter {
     when they are created. */
   public static Hashtable<String, Entity> entities;
 
-  /** Command Manager - One to rule them all.
-    No input goes straight into the controlled entity. All input generate
-    commands and sends those commands to te Command Manager.
-    The command manager flushes, executes and boradcasts all commands every
-    cycle, at the beggining.
-    When initialized, CommandManager declares one entity, for running no-target
-    commands. Because of this, command_manager MUST be initialized AFTER the
-    entities hashtable is initialized. */
-  static CommandManager command_manager;
-
   // Tracks time for animations and other time based events
   float state_time;
 
@@ -103,7 +93,15 @@ public class CoreGame extends ApplicationAdapter {
 
     entities = new Hashtable<String, Entity>();
 
-    command_manager = new CommandManager();
+    /** Command Manager - One to rule them all.
+     No input goes straight into the controlled entity. All input generate
+     commands and sends those commands to te Command Manager.
+     The command manager flushes, and boradcasts all commands every
+     cycle, at the beginning.
+     When initialized, CommandManager declares one entity, for running no-target
+     commands. Because of this, CommandManager MUST be initialized AFTER the
+     entities hashtable is initialized. **/
+    CommandManager.setup();
 
     // Sets active input multiplexer
     Gdx.input.setInputProcessor(input_multiplexer);
@@ -115,13 +113,13 @@ public class CoreGame extends ApplicationAdapter {
     guiBatch = new SpriteBatch();
 
     // Prepares the running game state, by making several connections.
-    running_state = new RunningGameState(command_manager, input_multiplexer);
+    running_state = new RunningGameState(input_multiplexer);
     running_state.setScreenbatch(guiBatch);
     running_state.clear(); // Stupid hack to clean the input multiplexer.
     // TODO: Set a more elegant solution.
 
     // Prepares the main menu game state, by making several connections.
-    main_menu_state = new MainMenuGameState(command_manager, input_multiplexer);
+    main_menu_state = new MainMenuGameState(input_multiplexer);
     main_menu_state.setScreenbatch(guiBatch);
     /** Since the game actually starts at the main menu, we don't have to
      clean the input multiplexer. */
@@ -154,7 +152,7 @@ public class CoreGame extends ApplicationAdapter {
     game.update(state_time);
 
     // Execute all commands until command queue is empty
-    command_manager.flushCommands();
+    CommandManager.flushCommands();
 
     // Render the result
     game.render();
