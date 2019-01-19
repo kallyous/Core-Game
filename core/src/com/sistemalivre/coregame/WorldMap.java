@@ -63,9 +63,9 @@ public class WorldMap implements GestureListener, InputProcessor {
     int s_width = (int)CoreGame.game_window_width;
     int s_height = (int)CoreGame.game_window_height;
 
-    this.entities_batch = new SpriteBatch();
+    entities_batch = new SpriteBatch();
 
-    this.entities = new Array<>();
+    entities = new Array<>();
 
     tiled_map = new TmxMapLoader().load(
         "maps/debug_island/overworld_island.tmx");
@@ -132,8 +132,8 @@ public class WorldMap implements GestureListener, InputProcessor {
 
 
   void addEntity(Entity ent) {
-    input_multiplexer.addProcessor(ent);
     entities.add(ent);
+    reloadInputMultiplexer();
   }
 
 
