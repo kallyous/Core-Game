@@ -3,6 +3,7 @@ package com.sistemalivre.coregame;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -26,12 +27,12 @@ public class GraphicComponent {
   Entity owner;
 
   // Texture to be split and used
-  Texture texture;
+  private Texture texture;
 
-  JsonValue data;
+  private JsonValue data;
 
   // Texture sections after splitting the texture
-  private TextureRegion texture_region[];
+  private TextureRegion texture_regions[];
 
   // Size of regions/frames and how much of them there is in the texture sheet
   private int sheet_cols, sheet_rows;
@@ -39,9 +40,14 @@ public class GraphicComponent {
   // Offsets for this component
   private float x_offset, y_offset;
 
-  // Index of the current texture region to be rendered at runtime
-  private int region_index;
+  // Index of the frame to fallback when animation stops or ends.
+  private int stand_index;
 
+  private Animation<TextureRegion> animation;
+
+  private float frame_interval = 0.04f;
+
+  private boolean animate;
 
 
 
@@ -72,15 +78,15 @@ public class GraphicComponent {
 
     this.texture = texture;
 
-    texture_region = new TextureRegion[1];
+    texture_regions = new TextureRegion[1];
 
-    texture_region[0] = new TextureRegion(
+    texture_regions[0] = new TextureRegion(
         this.texture, region_x, region_y,
         width, height);
 
-    region_index = 0;
+    stand_index = 0;
 
-    sprite = new Sprite(texture_region[region_index]);
+    sprite = new Sprite(texture_regions[stand_index]);
 
     Log.d(TAG, entity.getName() +
       " created with custom graphics and a single region.");
@@ -99,8 +105,8 @@ public class GraphicComponent {
   private void setupAssetGraphics(GraphicAsset asset) {
     data = asset.data();
     texture = asset.texture();
-    texture_region = asset.textureRegions();
-    region_index = data.getInt("default");
+    texture_regions = asset.textureRegions();
+    stand_index = data.getInt("default");
     sheet_cols = data.getInt("cols");
     sheet_rows = data.getInt("rows");
 
@@ -114,7 +120,7 @@ public class GraphicComponent {
       Log.v(TAG, e.getMessage());
       setSpriteOffsetY(0); }
 
-    sprite = new Sprite(texture_region[region_index]);
+    sprite = new Sprite(texture_regions[stand_index]);
   }
 
 
@@ -140,48 +146,87 @@ public class GraphicComponent {
 
 
   public void update(float dt) {
+
+    // Updates sprite location to it's respective owner
     sprite.setPosition(
         owner.getX() - x_offset,
         owner.getY() - y_offset);
+
+    // If animating, set the current frame to be the active
+    if (animate)
+      sprite.setRegion(animation.getKeyFrame(dt, true));
+    /** If not animating, set the frame specified for standing.
+      This is set by the FMS or something similar that handles transitions
+      between behavior. **/
+    else
+      sprite.setRegion(texture_regions[stand_index]);
   }
+
+
+  public void setAnimation(String name) {
+
+    Log.v(TAG, "Animation setup");
+
+    int[] animation_indexes =
+        data.get("animation").get(name).asIntArray();
+
+    TextureRegion[] keyframes =
+        new TextureRegion[animation_indexes.length];
+
+    int frame_index;
+    for (int i=0; i < animation_indexes.length; i++) {
+
+      frame_index = animation_indexes[i];
+
+      keyframes[i] = texture_regions[frame_index];
+
+    }
+
+    animation = new Animation<>(frame_interval, keyframes);
+
+  }
+
+
+  void playAnim() {
+    Log.v(TAG, "Playing animation");
+    animate = true;
+  }
+
+
+  void stopAnim() {
+    Log.v(TAG, "Stopping animation");
+    animate = false;
+  }
+
 
 
 
 
 // ========================= GET / SET ========================= //
 
-  // Texture
-  public Texture getTexture() { return texture; }
+  Texture texture() { return texture; }
+
+  JsonValue data() {
+    return data;
+  }
 
 
   // Region Index (Frame)
-  public int getRegionIndex() {
-    return region_index;
+  int getStandIndex() {
+    return stand_index;
   }
-  public void setRegionIndex(int i) {
-    region_index = i;
-    sprite.setRegion(texture_region[i]);
-  }
-
-
-  // Sheet Columns
-  public int getSheetCols() {
-    return sheet_cols;
-  }
-
-
-  // Sheet Rows
-  public int getSheetRows() {
-    return sheet_rows;
+  void setStandIndex(int i) {
+    stand_index = i;
+    sprite.setRegion(texture_regions[i]);
   }
 
 
   // X Offset
-  public float getSpriteOffsetX() { return x_offset; }
-  public void setSpriteOffsetX(float x) { x_offset = x; }
+  float getSpriteOffsetX() { return x_offset; }
+  void setSpriteOffsetX(float x) { x_offset = x; }
 
 
-  public float getSpriteOffsetY() { return y_offset; }
-  public void setSpriteOffsetY(float y) { y_offset = y; }
+  float getSpriteOffsetY() { return y_offset; }
+  void setSpriteOffsetY(float y) { y_offset = y; }
 
 }

@@ -5,6 +5,7 @@ package com.sistemalivre.coregame;
 // ========================== EntityState ========================== //
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Queue;
 
 import java.util.NoSuchElementException;
@@ -181,6 +182,11 @@ class MovingState extends EntityState {
 
   boolean broken;
 
+  String top = "walk-top";
+  String right = "walk-right";
+  String bot = "walk-bot";
+  String left = "walk-left";
+
 // ========================== CREATE ========================== //
 
   MovingState(Entity entity) {
@@ -210,6 +216,12 @@ class MovingState extends EntityState {
 
   void init() {
     Log.d(TAG, "Entity is now moving. (" + owner.getName() + ")");
+    try {
+      ((Creature)owner).graphic_comp.playAnim();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   void update(float dt) {
@@ -293,37 +305,105 @@ class MovingState extends EntityState {
 
   }
 
+  void updateAnimation() {
+
+    if (owner.type() != Entity.CREATURE) {
+      Log.w(TAG, "Movement animations only implemented for Creatures.");
+      return;
+    }
+
+    Creature creep = (Creature)owner;
+    int facing = creep.getFaceDirection();
+    String anim;
+
+    if (facing == Entity.FACING_TOP)
+      anim = top;
+    else if (facing == Entity.FACING_RIGHT)
+      anim = right;
+    else if (facing == Entity.FACING_BOT)
+      anim = bot;
+    else // Left
+      anim = left;
+
+    creep.graphic_comp.setAnimation(anim);
+    creep.graphic_comp.playAnim();
+
+  }
+
   void faceDestination() {
+
+    int curr_facing = owner.getFaceDirection();
+
     try {
+
       int dx = destination.getX() * Global.tile_size;
       int dy = destination.getY() * Global.tile_size;
+
       if (dy > owner.getY()) {
         owner.setFaceDirection(Entity.FACING_TOP);
         Log.v(TAG, "Facing evaluated to TOP");
       }
+
       else if (dy < owner.getY()) {
         owner.setFaceDirection(Entity.FACING_BOT);
-      Log.v(TAG, "Facing evaluated to BOT");
-    }
+        Log.v(TAG, "Facing evaluated to BOT");
+      }
+
       else if (dx > owner.getX()) {
         owner.setFaceDirection(Entity.FACING_RIGHT);
-    Log.v(TAG, "Facing evaluated to RIGHT");
-  }
+        Log.v(TAG, "Facing evaluated to RIGHT");
+      }
+
       else if (dx < owner.getX()) {
         owner.setFaceDirection(Entity.FACING_LEFT);
         Log.v(TAG, "Facing evaluated to LEFT");
-}
+      }
+
       else
-        Log.w(TAG, "faceDestination() called when standing on destination.");
+        Log.w(TAG, "faceDestination() called when" +
+            " standing on destination.");
     }
+
     catch (Exception e) {
       Log.e(TAG, "Shit inside faceDestination()");
       e.printStackTrace();
     }
+
+    if (curr_facing != owner.getFaceDirection())
+      updateAnimation();
+
+  }
+
+  void setStandFrame() {
+
+    if (owner.type() != Entity.CREATURE) {
+      Log.w(TAG, "Movement animations only implemented for Creatures.");
+      return;
+    }
+
+    Creature creep = (Creature)owner;
+
+    JsonValue data = creep.graphic_comp.data();
+    int facing = creep.getFaceDirection();
+    int index;
+
+    if (facing == Entity.FACING_TOP)
+      index = data.get("animation").get("idle-top").getInt(0);
+    else if (facing == Entity.FACING_RIGHT)
+      index = data.get("animation").get("idle-right").getInt(0);
+    else if (facing == Entity.FACING_BOT)
+      index = data.get("animation").get("idle-bot").getInt(0);
+    else // Left
+      index = data.get("animation").get("idle-left").getInt(0);
+
+    creep.graphic_comp.setStandIndex(index);
+    creep.graphic_comp.stopAnim();
+
   }
 
   void leave() {
-    Log.w(TAG, "leave() not implemented");
+    Log.w(TAG, "Leaving MovingState");
+    setStandFrame();
     broken = false;
     destination = null;
     path = null;

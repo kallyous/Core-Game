@@ -32,7 +32,7 @@ public class SupportUIElement extends Entity implements InputProcessor {
   SupportUIElement(String name, int region_index) {
     super(name);
     graphic_comp = new GraphicComponent(this);
-    graphic_comp.setRegionIndex(region_index);
+    graphic_comp.setStandIndex(region_index);
     this.setType(Entity.MOVEMARK);
   }
 
