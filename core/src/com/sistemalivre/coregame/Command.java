@@ -427,7 +427,7 @@ class TracePathCommand extends Command {
 
               // Screen touch/click always clear the scene from any support ui elements.
               CommandManager.sendCommand(
-                  new DestroyWorldEntitiesByTypeCommand(Entity.MOVEMARK)
+                  new DestroyWorldSupportGUICommand()
               );
 
               return true;
@@ -444,16 +444,17 @@ class TracePathCommand extends Command {
             g.getX()*Global.tile_size,
             g.getY()*Global.tile_size
         );
-        GameState.world.addEntity(element);
+        GameState.world.addSupportElem(element);
       }
       else if (!first) {
         SupportUIElement element = new SupportUIElement(
-            "mov_mark_" + path.size, 12);
+            "mov_mark_" + Entity.getLastUsedID(),
+            12);
         element.setPosition(
             g.getX()*Global.tile_size,
             g.getY()*Global.tile_size
         );
-        GameState.world.addEntity(element);
+        GameState.world.addSupportElem(element);
       }
       else
         first = false;
@@ -567,35 +568,32 @@ class TracePathCommand extends Command {
 
 
 
-// ======================== DestroyAllOfTypeCommand ======================== //
+// ======================== DestroyWorldSupportGUICommand ======================== //
 
-class DestroyWorldEntitiesByTypeCommand extends Command {
+class DestroyWorldSupportGUICommand extends Command {
 
-  private static final String TAG = "DestroyWorldEntitiesByTypeCommand";
+  private static final String TAG = "DestroyWorldSupportGUICommand";
 
 
 
-// ========================= CREATION BEGIN ========================= //
+// ========================= CONSTRUCTION ========================= //
 
-  DestroyWorldEntitiesByTypeCommand(int entity_type) {
-    super(entity_type, null);
-  }
+  DestroyWorldSupportGUICommand() {}
 
 
 
 
-// ========================= LOGIC BEGIN ========================= //
+// ========================= LOGIC ========================= //
 
   @Override
   public boolean execute() {
 
     // Prepares a holder for entities reference
-    Vector<Entity> to_destroy = new Vector<>();
+    Vector<SupportUIElement> to_destroy = new Vector<>();
 
     // Collects all entities of given type into holder
-    for (Entity entity : GameState.world.entities()) {
-      if (entity.type() == this.entity_type)
-        to_destroy.add(entity);
+    for (SupportUIElement elem : GameState.world.getSupportGUI()) {
+      to_destroy.add(elem);
     }
 
     // Destroy them all. Entities must make sure they are removed from World.

@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.MathUtils;
 
-
+import java.util.Vector;
 
 // ========================= WORLD MAP ========================= //
 
@@ -36,6 +36,8 @@ public class WorldMap implements GestureListener, InputProcessor {
   OrthogonalTiledMapRenderer otm_renderer;
 
   private Array<Entity> entities;
+
+  private Vector<SupportUIElement> support_gui;
 
   private ShapeRenderer shape_renderer;
 
@@ -66,6 +68,8 @@ public class WorldMap implements GestureListener, InputProcessor {
     entities_batch = new SpriteBatch();
 
     entities = new Array<>();
+
+    support_gui = new Vector<>();
 
     tiled_map = new TmxMapLoader().load(
         "maps/debug_island/overworld_island.tmx");
@@ -101,8 +105,12 @@ public class WorldMap implements GestureListener, InputProcessor {
 // ========================= LOGIC ========================= //
 
   void update(float dt) {
-    if (world_running)
-      for (Entity ent : entities) ent.update(dt);
+    if (world_running) {
+      for (Entity ent : entities)
+        ent.update(dt);
+      for (SupportUIElement elem : support_gui)
+        elem.update(dt);
+    }
   }
 
 
@@ -113,6 +121,8 @@ public class WorldMap implements GestureListener, InputProcessor {
     otm_renderer.render();
 
     drawGrid();
+
+    drawSupportGUI();
 
     drawEntities();
 
@@ -226,6 +236,34 @@ public class WorldMap implements GestureListener, InputProcessor {
   }
 
 
+  private void drawSupportGUI() {
+
+    if (support_gui.size() > 0) {
+
+      entities_batch.begin();
+      entities_batch.setProjectionMatrix(camera.combined);
+
+      for (SupportUIElement elem : support_gui)
+        elem.graphic_comp.draw(entities_batch);
+
+      entities_batch.end();
+    }
+
+  }
+
+
+  void addSupportElem(SupportUIElement elem) {
+    support_gui.add(elem);
+    reloadInputMultiplexer();
+  }
+
+
+  void remSupportElem(SupportUIElement elem) {
+    input_multiplexer.removeProcessor(elem);
+    support_gui.remove(elem);
+  }
+
+
 
 
 // ========================= GET / SET ========================= //
@@ -239,14 +277,20 @@ public class WorldMap implements GestureListener, InputProcessor {
 
   void reloadInputMultiplexer() {
     clearInputMultiplexer();
-    for (Entity ent : entities) input_multiplexer.addProcessor(ent);
+    for (Entity ent : entities)
+      input_multiplexer.addProcessor(ent);
+    for (SupportUIElement elem : support_gui)
+      input_multiplexer.addProcessor(elem);
     input_multiplexer.addProcessor(this); // That's for InputProcessor
     input_multiplexer.addProcessor(gesture_detector);
   }
 
 
   void clearInputMultiplexer() {
-    for (Entity ent : entities) input_multiplexer.removeProcessor(ent);
+    for (Entity ent : entities)
+      input_multiplexer.removeProcessor(ent);
+    for (SupportUIElement elem : support_gui)
+      input_multiplexer.removeProcessor(elem);
     input_multiplexer.removeProcessor(this); // That's for InputProcessor
     input_multiplexer.removeProcessor(gesture_detector);
   }
@@ -256,27 +300,20 @@ public class WorldMap implements GestureListener, InputProcessor {
     return entities;
   }
 
+  Vector<SupportUIElement> getSupportGUI() {
+    return support_gui;
+  }
 
 
 
 // ========================= INPUT ========================= //
 
   @Override
-  public boolean touchDown(float x, float y,
-                           int pointer, int button) {
-    return false;
-  }
-
-
-  @Override
   public boolean tap(float screenX, float screenY,
                      int count, int button) {
     Log.d(TAG, "Map touched.");
 
-    // Screen touch/click always clear the scene from any support ui elements.
-    CommandManager.sendCommand(
-        new DestroyWorldEntitiesByTypeCommand(Entity.MOVEMARK)
-    );
+    CommandManager.sendCommand(new DestroyWorldSupportGUICommand());
 
     if (Entity.selected_entity != null) {
 
@@ -284,7 +321,7 @@ public class WorldMap implements GestureListener, InputProcessor {
       Vector3 target = new Vector3(screenX, screenY, 0);
 
       /** Using the world camera, unprojects this coordinates from the screen
-        into the world coordinates. **/
+       into the world coordinates. **/
       camera.unproject(target);
 
       // Enforces grid alignment
@@ -344,6 +381,13 @@ public class WorldMap implements GestureListener, InputProcessor {
 
     }
     return true;
+  }
+
+
+  @Override
+  public boolean touchDown(float x, float y,
+                           int pointer, int button) {
+    return false;
   }
 
 

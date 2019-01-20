@@ -49,6 +49,9 @@ public class SupportUIElement extends Entity implements InputProcessor {
   @Override
   public void dispose() {
 
+    // Unplug it from game world.
+    GameState.world.remSupportElem(this);
+
     /** Remove reference form graphic_comp to this entity, so garbage
       collector do the thing. **/
     graphic_comp.entity = null;
@@ -57,9 +60,6 @@ public class SupportUIElement extends Entity implements InputProcessor {
       This is for a fail-fast, in case of a attempt to render a destroyed
       object. **/
     graphic_comp = null;
-
-    // Tells WorldMap to get this entity from it's bundle
-    GameState.world.remEntity(this);
 
   }
 

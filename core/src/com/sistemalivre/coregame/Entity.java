@@ -224,8 +224,10 @@ abstract public class Entity implements InputProcessor {
     Log.i(TAG, "Destroying " + this.toString() + "(" + name + ")");
     if (selected_entity == this) selected_entity = null;
     this.dispose();
-    for (EntityState state : states)
+    for (EntityState state : states) {
+      state.owner = null;
       state = null;
+    }
     states = null;
     CoreGame.entities.remove(this);
   }
