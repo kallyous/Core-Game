@@ -1,6 +1,18 @@
 {
-  "DefaultTerrain" : "graphic/terrain_atlas.png",
-  "DefaultInterface" : "graphic/interface.png",
-  "HumanBaseMale" : "graphic/human_base_male.png",
-  "HumanBaseFemale" : "graphic/human_base_female.png"
+  "DefaultTerrain" : {
+    "path" : "graphic/terrain_atlas.png",
+    "data" : "data/graphic/terrain_atlas.json"
+  },
+  "DefaultInterface" : {
+    "path" : "graphic/interface.png",
+    "data" : "data/graphic/interface.json"
+  },
+  "HumanBaseMale" : {
+    "path" : "graphic/human_base_male.png",
+    "data" : "data/graphic/human_base_male.json"
+  },
+  "HumanBaseFemale" : {
+    "path" : "graphic/human_base_female.png",
+    "data" : "data/graphic/human_base_female.json"
+  }
 }

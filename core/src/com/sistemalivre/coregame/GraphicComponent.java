@@ -49,7 +49,7 @@ public class GraphicComponent {
   // Default constructor assumes the GUI texture and (?) symbol
   GraphicComponent(Entity entity) {
     this.entity = entity;
-    this.texture = CoreGame.asset_manager.textures.get("DefaultInterface");
+    this.texture = AssetManager.texture("DefaultInterface");
     setupDefaultGraphics();
   }
 
@@ -57,7 +57,7 @@ public class GraphicComponent {
   // This additional one just takes also a name and texture region index
   GraphicComponent(Entity entity, int region_index) {
     this.entity = entity;
-    this.texture = CoreGame.asset_manager.textures.get("DefaultInterface");
+    this.texture = AssetManager.texture("DefaultInterface");
     setupDefaultGraphics();
     setRegionIndex(region_index);
   }
@@ -68,7 +68,7 @@ public class GraphicComponent {
   GraphicComponent(Entity entity, String spritesheet_name,
                    int sheet_cols, int sheet_rows,  int region_index) {
     this.entity = entity;
-    this.texture = CoreGame.asset_manager.textures.get(spritesheet_name);
+    this.texture = AssetManager.texture(spritesheet_name);
     this.sheet_cols = sheet_cols;
     this.sheet_rows = sheet_rows;
     this.region_index = region_index;
