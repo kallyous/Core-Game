@@ -391,41 +391,44 @@ class TracePathCommand extends Command {
   public boolean execute() {
     Log.d(TAG, "Tracing path for " + target.getName());
 
-    Queue<GraphMapVertex> path = breadthFirstSearch(entrance, exit);
-    Queue<GraphMapVertex> reverse = new Queue<>();
+    Queue<GraphMapVertex> path = Pathfinder.findPath(entrance, exit);
 
     GraphMapVertex g;
 
-    boolean first =  true;
+    for (int i = 0; i < path.size; i++) {
 
-    for (int i = 0; i < path.size;) {
+      g = path.get(i);
 
-      g = path.removeLast();
-      reverse.addLast(g);
-
-      if (path.size == 0) {
+      /* This is for the exit vertex, the destination.
+      It is the location where the player actually taped the world.
+      Instead of creating the usual path marker for the player
+      visualizing the movement path, the last marker not only has
+      different visual but holds special behavior.
+      When clicked, it confirms the movement intent and sends the
+      MoveToCommand to the CommandManager, containing both the entity
+      selected at the moment of path finding and the path found.
+      Effectively this means for the player that taping again on the
+      same spot will perform the movement of the selected entity.
+       */
+      if (i == path.size - 1) {
 
         SupportUIElement element = new SupportUIElement(
             "mov_mark_" + Entity.getLastUsedID(),
             13) {
 
-          @Override
+          @Override // For detecting the confirmation tap
           public boolean touchUp(int screenX, int screenY,
                                  int pointer, int button) {
 
-            /** Converts touched location into Vector3,
-             for OrthographicCamera consuming it. **/
             Vector3 touched_spot = new Vector3(screenX, screenY, 0);
 
-            // Tests world collision for the touched point
             if ( worldTouched(touched_spot) ) {
+              Log.v(TAG, "We got a collision with the touch.");
 
-              Log.d(TAG, "We got a collision with the touch.");
+              CommandManager.sendCommand( // Triggers/confirms movement
+                  new MoveToCommand(target, path) );
 
-              CommandManager.sendCommand(
-                  new MoveToCommand(target, reverse) );
-
-              // Screen touch/click always clear the scene from any support ui elements.
+              // Clears the screen/world from path markers
               CommandManager.sendCommand(
                   new DestroyWorldSupportGUICommand()
               );
@@ -444,9 +447,17 @@ class TracePathCommand extends Command {
             g.getX()*Global.tile_size,
             g.getY()*Global.tile_size
         );
+
         GameState.world.addSupportElem(element);
+
       }
-      else if (!first) {
+
+      /* Visual Path marker
+      For the player to see the path it's selected entity will take
+      to reach the destination, we create and place one of those on
+      every tile it will walk through.
+       */
+      else {
         SupportUIElement element = new SupportUIElement(
             "mov_mark_" + Entity.getLastUsedID(),
             12);
@@ -456,8 +467,6 @@ class TracePathCommand extends Command {
         );
         GameState.world.addSupportElem(element);
       }
-      else
-        first = false;
 
     }
 
@@ -465,6 +474,19 @@ class TracePathCommand extends Command {
   }
 
 
+
+
+// ========================== GET / SET ========================== //
+
+  @Override
+  public String getTAG() {
+    return TAG;
+  }
+
+
+
+
+// ========================== REFERENCE ========================== //
   private Queue<GraphMapVertex> breadthFirstSearch(
       GraphMapVertex entrance, GraphMapVertex exit) {
 
@@ -522,8 +544,6 @@ class TracePathCommand extends Command {
     // Return the path
     return path;
   }
-
-
   private Queue<GraphMapVertex> reversePath(GraphMapVertex exit) {
 
     Queue<GraphMapVertex> path = new Queue<GraphMapVertex>();
@@ -551,16 +571,7 @@ class TracePathCommand extends Command {
 
     return path;
   }
-
-
-
-
-// ========================== GET / SET ========================== //
-
-  @Override
-  public String getTAG() {
-    return TAG;
-  }
+// ========================== REFERENCE ========================== //
 
 }
 
