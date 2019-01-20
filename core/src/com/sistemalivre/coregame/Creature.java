@@ -21,38 +21,15 @@ public class Creature extends Entity {
   // Possui atributos e medidores
   public BodyComponent body_comp;
 
-  // Possui funcionalidades de combate
-  public CombatComponent combat_comp;
-
-  public MovementComponent move_comp;
-
 
 
 
 // ========================= CONSTRUCTION ========================= //
 
-  Creature(String name) {
+  Creature(String name, String spritesheet_name) {
     super(name);
-    graphic_comp = new GraphicComponent(this);
-    graphic_comp.setSpriteOffsetX(this.getWidth()/2);
+    graphic_comp = new GraphicComponent(this, spritesheet_name);
     body_comp = new BodyComponent(this);
-    combat_comp = new CombatComponent(this);
-    move_comp = new MovementComponent(this);
-    states.add(new IdleState(this));
-    states.add(new MovingState(this));
-    setState("IdleState");
-    setType(CREATURE);
-  }
-
-  Creature(String name, String spritesheet_name,
-           int sheet_cols, int sheet_rows, int region_index) {
-    super(name);
-    graphic_comp = new GraphicComponent(this, spritesheet_name,
-        sheet_cols, sheet_rows, region_index);
-    graphic_comp.setSpriteOffsetX(this.getWidth()/2);
-    body_comp = new BodyComponent(this);
-    combat_comp = new CombatComponent(this);
-    move_comp = new MovementComponent(this);
     states.add(new IdleState(this));
     states.add(new MovingState(this));
     setState("IdleState");

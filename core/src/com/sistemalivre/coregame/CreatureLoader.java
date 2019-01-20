@@ -88,11 +88,7 @@ public class CreatureLoader {
       float y = Float.parseFloat( props.get("y").toString() );
 
       // Prepare a new creature with the given name
-      Creature creature = new Creature(
-          creature_name,
-          spritesheet_name,
-          13, 21, 131
-      );
+      Creature creature = new Creature(creature_name, spritesheet_name);
 
       // Set display name
       creature.setDisplayName(display_name);
@@ -226,9 +222,7 @@ public class CreatureLoader {
 
     Creature creature_obj = new Creature(
         internal_name,
-        creature_json.getString("spritesheet"),
-        13, 21, // TODO: Get dynamically
-        creature_json.getInt("init_frame")
+        creature_json.getString("spritesheet")
     );
 
     creature_obj.body_comp.setHealthPtsMax(

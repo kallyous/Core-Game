@@ -7,8 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-
-
+import com.badlogic.gdx.utils.JsonValue;
 
 // ========================= GRAPHIC COMPONENT ========================= //
 
@@ -24,10 +23,12 @@ public class GraphicComponent {
   Sprite sprite;
 
   // Entity owning this instance of GraphicComponent
-  Entity entity;
+  Entity owner;
 
   // Texture to be split and used
   Texture texture;
+
+  JsonValue data;
 
   // Texture sections after splitting the texture
   private TextureRegion texture_region[];
@@ -46,34 +47,19 @@ public class GraphicComponent {
 
 // ========================= CONSTRUCTION ========================= //
 
-  // Default constructor assumes the GUI texture and (?) symbol
+  // Default constructor assumes default GUI texture.
   GraphicComponent(Entity entity) {
-    this.entity = entity;
-    this.texture = AssetManager.texture("DefaultInterface");
-    setupDefaultGraphics();
+    owner = entity;
+    GraphicAsset asset =(GraphicAsset)AssetManager.asset("DefaultInterface");
+    setupAssetGraphics(asset);
   }
 
 
-  // This additional one just takes also a name and texture region index
-  GraphicComponent(Entity entity, int region_index) {
-    this.entity = entity;
-    this.texture = AssetManager.texture("DefaultInterface");
-    setupDefaultGraphics();
-    setRegionIndex(region_index);
-  }
-
-
-  /** Here we take the name of a Texture inside the AssetManager's
-    textures hash table. **/
-  GraphicComponent(Entity entity, String spritesheet_name,
-                   int sheet_cols, int sheet_rows,  int region_index) {
-    this.entity = entity;
-    this.texture = AssetManager.texture(spritesheet_name);
-    this.sheet_cols = sheet_cols;
-    this.sheet_rows = sheet_rows;
-    this.region_index = region_index;
-    setupTextureRegions();
-    setRegionIndex(region_index);
+  // Most common use, we specify the name of an asset for the component to use
+  GraphicComponent(Entity entity, String asset_name) {
+    owner = entity;
+    GraphicAsset asset = (GraphicAsset)AssetManager.asset(asset_name);
+    setupAssetGraphics(asset);
   }
 
 
@@ -82,7 +68,7 @@ public class GraphicComponent {
       Entity entity, Texture texture,
       int region_x, int region_y, int width, int height) {
 
-    this.entity = entity;
+    owner = entity;
 
     this.texture = texture;
 
@@ -101,48 +87,34 @@ public class GraphicComponent {
 
   // ------------------------- Entity Size Setup -------------------------- //
 
-    this.entity.setWidth(width);
+    owner.setWidth(width);
 
-    this.entity.setHeight(height);
+    owner.setHeight(height);
 
   // ---------------------------------------------------------------------- //
 
   }
 
 
-  // Default graphics loads the '?' symbol from the GUI texture
-  private void setupDefaultGraphics() {
-    Log.d(TAG, "Entity " + entity.getName() + " created with generic graphics.");
-    sheet_cols = 16;
-    sheet_rows = 16;
-    x_offset = 0;
-    y_offset = 0;
-    region_index = 0;
-    setupTextureRegions();
-  }
+  private void setupAssetGraphics(GraphicAsset asset) {
+    data = asset.data();
+    texture = asset.texture();
+    texture_region = asset.textureRegions();
+    region_index = data.getInt("default");
+    sheet_cols = data.getInt("cols");
+    sheet_rows = data.getInt("rows");
 
+    try { setSpriteOffsetX(data.getInt("sprite_offset_x")); }
+    catch (Exception e) {
+      Log.v(TAG, e.getMessage());
+      setSpriteOffsetX(0); }
 
-  // Texture Regions Setup
-  public void setupTextureRegions() {
+    try { setSpriteOffsetY(data.getInt("sprite_offset_y")); }
+    catch (Exception e) {
+      Log.v(TAG, e.getMessage());
+      setSpriteOffsetY(0); }
 
-    // Splits regions based on the data loaded.
-    TextureRegion[][] tempReg = TextureRegion.split(texture,
-        texture.getWidth()/sheet_cols, texture.getHeight()/sheet_rows);
-
-    // Creates the TextureRegion array with the calculated number or children.
-    texture_region = new TextureRegion[sheet_cols*sheet_rows];
-
-    // Assign a region to each array index.
-    int index = 0;
-    for(int i = 0; i < sheet_rows; i++){
-      for(int j = 0; j < sheet_cols; j++){
-        texture_region[index++] = tempReg[i][j];
-      }
-    }
-
-    // Creates the sprites and puts it facing to the informed initial position.
     sprite = new Sprite(texture_region[region_index]);
-
   }
 
 
@@ -158,7 +130,7 @@ public class GraphicComponent {
   public void drawCollBox(ShapeRenderer shape_renderer) {
 
     shape_renderer.setColor(Color.GREEN);
-    shape_renderer.rect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
+    shape_renderer.rect(owner.getX(), owner.getY(), owner.getWidth(), owner.getHeight());
 
     shape_renderer.setColor(Color.LIGHT_GRAY);
     shape_renderer.rect(sprite.getX(), sprite.getY(),
@@ -169,8 +141,8 @@ public class GraphicComponent {
 
   public void update(float dt) {
     sprite.setPosition(
-        entity.getX() - x_offset,
-        entity.getY() - y_offset);
+        owner.getX() - x_offset,
+        owner.getY() - y_offset);
   }
 
 

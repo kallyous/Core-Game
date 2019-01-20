@@ -106,14 +106,15 @@ class UiElement extends Entity {
   // Default constructor spans a (?) button
   UiElement(String name) {
     super(name);
-    graphic_comp = new GraphicComponent(this, 0);
+    graphic_comp = new GraphicComponent(this);
   }
 
 
   // This one spans a button using the default GUI texture
   UiElement(String name, int region_index) {
     super(name);
-    graphic_comp = new GraphicComponent(this, region_index);
+    graphic_comp = new GraphicComponent(this);
+    graphic_comp.setRegionIndex(region_index);
   }
 
 
@@ -121,7 +122,7 @@ class UiElement extends Entity {
     component, mostly for texts. **/
   UiElement(String name, boolean has_graphic_comp) {
     super(name);
-    if (has_graphic_comp) graphic_comp = new GraphicComponent(this, 0);
+    if (has_graphic_comp) graphic_comp = new GraphicComponent(this);
     else graphic_comp = null;
   }
 

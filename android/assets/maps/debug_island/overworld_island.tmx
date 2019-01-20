@@ -9,15 +9,7 @@
   </data>
  </layer>
  <objectgroup id="2" name="creatures">
-  <object id="1" name="robert" type="creature" x="576" y="2048" width="32" height="32">
-   <properties>
-    <property name="controllable" value="true"/>
-    <property name="display_name" value="Robert Batation"/>
-    <property name="prototype" value="fighter"/>
-    <property name="spritesheet" value="HumanBaseMale"/>
-   </properties>
-  </object>
-  <object id="2" name="arya" type="creature" x="928" y="1952" width="32" height="32">
+  <object id="2" name="arya" type="creature" x="896" y="1856" width="32" height="32">
    <properties>
     <property name="controllable" type="bool" value="true"/>
     <property name="display_name" value="Arya Spark"/>

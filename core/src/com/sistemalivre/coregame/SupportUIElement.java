@@ -31,7 +31,8 @@ public class SupportUIElement extends Entity implements InputProcessor {
 
   SupportUIElement(String name, int region_index) {
     super(name);
-    graphic_comp = new GraphicComponent(this, region_index);
+    graphic_comp = new GraphicComponent(this);
+    graphic_comp.setRegionIndex(region_index);
     this.setType(Entity.MOVEMARK);
   }
 
@@ -54,7 +55,7 @@ public class SupportUIElement extends Entity implements InputProcessor {
 
     /** Remove reference form graphic_comp to this entity, so garbage
       collector do the thing. **/
-    graphic_comp.entity = null;
+    graphic_comp.owner = null;
 
     /** Remove reference to the graphic component.
       This is for a fail-fast, in case of a attempt to render a destroyed

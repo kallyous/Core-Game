@@ -90,6 +90,10 @@ public class AssetManager {
     return creatures.get(name);
   }
 
+  static Asset asset(String name) {
+    return assets.get(name);
+  }
+
   static Texture texture(String name) {
     /** Get a texture:
      1. Assume there is a texture with this name. This means there is a asset
@@ -99,6 +103,10 @@ public class AssetManager {
         if already loaded or loaded then returned if not yet loaded.
      **/
     return ((GraphicAsset)assets.get(name)).texture();
+  }
+
+  static JsonValue data(String name) {
+    return assets.get(name).data();
   }
 
 }
@@ -146,6 +154,8 @@ abstract class Asset {
 
   // TODO: ensure no modification by passing a deep copy
   JsonValue data() {
+    if (data == null)
+      loadData();
     return data;
   }
 
