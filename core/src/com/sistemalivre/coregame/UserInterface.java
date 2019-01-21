@@ -59,7 +59,7 @@ public class UserInterface {
 
 // ========================= LOGIC ========================= //
 
-  // Update all elements based on game sate
+  // Update all elements based on state sate
   public void update(float dt) {
     for (UiElement elem : elements) elem.update(dt);
   }

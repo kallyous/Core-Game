@@ -93,7 +93,7 @@ public class World implements GestureListener, InputProcessor {
     Array<Creature> lvl_creats =
         CreatureLoader.LoadCreaturesFromTiledMap(tiled_map);
 
-    // Insert all loaded creatures into the game running world
+    // Insert all loaded creatures into the state running world
     for (int i = 0; i < lvl_creats.size; i++)
       addEntity(lvl_creats.get(i));
 
@@ -194,7 +194,7 @@ public class World implements GestureListener, InputProcessor {
     /* Camera Projection:
      This projects the objects position into the camera point of view.
      It means that things will be rendered with their sprites positions
-     projected into the game world matrix or coordinate system, instead of
+     projected into the state world matrix or coordinate system, instead of
      relative to the screen coordinates. */
       entities_batch.setProjectionMatrix(camera.combined);
 

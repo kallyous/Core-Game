@@ -50,8 +50,8 @@ public class SupportUIElement extends Entity implements InputProcessor {
   @Override
   public void dispose() {
 
-    // Unplug it from game world.
-    GameState.world.remSupportElem(this);
+    // Unplug it from state world.
+    Game.world.remSupportElem(this);
 
     /** Remove reference form graphic_comp to this entity, so garbage
       collector do the thing. **/

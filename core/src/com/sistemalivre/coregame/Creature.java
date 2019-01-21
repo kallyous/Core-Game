@@ -50,7 +50,7 @@ public class Creature extends Entity {
   @Override
   public void dispose() {
     try {
-      GameState.world.remEntity(this);
+      Game.world.remEntity(this);
       graphic_comp.destroy();
       body_comp.destroy();
     }

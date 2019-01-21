@@ -25,7 +25,7 @@ public class Log {
     i() Info is for not really necessary informational stuff.
     v() A more rich(cluttered) info on running stuff.
     w() Warnings are things that may be broken or not. They demand attention.
-    e() Error level for wrong things. Usually, the game breaks or no longer
+    e() Error level for wrong things. Usually, the state breaks or no longer
         works properly after one of those.
 
     Who prints out more shit?

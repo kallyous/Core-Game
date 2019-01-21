@@ -32,7 +32,7 @@ abstract public class Command {
   // For entity type targets. Informs the type of entity targeted.
   int entity_type = -1;
 
-  // Array of argumetns for complex shit
+  // Array of arguments for complex shit
   String args[];
 
 
@@ -90,6 +90,7 @@ abstract public class Command {
       this.command_target_type = TARGET_ENTITY_TYPE;
       this.entity_type = target_or_entity_type;
     }
+
     this.args = args;
   }
 
@@ -122,7 +123,7 @@ abstract public class Command {
 
 // ========================= OpenMainMenuCommand ========================= //
 
-// Pause game and bring in the title screen with the main menu
+// Pause state and bring in the title screen with the main menu
 class OpenMainMenuCommand extends Command {
 
   private static final String TAG = "OpenMainMenuCommand";
@@ -140,7 +141,7 @@ class OpenMainMenuCommand extends Command {
   @Override
   public boolean execute() {
     Log.i(TAG, "Pausando jogo e abrindo menu principal. ");
-    Game.game.switchTo(Game.main_menu_state);
+    Game.state.switchTo(Game.main_menu_state);
     return true;
   }
 
@@ -152,7 +153,7 @@ class OpenMainMenuCommand extends Command {
 
 // ========================= RunGameCommand ========================= //
 
-// Start/Resume the game
+// Start/Resume the state
 class RunGameCommand extends Command {
 
   private static final String TAG = "RunGameCommand";
@@ -169,8 +170,8 @@ class RunGameCommand extends Command {
 
   @Override
   public boolean execute() {
-    Log.i(TAG, "Starting/Resuming game. ");
-    Game.game.switchTo(Game.running_state);
+    Log.i(TAG, "Starting/Resuming state. ");
+    Game.state.switchTo(Game.running_state);
     return true;
   }
 
@@ -182,7 +183,7 @@ class RunGameCommand extends Command {
 
 // ========================= ExitCommand ========================= //
 
-// Exit/Close the game
+// Exit/Close the state
 class ExitCommand extends Command {
 
   private static final String TAG = "ExitCommand";
@@ -193,7 +194,7 @@ class ExitCommand extends Command {
 
   @Override
   public boolean execute() {
-    Log.i(TAG, "Issuing shutdow flag. Game is about to exit.");
+    Log.v(TAG, "Issuing shutdow flag. Game is about to exit.");
     Game.game_running = false;
     return true;
   }
@@ -233,13 +234,13 @@ class SelectCommand extends Command {
   public boolean execute() {
 
     if (this.target == Entity.selected_entity) {
-      Log.i(TAG, "Unselecting " + this.target.getName() );
+      Log.v(TAG, "Unselecting " + this.target.getName() );
       Entity.selected_entity = null;
     }
     else {
-      Log.i(TAG, "Selecting " + this.target.getName());
+      Log.v(TAG, "Selecting " + this.target.getName());
       Entity.selected_entity = this.target;
-      Log.d( TAG, "Info on selected entity:\n" + this.target.info() );
+      Log.i( TAG, "Info on selected entity:\n" + this.target.info() );
     }
 
     return true;
@@ -448,7 +449,7 @@ class TracePathCommand extends Command {
             g.getY()*Global.tile_size
         );
 
-        GameState.world.addSupportElem(element);
+        Game.world.addSupportElem(element);
 
       }
 
@@ -465,7 +466,7 @@ class TracePathCommand extends Command {
             g.getX()*Global.tile_size,
             g.getY()*Global.tile_size
         );
-        GameState.world.addSupportElem(element);
+        Game.world.addSupportElem(element);
       }
 
     }
@@ -603,7 +604,7 @@ class DestroyWorldSupportGUICommand extends Command {
     Vector<SupportUIElement> to_destroy = new Vector<>();
 
     // Collects all entities of given type into holder
-    for (SupportUIElement elem : GameState.world.getSupportGUI()) {
+    for (SupportUIElement elem : Game.world.getSupportGUI()) {
       to_destroy.add(elem);
     }
 
@@ -755,7 +756,7 @@ class LoadAndPlaceCreatureCommand extends Command {
     creature.setDisplayName(args[0]);
     creature.setX(Float.parseFloat(args[3]));
     creature.setY(Float.parseFloat(args[4]));
-    GameState.world.addEntity(creature);
+    Game.world.addEntity(creature);
 
     return true;
   }

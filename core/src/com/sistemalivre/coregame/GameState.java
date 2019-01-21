@@ -14,9 +14,6 @@ abstract public class GameState {
 
 // ========================= DATA SETUP ========================= //
 
-  // Holds reference to the current game world map or level
-  static World world;
-
   // For single back actions support
   protected static GameState previous_state;
 
@@ -70,14 +67,14 @@ abstract public class GameState {
     // Call the clear for releasing resources
     clear();
 
-    // Switches the game state on the main loop
+    // Switches the state state on the main loop
     previous_state = this;
 
     // Sets the new state
-    Game.game = new_state;
+    Game.state = new_state;
 
-    // Initializes the new game state
-    Game.game.init();
+    // Initializes the new state state
+    Game.state.init();
 
   }
 
@@ -115,7 +112,7 @@ class RunningGameState extends GameState {
 
 // ============================= CONSTRUCTION ============================= //
 
-  RunningGameState(InputMultiplexer input_multiplexer, World world) {
+  RunningGameState(InputMultiplexer input_multiplexer) {
 
     // Creates a new interface
     gui = new RunningGameInterface(
@@ -124,9 +121,6 @@ class RunningGameState extends GameState {
 
     // Creates new input multiplexer
     this.input_multiplexer = input_multiplexer;
-
-    // Initializes the world map.
-    this.world = world;
 
   }
 
@@ -142,28 +136,28 @@ class RunningGameState extends GameState {
 
     gui.setInputMultiplexer(input_multiplexer);
 
-    world.resume();
+    Game.world.resume();
 
   }
 
 
   @Override
   public void update(float dt) {
-    world.update(dt);
+    Game.world.update(dt);
     gui.update(dt);
   }
 
 
   @Override
   protected void drawAll() {
-    world.render();
+    Game.world.render();
   }
 
 
   @Override
   public void clear() {
     gui.unsetInputMultiplexer(input_multiplexer);
-    world.suspend();
+    Game.world.suspend();
   }
 
 }
@@ -207,7 +201,7 @@ class MainMenuGameState extends GameState {
 
   @Override
   public void init() {
-    // Each game state handles input it's own way.
+    // Each state state handles input it's own way.
     Log.d(TAG, "init() ");
     gui.setInputMultiplexer(input_multiplexer);
   }

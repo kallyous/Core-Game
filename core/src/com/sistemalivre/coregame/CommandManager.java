@@ -17,7 +17,7 @@ public class CommandManager {
 
 // ========================= DATA ========================= //
 
-  // Queue with all commands to broadcast each game cycle
+  // Queue with all commands to broadcast each state cycle
   private static LinkedList<Command> pending_commands;
 
   // Entity for running target-less commands.
@@ -75,7 +75,7 @@ public class CommandManager {
         commander.executeCommand(command);
       }
       /** If it isn't none of the previous type, it is a wide target.
-        We make an enumeration of all current entities within the game, and
+        We make an enumeration of all current entities within the state, and
         send the command to all of them. Slow but effective. **/
       else {
         // Builds enumeration with all entities

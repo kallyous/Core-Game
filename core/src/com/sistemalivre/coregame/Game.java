@@ -8,10 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.utils.ObjectMap;
 
-import java.util.Hashtable;
-
-
-
 // ========================= CORE GAME STARTS ========================= //
 
 public class Game extends ApplicationAdapter {
@@ -22,22 +18,22 @@ public class Game extends ApplicationAdapter {
 
 // ============================== DATA SETUP ============================== //
 
-  /** This flag is used within the main loop to keep then game running and
+  /** This flag is used within the main loop to keep then state running and
     stop it when exit command has been issued. */
   public static boolean game_running = true;
 
-  /** This is a pseudo-service locator for the game static assets. For any class
+  /** This is a pseudo-service locator for the state static assets. For any class
     to have access to images, sounds, fonts and etc, it just needs a reference
     to this object. */
   public static AssetManager asset_manager;
 
   public static World world;
 
-  /** Finite State Machine - This one holds the current game state.
-    The game is actually split into states. Each state holds almost everything
-    related to it's doings. Things that are shared among game states are either
+  /** Finite State Machine - This one holds the current state state.
+    The state is actually split into states. Each state holds almost everything
+    related to it's doings. Things that are shared among state states are either
     held by the superclass GameState or the Game itself. */
-  public static GameState game;
+  public static GameState state;
 
   // Available Game States
   static MainMenuGameState main_menu_state;
@@ -48,13 +44,13 @@ public class Game extends ApplicationAdapter {
 
   /** Input Multiplexer for managing all different input source types.
     All input handling objects shall register to this multiplexer.
-    No exceptions. Also, each game state swap must perform two things: The
-    leaving game state must remove itself and childrens from the multiplexer,
+    No exceptions. Also, each state state swap must perform two things: The
+    leaving state state must remove itself and childrens from the multiplexer,
     and the entering state must register itself and childrens in this
     multiplexer. */
   public static InputMultiplexer input_multiplexer;
 
-  /** Keeps all game entities organized and accessible. To any class to have
+  /** Keeps all state entities organized and accessible. To any class to have
     access to every entity, it only needs a reference to this hashtable.
     Entities register themselves in this hashtable automatically,
     when they are created. */
@@ -64,7 +60,7 @@ public class Game extends ApplicationAdapter {
   float state_time;
 
   /** Batch render for the GUI
-   We use a separate sprite batch's for game world stuff and UI elements,
+   We use a separate sprite batch's for state world stuff and UI elements,
    because of projection.
    While all stuff are draw relative to the world coordinates, UI elements
    are draw relative to the screen coordinates, for obvious reasons (you don't
@@ -115,22 +111,22 @@ public class Game extends ApplicationAdapter {
      Very important stuff. Do your worship, human. */
     guiBatch = new SpriteBatch();
 
-    // Creates the game world
+    // Creates the state world
     world = new World(input_multiplexer);
 
-    // Prepares the running game state, by making several connections.
-    running_state = new RunningGameState(input_multiplexer, world);
+    // Prepares the running state state, by making several connections.
+    running_state = new RunningGameState(input_multiplexer);
     running_state.setScreenbatch(guiBatch);
     running_state.clear(); // Stupid hack to clean the input multiplexer.
     // TODO: Set a more elegant solution.
 
-    // Prepares the main menu game state, by making several connections.
+    // Prepares the main menu state state, by making several connections.
     main_menu_state = new MainMenuGameState(input_multiplexer);
     main_menu_state.setScreenbatch(guiBatch);
-    /** Since the game actually starts at the main menu, we don't have to
+    /** Since the state actually starts at the main menu, we don't have to
      clean the input multiplexer. */
 
-    // Sets game to the initial game state, Main Menu
+    // Sets state to the initial state state, Main Menu
     main_menu_state.switchTo(main_menu_state);
 
   }
@@ -154,16 +150,16 @@ public class Game extends ApplicationAdapter {
     // Increment elapsed time
     state_time += Gdx.graphics.getDeltaTime();
 
-    // Update the game state
-    game.update(state_time);
+    // Update the state state
+    state.update(state_time);
 
     // Execute all commands until command queue is empty
     CommandManager.flushCommands();
 
     // Render the result
-    game.render();
+    state.render();
 
-    // Triggers game shutdown if it's flag has been raised
+    // Triggers state shutdown if it's flag has been raised
     if (!game_running) gameShutdown();
 
   }

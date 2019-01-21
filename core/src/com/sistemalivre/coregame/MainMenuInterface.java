@@ -32,7 +32,7 @@ public class MainMenuInterface extends UserInterface {
       public boolean touchUp(int screenX, int screenY,
                              int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          Log.i(TAG, "Play game touched, sending RunGameCommand to manager.");
+          Log.i(TAG, "Play state touched, sending RunGameCommand to manager.");
           CommandManager.sendCommand(new RunGameCommand());
           return true;
         }
@@ -73,7 +73,7 @@ public class MainMenuInterface extends UserInterface {
       public boolean touchUp(int screenX, int screenY,
                              int pointer, int button) {
         if (collidedScreen(screenX, screenY)) {
-          Log.i(TAG, "Exit game touched, sending ExitCommand to manager.");
+          Log.i(TAG, "Exit state touched, sending ExitCommand to manager.");
           CommandManager.sendCommand(new ExitCommand());
           return true;
         }

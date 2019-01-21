@@ -93,7 +93,7 @@ abstract public class Entity implements InputProcessor {
 
   /** Commands:
     There are two unifying features to all entities - They all have a location
-    in the game world and they all at least CAN receive commands, to perform
+    in the state world and they all at least CAN receive commands, to perform
     or be targets of actions. Therefore, all entities have (X,Y) coordinates
     and a Finite State Machine setup. Each state has a set of commands it can
     perform. **/
