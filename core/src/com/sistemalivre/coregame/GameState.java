@@ -74,10 +74,10 @@ abstract public class GameState {
     previous_state = this;
 
     // Sets the new state
-    CoreGame.game = new_state;
+    Game.game = new_state;
 
     // Initializes the new game state
-    CoreGame.game.init();
+    Game.game.init();
 
   }
 
@@ -115,18 +115,18 @@ class RunningGameState extends GameState {
 
 // ============================= CONSTRUCTION ============================= //
 
-  RunningGameState(InputMultiplexer input_multiplexer) {
+  RunningGameState(InputMultiplexer input_multiplexer, World world) {
 
     // Creates a new interface
     gui = new RunningGameInterface(
-        CoreGame.game_window_width,
-        CoreGame.game_window_height);
+        Game.game_window_width,
+        Game.game_window_height);
 
     // Creates new input multiplexer
     this.input_multiplexer = input_multiplexer;
 
     // Initializes the world map.
-    world = new World(input_multiplexer);
+    this.world = world;
 
   }
 
@@ -192,8 +192,8 @@ class MainMenuGameState extends GameState {
   MainMenuGameState(InputMultiplexer input_multiplexer) {
 
     gui = new MainMenuInterface(
-        CoreGame.game_window_width,
-        CoreGame.game_window_height);
+        Game.game_window_width,
+        Game.game_window_height);
 
     // Cretes new input multiplexer
     this.input_multiplexer = input_multiplexer;

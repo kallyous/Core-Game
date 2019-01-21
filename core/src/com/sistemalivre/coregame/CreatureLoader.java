@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 
 import java.util.Iterator;
-import java.util.Map;
 
 //========================= CreatureLoader ========================= //
 
@@ -119,7 +118,7 @@ public class CreatureLoader {
                                              String prototype_name) {
 
     // Gets current prototype data
-    JsonValue prototype = CoreGame.asset_manager.creature(prototype_name);
+    JsonValue prototype = Game.asset_manager.creature(prototype_name);
 
     JsonValue creature_json = protoypeFactory(prototype);
 
@@ -140,7 +139,7 @@ public class CreatureLoader {
 
   private static JsonValue protoypeFactory(JsonValue arc_creature) {
 
-    JsonValue prototype = CoreGame.asset_manager.creature(
+    JsonValue prototype = Game.asset_manager.creature(
         arc_creature.getString("prototype") );
 
     // Pseudo deep copy
@@ -209,7 +208,7 @@ public class CreatureLoader {
   public static Creature loadBaseCreature(String prototype_name) {
 
     // Gets current prototype data
-    JsonValue prototype = CoreGame.asset_manager.creature(prototype_name);
+    JsonValue prototype = Game.asset_manager.creature(prototype_name);
 
     JsonValue creature_json = protoypeFactory(prototype);
 

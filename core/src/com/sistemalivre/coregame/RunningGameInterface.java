@@ -1,10 +1,5 @@
 package com.sistemalivre.coregame;
 
-
-import com.badlogic.gdx.utils.Array;
-
-
-
 // ========================= RUNNING GAME GUI ========================= //
 
 // GUI for the main menu or title screen
@@ -71,7 +66,7 @@ public class RunningGameInterface extends UserInterface {
     };
 
     // Register in the hash map
-    CoreGame.entities.put(btn_pass.getName(), btn_pass);
+    Game.entities.put(btn_pass.getName(), btn_pass);
 
     // Positioning
     btn_pass.setPosition(screen_width - 42, screen_height - 42);
@@ -120,7 +115,7 @@ public class RunningGameInterface extends UserInterface {
     sel_txt.states.add(state);
 
     // Register the element in the hash map
-    CoreGame.entities.put(sel_txt.getName(), sel_txt);
+    Game.entities.put(sel_txt.getName(), sel_txt);
 
     // Scale down the font
     sel_txt.label.setFontScale(.6f);

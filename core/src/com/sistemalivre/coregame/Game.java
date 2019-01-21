@@ -14,7 +14,7 @@ import java.util.Hashtable;
 
 // ========================= CORE GAME STARTS ========================= //
 
-public class CoreGame extends ApplicationAdapter {
+public class Game extends ApplicationAdapter {
 
   private static final String TAG = "NopeIslandGame";
 
@@ -31,10 +31,12 @@ public class CoreGame extends ApplicationAdapter {
     to this object. */
   public static AssetManager asset_manager;
 
+  public static World world;
+
   /** Finite State Machine - This one holds the current game state.
     The game is actually split into states. Each state holds almost everything
     related to it's doings. Things that are shared among game states are either
-    held by the superclass GameState or the CoreGame itself. */
+    held by the superclass GameState or the Game itself. */
   public static GameState game;
 
   // Available Game States
@@ -113,8 +115,11 @@ public class CoreGame extends ApplicationAdapter {
      Very important stuff. Do your worship, human. */
     guiBatch = new SpriteBatch();
 
+    // Creates the game world
+    world = new World(input_multiplexer);
+
     // Prepares the running game state, by making several connections.
-    running_state = new RunningGameState(input_multiplexer);
+    running_state = new RunningGameState(input_multiplexer, world);
     running_state.setScreenbatch(guiBatch);
     running_state.clear(); // Stupid hack to clean the input multiplexer.
     // TODO: Set a more elegant solution.

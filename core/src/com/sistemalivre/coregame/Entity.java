@@ -128,11 +128,11 @@ abstract public class Entity implements InputProcessor {
     setDefaultDimensions();
 
     // The so important duplicated name checkup
-    if (CoreGame.entities.containsKey(name)) {
+    if (Game.entities.containsKey(name)) {
 
       // Debug warnings
       Log.d(TAG, "Entidade com nome " + name + " já existe. É o objeto "
-          + CoreGame.entities.get(name).toString() );
+          + Game.entities.get(name).toString() );
       Log.d(TAG, "Duplicatas não são permitidas," +
           " emitindo comando de autodestruição");
 
@@ -147,7 +147,7 @@ abstract public class Entity implements InputProcessor {
     else {
 
       // Hash table registration
-      CoreGame.entities.put(name, this);
+      Game.entities.put(name, this);
 
       // Debug notification
       Log.i(TAG, "Adicionado " + name + " à Hashtable de entidades.");
@@ -229,7 +229,7 @@ abstract public class Entity implements InputProcessor {
       state = null;
     }
     states = null;
-    CoreGame.entities.remove(this.name);
+    Game.entities.remove(this.name);
   }
 
   boolean setState(String state_name) {

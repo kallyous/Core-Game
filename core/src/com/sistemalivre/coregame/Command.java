@@ -66,7 +66,7 @@ abstract public class Command {
   // Issued for specific entities with known name
   Command(String target_name, String args[]) {
     this.command_target_type = TARGET_SINGLE;
-    this.target = CoreGame.entities.get(target_name);
+    this.target = Game.entities.get(target_name);
     if (this.target == null)
       Log.w(TAG, "Falha ao localizar " + target_name + " na hash table.");
     else
@@ -140,7 +140,7 @@ class OpenMainMenuCommand extends Command {
   @Override
   public boolean execute() {
     Log.i(TAG, "Pausando jogo e abrindo menu principal. ");
-    CoreGame.game.switchTo(CoreGame.main_menu_state);
+    Game.game.switchTo(Game.main_menu_state);
     return true;
   }
 
@@ -170,7 +170,7 @@ class RunGameCommand extends Command {
   @Override
   public boolean execute() {
     Log.i(TAG, "Starting/Resuming game. ");
-    CoreGame.game.switchTo(CoreGame.running_state);
+    Game.game.switchTo(Game.running_state);
     return true;
   }
 
@@ -194,7 +194,7 @@ class ExitCommand extends Command {
   @Override
   public boolean execute() {
     Log.i(TAG, "Issuing shutdow flag. Game is about to exit.");
-    CoreGame.game_running = false;
+    Game.game_running = false;
     return true;
   }
 

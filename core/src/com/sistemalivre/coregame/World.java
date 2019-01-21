@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.MathUtils;
 
-// ========================= WORLD MAP ========================= //
+// ========================= GAME WORLD ========================= //
 
 public class World implements GestureListener, InputProcessor {
 
@@ -60,8 +60,8 @@ public class World implements GestureListener, InputProcessor {
 
     setInputMultiplexer(input_multiplexer);
 
-    int s_width = (int)CoreGame.game_window_width;
-    int s_height = (int)CoreGame.game_window_height;
+    int s_width = (int)Game.game_window_width;
+    int s_height = (int)Game.game_window_height;
 
     entities_batch = new SpriteBatch();
 
@@ -163,6 +163,24 @@ public class World implements GestureListener, InputProcessor {
     catch (NullPointerException e) {
       Log.v(TAG, e.getMessage());
       Log.v(TAG, "Is such creature really in the world? o_O");
+    }
+  }
+
+
+  void addSupportElem(SupportUIElement elem) {
+    support_gui.add(elem);
+    reloadInputMultiplexer();
+  }
+
+
+  void remSupportElem(SupportUIElement elem) {
+    try {
+      input_multiplexer.removeProcessor(elem);
+      support_gui.removeValue(elem, true);
+    }
+    catch (NullPointerException e) {
+      Log.v(TAG, e.getMessage());
+      Log.v(TAG, "Is this Support GUI Element really in the world? o_O");
     }
   }
 
@@ -273,24 +291,6 @@ public class World implements GestureListener, InputProcessor {
 
     entities_batch.end();
 
-  }
-
-
-  void addSupportElem(SupportUIElement elem) {
-    support_gui.add(elem);
-    reloadInputMultiplexer();
-  }
-
-
-  void remSupportElem(SupportUIElement elem) {
-    try {
-      input_multiplexer.removeProcessor(elem);
-      support_gui.removeValue(elem, true);
-    }
-    catch (NullPointerException e) {
-      Log.v(TAG, e.getMessage());
-      Log.v(TAG, "Is this Support GUI Element really in the world? o_O");
-    }
   }
 
 

@@ -1,10 +1,5 @@
 package com.sistemalivre.coregame;
 
-
-import com.badlogic.gdx.utils.Array;
-
-
-
 // ========================= MAIN MENU GUI ========================= //
 
 // GUI for the main menu or title screen
@@ -47,7 +42,7 @@ public class MainMenuInterface extends UserInterface {
 
 
     // Register button on hash table
-    CoreGame.entities.put(start_btn.getName(), start_btn);
+    Game.entities.put(start_btn.getName(), start_btn);
 
     // Set the entity/button location on the screen
     start_btn.setPosition(
@@ -89,7 +84,7 @@ public class MainMenuInterface extends UserInterface {
 
 
     // Register button on hash table
-    CoreGame.entities.put(exit_game_btn.getName(), exit_game_btn);
+    Game.entities.put(exit_game_btn.getName(), exit_game_btn);
 
     // Set the entity/button location on the screen
     exit_game_btn.setPosition(
@@ -109,7 +104,7 @@ public class MainMenuInterface extends UserInterface {
     TextElement game_title = new TextElement(
         "game_title_main","Nope Island Game");
 
-    CoreGame.entities.put(game_title.getName(), game_title);
+    Game.entities.put(game_title.getName(), game_title);
 
     game_title.setPosition(margin, screen_height - margin - 24);
 

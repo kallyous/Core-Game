@@ -3,7 +3,7 @@ package com.sistemalivre.coregame.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.sistemalivre.coregame.CoreGame;
+import com.sistemalivre.coregame.Game;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -46,6 +46,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener createApplicationListener () {
-                return new CoreGame();
+                return new Game();
         }
 }

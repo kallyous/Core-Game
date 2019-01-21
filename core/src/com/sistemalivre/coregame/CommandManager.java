@@ -79,7 +79,7 @@ public class CommandManager {
         send the command to all of them. Slow but effective. **/
       else {
         // Builds enumeration with all entities
-        ObjectMap.Entries<String, Entity> entities = CoreGame.entities.iterator();
+        ObjectMap.Entries<String, Entity> entities = Game.entities.iterator();
         // Cycles through them all and let them know about the command
         while(entities.hasNext())
           entities.next().value.executeCommand(command);

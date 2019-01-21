@@ -226,7 +226,7 @@ class TextElement extends UiElement {
 
     this.setHeight( (int)label.getPrefHeight() );
 
-    CoreGame.entities.put(name, this);
+    Game.entities.put(name, this);
 
   }
 
