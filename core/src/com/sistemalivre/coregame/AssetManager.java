@@ -8,6 +8,7 @@ import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import java.util.Hashtable;
 
@@ -30,7 +31,7 @@ public class AssetManager {
   public static JsonReader jsonreader = new JsonReader();
 
   // Holds all assets by their names
-  private static Hashtable<String, Asset> assets;
+  private static ObjectMap<String, Asset> assets;
 
   // Holds the creatures templates data
   private final JsonValue creatures;
@@ -42,7 +43,7 @@ public class AssetManager {
 
   AssetManager() {
 
-    assets = new Hashtable<>();
+    assets = new ObjectMap<>();
 
     // Sets up the basic defaults
     JsonValue default_graphics = jsonreader.parse(
@@ -95,13 +96,13 @@ public class AssetManager {
   }
 
   static Texture texture(String name) {
-    /** Get a texture:
+    /* Get a texture:
      1. Assume there is a texture with this name. This means there is a asset
         with the same name.
      2. Get the asset of this name and cast into a GraphicAsset
      3. Call texture() from the asset. This cause the texture to be returned
         if already loaded or loaded then returned if not yet loaded.
-     **/
+     */
     return ((GraphicAsset)assets.get(name)).texture();
   }
 

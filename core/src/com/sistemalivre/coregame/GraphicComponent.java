@@ -34,9 +34,6 @@ public class GraphicComponent {
   // Texture sections after splitting the texture
   private TextureRegion texture_regions[];
 
-  // Size of regions/frames and how much of them there is in the texture sheet
-  private int sheet_cols, sheet_rows;
-
   // Offsets for this component
   private float x_offset, y_offset;
 
@@ -107,8 +104,6 @@ public class GraphicComponent {
     texture = asset.texture();
     texture_regions = asset.textureRegions();
     stand_index = data.getInt("default");
-    sheet_cols = data.getInt("cols");
-    sheet_rows = data.getInt("rows");
 
     try { setSpriteOffsetX(data.getInt("sprite_offset_x")); }
     catch (Exception e) {
@@ -196,6 +191,16 @@ public class GraphicComponent {
   void stopAnim() {
     Log.v(TAG, "Stopping animation");
     animate = false;
+  }
+
+
+  void destroy() {
+    owner = null;
+    sprite = null;
+    data = null;
+    texture_regions = null;
+    animation = null;
+    texture = null;
   }
 
 

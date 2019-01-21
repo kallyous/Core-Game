@@ -48,7 +48,18 @@ public class Creature extends Entity {
 
 
   @Override
-  public void dispose() {}
+  public void dispose() {
+    try {
+      GameState.world.remEntity(this);
+      graphic_comp.destroy();
+      body_comp.destroy();
+    }
+    catch (NullPointerException e) {
+      Log.v(TAG, e.getMessage());
+    }
+    graphic_comp = null;
+    body_comp = null;
+  }
 
 
   @Override

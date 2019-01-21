@@ -3,9 +3,6 @@ package com.sistemalivre.coregame;
 
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
-
-
 
 // ===================== GAME STATES SUPERCLASS - FSM ===================== //
 
@@ -18,7 +15,7 @@ abstract public class GameState {
 // ========================= DATA SETUP ========================= //
 
   // Holds reference to the current game world map or level
-  static WorldMap world;
+  static World world;
 
   // For single back actions support
   protected static GameState previous_state;
@@ -129,7 +126,7 @@ class RunningGameState extends GameState {
     this.input_multiplexer = input_multiplexer;
 
     // Initializes the world map.
-    world = new WorldMap(input_multiplexer);
+    world = new World(input_multiplexer);
 
   }
 

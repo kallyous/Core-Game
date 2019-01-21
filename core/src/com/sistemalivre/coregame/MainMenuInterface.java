@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Array;
 // GUI for the main menu or title screen
 public class MainMenuInterface extends UserInterface {
 
-  private static final String TAG = "MainMenuInterface";
+  protected static final String TAG = "MainMenuInterface";
 
 
 
@@ -18,9 +18,7 @@ public class MainMenuInterface extends UserInterface {
 
   MainMenuInterface(float width, float height) {
 
-    super(width, height);
-
-    elements = new Array<UiElement>(2);
+    super(width, height, 3);
 
 
 // --------------- UiElement - Start Button ---------------- //

@@ -37,7 +37,9 @@ class BodyComponent {
   }
 
 
-
+  void destroy() {
+    owner = null;
+  }
 
 // ========================= GET / SET ========================= //
 

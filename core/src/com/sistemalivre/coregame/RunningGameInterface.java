@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Array;
 // GUI for the main menu or title screen
 public class RunningGameInterface extends UserInterface {
 
-  private static final String TAG = "RunningGameInterface";
+  protected static final String TAG = "RunningGameInterface";
 
 
 
@@ -18,9 +18,7 @@ public class RunningGameInterface extends UserInterface {
 
   RunningGameInterface(float width, float height) {
 
-    super(width, height);
-
-    elements = new Array<UiElement>(2);
+    super(width, height, 3);
 
 
 

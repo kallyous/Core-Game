@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import java.util.Hashtable;
 
@@ -55,7 +56,7 @@ public class CoreGame extends ApplicationAdapter {
     access to every entity, it only needs a reference to this hashtable.
     Entities register themselves in this hashtable automatically,
     when they are created. */
-  public static Hashtable<String, Entity> entities;
+  public static ObjectMap<String, Entity> entities;
 
   // Tracks time for animations and other time based events
   float state_time;
@@ -91,7 +92,7 @@ public class CoreGame extends ApplicationAdapter {
 
     input_multiplexer = new InputMultiplexer();
 
-    entities = new Hashtable<String, Entity>();
+    entities = new ObjectMap<>();
 
     /** Command Manager - One to rule them all.
      No input goes straight into the controlled entity. All input generate

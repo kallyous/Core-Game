@@ -217,7 +217,7 @@ class MovingState extends EntityState {
   void init() {
     Log.d(TAG, "Entity is now moving. (" + owner.getName() + ")");
     try {
-      ((Creature)owner).graphic_comp.playAnim();
+      updateAnimation();
     }
     catch (Exception e) {
       e.printStackTrace();

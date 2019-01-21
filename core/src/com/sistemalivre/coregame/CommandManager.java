@@ -1,7 +1,8 @@
 package com.sistemalivre.coregame;
 
 
-import java.util.Enumeration;
+import com.badlogic.gdx.utils.ObjectMap;
+
 import java.util.LinkedList;
 
 
@@ -78,10 +79,10 @@ public class CommandManager {
         send the command to all of them. Slow but effective. **/
       else {
         // Builds enumeration with all entities
-        Enumeration<Entity> entities = CoreGame.entities.elements();
+        ObjectMap.Entries<String, Entity> entities = CoreGame.entities.iterator();
         // Cycles through them all and let them know about the command
-        while(entities.hasMoreElements())
-          entities.nextElement().executeCommand(command);
+        while(entities.hasNext())
+          entities.next().value.executeCommand(command);
       }
 
     }

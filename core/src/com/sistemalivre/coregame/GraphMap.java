@@ -79,6 +79,13 @@ public class GraphMap {
     }
   }
 
+  boolean plug(Entity ent) {
+    return true;
+  }
+
+  boolean unplug(Entity ent) {
+    return true;
+  }
 
 
   // ===================== GET / SET ==================== //

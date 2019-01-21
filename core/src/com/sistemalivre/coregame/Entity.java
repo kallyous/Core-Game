@@ -229,7 +229,7 @@ abstract public class Entity implements InputProcessor {
       state = null;
     }
     states = null;
-    CoreGame.entities.remove(this);
+    CoreGame.entities.remove(this.name);
   }
 
   boolean setState(String state_name) {

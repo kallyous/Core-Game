@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Array;
 // Superclass on top of what all GUI shall be built
 public class UserInterface {
 
-  private static final String TAG = "UserInterface ";
+  protected static final String TAG = "UserInterface ";
 
 
 
@@ -32,19 +32,24 @@ public class UserInterface {
   // Array holding the UI elements
   public Array<UiElement> elements;
 
+  // Interface name
+  String name;
+
 
 
 
 // ========================= CONSTRUCTION ========================= //
 
   // Main Constructor
-  UserInterface(float width, float height) {
+  UserInterface(float width, float height, int initial_elements_count) {
+
+    elements = new Array<>(false, initial_elements_count);
 
     // Screen Dimensions Initialization
     screen_width = width;
     screen_height = height;
 
-    // Define the margin
+    // Define the margin between elements
     margin = 16;
 
   }
@@ -70,11 +75,12 @@ public class UserInterface {
   public void setInputMultiplexer(InputMultiplexer multiplexer) {
     Log.i(TAG, "Setting InputMultiplexer to "
         + multiplexer.toString() );
-    for (UiElement elem : elements) multiplexer.addProcessor(elem);
+    for (UiElement elem : elements)
+      multiplexer.addProcessor(elem);
   }
 
 
-  // Remove elementos from InputMultiplexer
+  // Remove elements from InputMultiplexer
   public void unsetInputMultiplexer(InputMultiplexer multiplexer) {
     for (UiElement elem : elements) multiplexer.removeProcessor(elem);
   }
@@ -158,20 +164,21 @@ class UiElement extends Entity {
   }
 
 
-  /** By default, each button just issues a SelectCommand
-    to itself. (potentially useless) **/
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
     if (collidedScreen(screenX, screenY)) {
-      Log.i(TAG, "Sending a SelectCommand. ");
-      CommandManager.sendCommand( new SelectCommand(this) );
+      Log.v(TAG, this.getName() + " touched.");
+      return true;
     }
     return false;
   }
 
 
   @Override
-  public void dispose() {}
+  public void dispose() {
+    graphic_comp.destroy();
+    graphic_comp = null;
+  }
 
 }
 
