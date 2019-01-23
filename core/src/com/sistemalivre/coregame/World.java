@@ -29,6 +29,8 @@ public class World implements GestureListener, InputProcessor {
 
 // ========================= DATA ========================= //
 
+  TiledMap upper_map;
+
   TiledMap tiled_map;
 
   TiledMapTileLayer blockers;
@@ -36,6 +38,8 @@ public class World implements GestureListener, InputProcessor {
   OrthographicCamera camera;
 
   OrthogonalTiledMapRenderer otm_renderer;
+
+  OrthogonalTiledMapRenderer upper_layers_renderer;
 
   private Array<Entity> entities;
 
@@ -76,9 +80,19 @@ public class World implements GestureListener, InputProcessor {
     tiled_map = new TmxMapLoader().load(
         "maps/debug_island/overworld_island.tmx");
 
+    upper_map = new TiledMap();
+
+    upper_map.getLayers().add(tiled_map.getLayers().get("roof"));
+
+    tiled_map.getLayers().remove(
+        tiled_map.getLayers().get("roof")
+    );
+
     blockers = (TiledMapTileLayer)tiled_map.getLayers().get("blockers");
 
     otm_renderer = new OrthogonalTiledMapRenderer(tiled_map);
+
+    upper_layers_renderer = new OrthogonalTiledMapRenderer(upper_map);
 
     camera = new OrthographicCamera();
     camera.setToOrtho(false, s_width, s_height);
@@ -136,6 +150,10 @@ public class World implements GestureListener, InputProcessor {
     drawSupportGUI();
 
     drawEntities();
+
+    upper_layers_renderer.setView(camera);
+    camera.update();
+    upper_layers_renderer.render();
 
     drawDebug();
 
