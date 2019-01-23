@@ -27,6 +27,8 @@ public class Game extends ApplicationAdapter {
     to this object. */
   public static AssetManager asset_manager;
 
+  public static Terrain terrain;
+
   public static World world;
 
   /** Finite State Machine - This one holds the current state state.
@@ -77,7 +79,7 @@ public class Game extends ApplicationAdapter {
   @Override
   public void create() {
 
-    Log.LOG_LEVEL = Log.VERBOSE;
+    Log.LOG_LEVEL = Log.INFO;
 
     // Starts timer
     state_time = 0f;
@@ -87,6 +89,8 @@ public class Game extends ApplicationAdapter {
     game_window_height = Gdx.graphics.getHeight();
 
     asset_manager = new AssetManager();
+
+    terrain = new Terrain();
 
     input_multiplexer = new InputMultiplexer();
 

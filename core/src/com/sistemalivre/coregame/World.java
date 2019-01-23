@@ -35,6 +35,8 @@ public class World implements GestureListener, InputProcessor {
 
   TiledMapTileLayer blockers;
 
+  TiledMapTileLayer ground;
+
   OrthographicCamera camera;
 
   OrthogonalTiledMapRenderer otm_renderer;
@@ -89,6 +91,8 @@ public class World implements GestureListener, InputProcessor {
     );
 
     blockers = (TiledMapTileLayer)tiled_map.getLayers().get("blockers");
+
+    ground = (TiledMapTileLayer)tiled_map.getLayers().get("ground");
 
     otm_renderer = new OrthogonalTiledMapRenderer(tiled_map);
 
@@ -207,13 +211,33 @@ public class World implements GestureListener, InputProcessor {
 
 
   boolean tileIsPassable(int x, int y) {
-     TiledMapTileLayer.Cell cell = blockers.getCell(x,y);
-     if (cell == null)
-       return true;
-     else {
-       Log.v(TAG, "Found impassable at " + cell.getTile().getId() + " at " + x + " " + y);
-       return false;
-     }
+
+    // If terrain not passable, don't even evaluate next shit
+    if (!isTerrainPassable(x,y))
+      return false;
+
+    // Get if there is something in the blockers layer at that spot
+    TiledMapTileLayer.Cell cell = blockers.getCell(x,y);
+
+    // Doesn't really matter what is there. If it is there, path is blocked.
+    if (cell == null)
+      return true;
+
+    // If we reach here, we can't pass that tile.
+    Log.v(TAG, "Found impassable at " + cell.getTile().getId() + " at " + x + " " + y);
+    return false;
+
+  }
+
+
+  boolean isTerrainPassable(int x, int y) {
+
+    int tile_id = ground.getCell(x,y).getTile().getId();
+
+    if (Game.terrain.land.contains(tile_id))
+      return true;
+
+    return false;
   }
 
 
