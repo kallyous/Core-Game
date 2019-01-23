@@ -364,54 +364,20 @@ abstract public class Entity implements InputProcessor {
   }
 
   public int getTileX() {
-
-    // Get integer version of X
-    int world_x = (int)getX();
-
-    // Gets how much it exceeds the current tile X
-    int ex = world_x % Global.tile_size;
-
-    // Removes excess, leaving us with a multiple of tile_size,
-    // Then divides by tile_size, getting the current tile location.
-    int x = (world_x - ex) / Global.tile_size;
-
-    return x;
+    return (int)getX() / Global.tile_size;
   }
 
   public void setTileX(int x) {
     setX(x*Global.tile_size);
   }
 
-  public void setTileX(float x) {
-    int world_x = (int)x;
-    int ex = world_x % Global.tile_size;
-    setTileX( (world_x - ex)/Global.tile_size );
-  }
-
 
   public int getTileY() {
-
-    // Get integer version of X
-    int world_y = (int)getY();
-
-    // Gets how much it exceeds the current tile X
-    int ex = world_y % Global.tile_size;
-
-    // Removes excess, leaving us with a multiple of tile_size,
-    // Then divides by tile_size, getting the current tile location.
-    int y = (world_y - ex) / Global.tile_size;
-
-    return y;
+    return (int)getY() / Global.tile_size;
   }
 
   public void setTileY(int y) {
     setY(y*Global.tile_size);
-  }
-
-  public void setTileY(float y) {
-    int world_y = (int)y;
-    int ex = world_y % Global.tile_size;
-    setTileY( (world_y - ex)/Global.tile_size );
   }
 
 

@@ -80,11 +80,33 @@ public class GraphMap {
   }
 
   boolean plug(Entity ent) {
-    return true;
+    try {
+      Log.v(TAG, "Plugging " + ent.getName() + " into graph.");
+      int x = ent.getTileX();
+      int y = ent.getTileY();
+      getVertexAt(x, y).putEntity(ent);
+      return true;
+    }
+    catch (Exception e) {
+      Log.w(TAG, "Failed to plug entity.");
+      Log.w(TAG, e.getMessage());
+      return false;
+    }
   }
 
   boolean unplug(Entity ent) {
-    return true;
+    try {
+      Log.v(TAG, "Unplugging " + ent.getName() + " from graph.");
+      int x = ent.getTileX();
+      int y = ent.getTileY();
+      getVertexAt(x,y).clearEntity();
+      return true;
+    }
+    catch (Exception e) {
+      Log.w(TAG, "Failed to unplug entity.");
+      Log.w(TAG, e.getMessage());
+      return false;
+    }
   }
 
 
@@ -92,6 +114,12 @@ public class GraphMap {
 
   public GraphMapVertex getVertexAt(int x, int y) {
     return vertexes[y][x];
+  }
+
+  void clearAll() {
+    for (int i=0; i < vertexes.length; i++)
+      for (int j=0; j < vertexes[i].length; j++)
+        vertexes[i][j].clear();
   }
 
 }

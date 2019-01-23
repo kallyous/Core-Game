@@ -144,13 +144,13 @@ public class World implements GestureListener, InputProcessor {
 
 
   void addEntity(Entity ent) {
-    // Try to plug it into the graph
     if (graph.plug(ent)) {
       entities.add(ent);
       reloadInputMultiplexer();
+      return;
     }
-    // Destroy entity if failed to plug it
-    else ent.destroy();
+    Log.w(TAG, "Failed to addEntity() for " + ent.getName());
+    ent.destroy();
   }
 
 
@@ -164,6 +164,14 @@ public class World implements GestureListener, InputProcessor {
       Log.v(TAG, e.getMessage());
       Log.v(TAG, "Is such creature really in the world? o_O");
     }
+  }
+
+  void unplug(Entity ent) {
+    graph.unplug(ent);
+  }
+
+  void plug(Entity ent) {
+    graph.plug(ent);
   }
 
 
@@ -293,6 +301,9 @@ public class World implements GestureListener, InputProcessor {
 
   }
 
+  void clearGraph() {
+    graph.clearAll();
+  }
 
 
 

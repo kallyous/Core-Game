@@ -15,8 +15,11 @@ public class GraphMapVertex {
 
   // =========================== DATA =========================== //
 
+  // Reference to a entity, case there is one occupying the square.
+  Entity entity_on;
+
   /** These are the same for the vertex location in both the graph
-    and the tiled map matrix. **/
+   and the tiled map matrix. **/
   private int x, y;
 
   // Edges originating from this vertex
@@ -24,9 +27,6 @@ public class GraphMapVertex {
 
   // Terrain and Feature (usually a wall or nothing)
   private int terrain, feature;
-
-  // Reference to a entity, case there is one occupying the square.
-  public Entity entity_on;
 
   // For algorithms
   private boolean visited = false;
@@ -65,7 +65,7 @@ public class GraphMapVertex {
   }
 
 
-  public void addEdge(GraphMapEdge edge) {
+  void addEdge(GraphMapEdge edge) {
     edges.add(edge);
   }
 
@@ -75,80 +75,74 @@ public class GraphMapVertex {
   // ======================== GET / SET ================== //
 
   // Algorithm Processing
-  public void clear() {
+  void clear() {
     visited = false;
     source_edge = null;
   }
 
 
-  public boolean isVisited() {
+  boolean isVisited() {
     return visited;
   }
 
 
-  public GraphMapEdge getSourceEdge() {
+  GraphMapEdge getSourceEdge() {
     return source_edge;
   }
 
 
-  public void visit() {
+  void visit() {
     visited = true;
   }
 
 
-  public void setSourceEdge(GraphMapEdge edge) {
+  void setSourceEdge(GraphMapEdge edge) {
     source_edge = edge;
   }
 
 
   // X
-  public int getX() {
+  int getX() {
     return x;
-  }
-  public void setX(int x) {
-    this.x = x;
   }
 
 
   // Y
-  public int getY() {
+  int getY() {
     return y;
-  }
-  public void setY(int y) {
-    this.y = y;
   }
 
 
   // Edges
-  public Vector<GraphMapEdge> getEdges() {
+  Vector<GraphMapEdge> getEdges() {
     return edges;
   }
 
 
   // Entity
-  public Entity getEntityOn() {
+  Entity getEntityOn() {
     return entity_on;
   }
-  public void putEntity(Entity entity) {
+  void putEntity(Entity entity) {
     entity_on = entity;
   }
-  public void clearEntity() { entity_on = null; }
+  void clearEntity() { entity_on = null; }
 
 
   // Terrain
-  public int getTerrain() {
+  int getTerrain() {
     return terrain;
   }
-  public void setTerrain(int terrain_id) {
+  void setTerrain(int terrain_id) {
     this.terrain = terrain;
   }
 
 
   // Feature
-  public int getFeature() {
+  int getFeature() {
     return feature;
   }
-  public void setFeature(int feature_id) {
+  void setFeature(int feature_id) {
     this.feature = feature;
   }
 

@@ -215,6 +215,7 @@ class MovingState extends EntityState {
 
 
   void init() {
+    Game.world.unplug(this.owner);
     Log.d(TAG, "Entity is now moving. (" + owner.getName() + ")");
     try {
       updateAnimation();
@@ -222,6 +223,15 @@ class MovingState extends EntityState {
     catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  void leave() {
+    Log.w(TAG, "Leaving MovingState");
+    Game.world.plug(this.owner);
+    setStandFrame();
+    broken = false;
+    destination = null;
+    path = null;
   }
 
   void update(float dt) {
@@ -399,14 +409,6 @@ class MovingState extends EntityState {
     creep.graphic_comp.setStandIndex(index);
     creep.graphic_comp.stopAnim();
 
-  }
-
-  void leave() {
-    Log.w(TAG, "Leaving MovingState");
-    setStandFrame();
-    broken = false;
-    destination = null;
-    path = null;
   }
 
   String getName() {

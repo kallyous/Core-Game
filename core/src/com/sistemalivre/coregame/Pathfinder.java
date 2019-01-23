@@ -54,6 +54,8 @@ public class Pathfinder {
 
     frontier.addLast(entrance);
 
+    boolean first = true;
+
     while(frontier.size > 0) {
       // Pop a vertex from frontier into the current vertex
       current = frontier.removeFirst();
@@ -68,18 +70,21 @@ public class Pathfinder {
       // Only process if not visited yet
       if (!current.isVisited()) {
         current.visit();
-        // Enqueue all it's neighbors for later parsing
-        for(GraphMapEdge edge : current.getEdges()) {
-          // Skip already visited vertexes
-          if(!edge.getTarget().isVisited()) {
-            // Marks into the parsing neighbor vertex where we came from when we reached it.
-            edge.getTarget().setSourceEdge(edge);
-            // Enqueue at the tail
-            frontier.addLast(edge.getTarget());
+        if (current.getEntityOn() == null || first) {
+          // Enqueue all it's neighbors for later parsing
+          for(GraphMapEdge edge : current.getEdges()) {
+            // Skip already visited vertexes
+            if(!edge.getTarget().isVisited()) {
+              // Marks into the parsing neighbor vertex where we came from when we reached it.
+              edge.getTarget().setSourceEdge(edge);
+              // Enqueue at the tail
+              frontier.addLast(edge.getTarget());
+            }
           }
+          // Throws current parsed vertex into the visited group
+          visited.add(current);
+          first = false;
         }
-        // Throws current parsed vertex into the visited group
-        visited.add(current);
       }
 
     }
@@ -87,11 +92,13 @@ public class Pathfinder {
     // Travel back from exit until entrance and return the path
     path = traceBack(exit);
 
+    Game.world.clearGraph();
+
     // The vertexes have to be cleared from data.
-    for (GraphMapVertex vertex : frontier)
+    /*for (GraphMapVertex vertex : frontier)
       vertex.clear();
     for (GraphMapVertex vertex : visited)
-      vertex.clear();
+      vertex.clear();*/
 
     // Return the path
     return path;

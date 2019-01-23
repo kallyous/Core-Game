@@ -366,9 +366,9 @@ class TracePathCommand extends Command {
 
 // ========================= DATA ========================= //
 
-  public GraphMapVertex entrance;
+  GraphMapVertex entrance;
 
-  public GraphMapVertex exit;
+  GraphMapVertex exit;
 
 
 
