@@ -121,11 +121,6 @@ public class World implements GestureListener, InputProcessor {
     for (int i = 0; i < lvl_creats.size; i++)
       addEntity(lvl_creats.get(i));
 
-    //StructureLoader.loadStructuresFromTieldMap(tiled_map);
-
-    /*Array<Structure> lvl_structs =
-        StructureLoader.loadStructuresFromTieldMap(tiled_map);*/
-
   }
 
 
