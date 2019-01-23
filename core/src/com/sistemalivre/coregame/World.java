@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -28,6 +30,8 @@ public class World implements GestureListener, InputProcessor {
 // ========================= DATA ========================= //
 
   TiledMap tiled_map;
+
+  TiledMapTileLayer blockers;
 
   OrthographicCamera camera;
 
@@ -72,6 +76,8 @@ public class World implements GestureListener, InputProcessor {
     tiled_map = new TmxMapLoader().load(
         "maps/debug_island/overworld_island.tmx");
 
+    blockers = (TiledMapTileLayer)tiled_map.getLayers().get("blockers");
+
     otm_renderer = new OrthogonalTiledMapRenderer(tiled_map);
 
     camera = new OrthographicCamera();
@@ -96,6 +102,11 @@ public class World implements GestureListener, InputProcessor {
     // Insert all loaded creatures into the state running world
     for (int i = 0; i < lvl_creats.size; i++)
       addEntity(lvl_creats.get(i));
+
+    //StructureLoader.loadStructuresFromTieldMap(tiled_map);
+
+    /*Array<Structure> lvl_structs =
+        StructureLoader.loadStructuresFromTieldMap(tiled_map);*/
 
   }
 
@@ -166,12 +177,25 @@ public class World implements GestureListener, InputProcessor {
     }
   }
 
+
   void unplug(Entity ent) {
     graph.unplug(ent);
   }
 
+
   void plug(Entity ent) {
     graph.plug(ent);
+  }
+
+
+  boolean tileIsPassable(int x, int y) {
+     TiledMapTileLayer.Cell cell = blockers.getCell(x,y);
+     if (cell == null)
+       return true;
+     else {
+       Log.v(TAG, "Found impassable at " + cell.getTile().getId() + " at " + x + " " + y);
+       return false;
+     }
   }
 
 
@@ -190,6 +214,11 @@ public class World implements GestureListener, InputProcessor {
       Log.v(TAG, e.getMessage());
       Log.v(TAG, "Is this Support GUI Element really in the world? o_O");
     }
+  }
+
+
+  void clearGraph() {
+    graph.clearAll();
   }
 
 
@@ -299,10 +328,6 @@ public class World implements GestureListener, InputProcessor {
 
     entities_batch.end();
 
-  }
-
-  void clearGraph() {
-    graph.clearAll();
   }
 
 

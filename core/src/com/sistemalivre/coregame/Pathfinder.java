@@ -71,19 +71,24 @@ public class Pathfinder {
       if (!current.isVisited()) {
         current.visit();
         if (current.getEntityOn() == null || first) {
-          // Enqueue all it's neighbors for later parsing
-          for(GraphMapEdge edge : current.getEdges()) {
-            // Skip already visited vertexes
-            if(!edge.getTarget().isVisited()) {
-              // Marks into the parsing neighbor vertex where we came from when we reached it.
-              edge.getTarget().setSourceEdge(edge);
-              // Enqueue at the tail
-              frontier.addLast(edge.getTarget());
+          int x = current.getX();
+          int y = current.getY();
+          if (Game.world.tileIsPassable(x,y)) {
+            Log.v(TAG, "Passable tile found at " + x + " " + y);
+            // Enqueue all it's neighbors for later parsing
+            for(GraphMapEdge edge : current.getEdges()) {
+              // Skip already visited vertexes
+              if(!edge.getTarget().isVisited()) {
+                // Marks into the parsing neighbor vertex where we came from when we reached it.
+                edge.getTarget().setSourceEdge(edge);
+                // Enqueue at the tail
+                frontier.addLast(edge.getTarget());
+              }
             }
+            // Throws current parsed vertex into the visited group
+            visited.add(current);
+            first = false;
           }
-          // Throws current parsed vertex into the visited group
-          visited.add(current);
-          first = false;
         }
       }
 

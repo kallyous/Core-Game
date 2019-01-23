@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#000000" nextlayerid="3" nextobjectid="7">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#000000" nextlayerid="8" nextobjectid="41">
  <tileset firstgid="1" name="terrain_atlas.png" tilewidth="32" tileheight="32" tilecount="1024" columns="32">
   <image source="../../graphic/terrain_atlas.png" width="1024" height="1024"/>
  </tileset>
- <layer id="1" name="ground" width="100" height="100">
+ <layer id="1" name="ground" width="100" height="100" locked="1">
   <data encoding="base64" compression="zlib">
    eJzt2tF1ozAQhWGrG7YTXIlJBSnB2UpCugyctU5mx5KQhIFR+B++JwcDczWSwPlwl8sHAAAAAAAAAAAAAAAAAAAAAAAAAAAAUKmbjMIfA9d0Zv3kbfJ++eczkUuX+AxxpXWbMxkycvHZfZJJUQ5fk9vkWnj830cet0c+Q+A7/N+QSV4OcnyX1quPZJA6x0guT3WSNZJ0Jr6mJTUM5bB0nrNKZaHHsK6prGEXqGdODqFM/HFnzMfP5bV8VnPNZW4lOejv88edcS5bm0cJuca/FZz3bqBOe+kLa7PGveK8NXu81u3VI3rNzjnvmXrj6B7JyeOs+66te8SvHXLuyR0HZ8xk6zxi807ueVuatzqXfg7IkTtWj8ijhTV9rvvofvb5d/fzbFfb31v2SOia/PW2nkWodvI5qra/t56zSp4XQ+uNNboncu891iud+//9RM3z9N7z25G11+/xausVm7/6x/jb8xm9xTx87eX7tbVjNzZ/W+uLpTF0hHnc+r2OXhdm8j3Q4PL3RXrMWewLiz2S6ge/35DzWZ+ZS2t5WOmRVJ3u4m9K3geF9o2yD62ykEmqTjIPWeNUT6V633qPpK7dQiZ+vPRqvJf2Rk6GFlh6HozVOPV/NCX3I4+p/a1oa5Z+I1yaS/S1hjJZmn9L570jczk6k9iYj+UyRmqZupe+gSxmVuatV623OWui5bXdwprux++w0Ce3jM+XxpbF3vD3ZaU3dC6pPXDo85J3pL43lrLdM4ure95HWhLLRO6B/XjKzUF/dyzbV9d6cOm+tzI/lWaia79mPMljt1pL9NzTR3JpJQ95D6U9kKtzr19LlnpW5m9xvbCQ96vmLF3fOe/RPb97a+E3QQu5rM1G/9/1lwvPW+RQl00qH/3bjHdV30Ptt8+Hed+OniwAAAAAAAAAAAAAAAAA4Nf7BpSQZag=
   </data>
  </layer>
- <objectgroup id="2" name="creatures">
+ <layer id="7" name="flor" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztzrEJADAIAEFB9x85pHEHUe6qLz8CAAAAAAAAAAAAAAAAAAAAAAAAAACADV521OgGAAAAAAAAAAAAAAAAAAAAAMB5H+3yAQY=
+  </data>
+ </layer>
+ <layer id="5" name="blockers" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt1bEJgDAQBdCAYziXOonYqFuo42qKFLaCkBjfg+uP+/AvBAAAAAAAAAAAAAAAAAAAAAAAAAAAAL7ibHJvAPxdF3uoTzM87KRVh71uvN10ct/s5FGWLWawpznkUZQ55rHIBACq0frrAAAAAAAAAAAAAAAAVOoCAYkITQ==
+  </data>
+ </layer>
+ <objectgroup id="4" name="structures"/>
+ <objectgroup id="2" name="creatures" locked="1">
   <object id="2" name="arya" type="creature" x="896" y="1856" width="32" height="32">
    <properties>
     <property name="controllable" type="bool" value="true"/>
@@ -26,4 +37,9 @@
    </properties>
   </object>
  </objectgroup>
+ <layer id="6" name="roof" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt1csJgEAMBcDgFqKdaCH+OrFwDxqrWHVnIDk/eJBEAAAAAAAAAAAAAAAAAAAAAAAAAAC07epylYit1E7Co88ehpxDH68wZg9Tzq4P4KNW9wuANOc/WPwEAPiNs6udAAAAAAAAAAAAAAAAAGjBDU0OBTM=
+  </data>
+ </layer>
 </map>

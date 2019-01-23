@@ -51,16 +51,16 @@ public class GraphicComponent {
 // ========================= CONSTRUCTION ========================= //
 
   // Default constructor assumes default GUI texture.
-  GraphicComponent(Entity entity) {
-    owner = entity;
+  GraphicComponent(Entity owner) {
+    this.owner = owner;
     GraphicAsset asset =(GraphicAsset)AssetManager.asset("DefaultInterface");
     setupAssetGraphics(asset);
   }
 
 
   // Most common use, we specify the name of an asset for the component to use
-  GraphicComponent(Entity entity, String asset_name) {
-    owner = entity;
+  GraphicComponent(Entity owner, String asset_name) {
+    this.owner = owner;
     GraphicAsset asset = (GraphicAsset)AssetManager.asset(asset_name);
     setupAssetGraphics(asset);
   }
@@ -68,10 +68,10 @@ public class GraphicComponent {
 
   // Makes a graphic component from an arbitrary region of a given texture
   GraphicComponent(
-      Entity entity, Texture texture,
+      Entity owner, Texture texture,
       int region_x, int region_y, int width, int height) {
 
-    owner = entity;
+    this.owner = owner;
 
     this.texture = texture;
 
@@ -85,7 +85,7 @@ public class GraphicComponent {
 
     sprite = new Sprite(texture_regions[stand_index]);
 
-    Log.d(TAG, entity.getName() +
+    Log.d(TAG, owner.getName() +
       " created with custom graphics and a single region.");
 
   // ------------------------- Entity Size Setup -------------------------- //
