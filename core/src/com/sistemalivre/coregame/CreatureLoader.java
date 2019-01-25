@@ -87,7 +87,7 @@ public class CreatureLoader {
       float y = Float.parseFloat( props.get("y").toString() );
 
       // Prepare a new creature with the given name
-      Creature creature = new Creature(creature_name, spritesheet_name);
+      Creature creature = new Creature(creature_name, spritesheet_name, 1, 1);
 
       // Set display name
       creature.setDisplayName(display_name);
@@ -125,10 +125,10 @@ public class CreatureLoader {
     Log.d(TAG, "JsonValue of build creature:\n"
         + creature_json.toString());
 
-    creature_obj.body_comp.setHealthPtsMax(
+    creature_obj.body_comp.setMaxHealth(
         creature_json.getFloat("health") );
 
-    creature_obj.body_comp.setHealthPtsCurr(
+    creature_obj.body_comp.setCurrHealth(
         creature_json.getFloat("health") );
 
     creature_obj.setWidth((int)creature_json.getFloat("width"));
@@ -145,7 +145,7 @@ public class CreatureLoader {
     // Pseudo deep copy
     JsonValue creature = new JsonValue("creature");
     for (JsonValue val : arc_creature) {
-      // In case of unceonvertible types, print a stacktrace and ignore it
+      // In case of unconvertable types, print a stacktrace and ignore it
       try {
         creature.addChild( val.name, new JsonValue(val.asString()) );
       } catch (Exception e) {
@@ -212,23 +212,17 @@ public class CreatureLoader {
 
     JsonValue creature_json = protoypeFactory(prototype);
 
-
-
-    Log.d(TAG, "JsonValue of build creature:\n"
+    Log.i(TAG, "JsonValue of build creature:\n"
         + creature_json.toString());
 
     String internal_name = prototype_name + "_" + (Entity.getLastUsedID() + 1);
 
     Creature creature_obj = new Creature(
         internal_name,
-        creature_json.getString("spritesheet")
+        creature_json.getString("spritesheet"),
+        creature_json.getFloat("health"),
+        creature_json.getInt("actions")
     );
-
-    creature_obj.body_comp.setHealthPtsMax(
-        creature_json.getFloat("health") );
-
-    creature_obj.body_comp.setHealthPtsCurr(
-        creature_json.getFloat("health") );
 
     creature_obj.setWidth((int)creature_json.getFloat("width"));
     creature_obj.setHeight((int)creature_json.getFloat("height"));

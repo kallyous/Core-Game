@@ -26,10 +26,10 @@ public class Creature extends Entity {
 
 // ========================= CONSTRUCTION ========================= //
 
-  Creature(String name, String spritesheet_name) {
+  Creature(String name, String spritesheet_name, float health, int actions) {
     super(name);
     graphic_comp = new GraphicComponent(this, spritesheet_name);
-    body_comp = new BodyComponent(this);
+    body_comp = new BodyComponent(this, health, actions);
     states.add(new IdleState(this));
     states.add(new MovingState(this));
     setState("IdleState");
@@ -85,10 +85,10 @@ public class Creature extends Entity {
   public String info() {
     String info = ("Info on " + this.getDisplayName() + "\n"
         + "\tlocation " + this.getX() + " " + this.getY() + "\n"
-        + "\tHP " + body_comp.getHealthPtsCurr()  + "/"
-        + body_comp.getHealthPtsMax() + "\n"
-        + "\tAP " + body_comp.getActionPtsCurr()
-        + "/" + body_comp.getActionPtsMax() );
+        + "\tHP " + body_comp.currHealth()  + "/"
+        + body_comp.maxHealth() + "\n"
+        + "\tAP " + body_comp.currActionPts()
+        + "/" + body_comp.maxActionPts() );
     return info;
   }
 

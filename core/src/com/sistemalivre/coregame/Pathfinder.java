@@ -1,15 +1,23 @@
 package com.sistemalivre.coregame;
 
 
-
-// ========================== Pathfinder ========================== //
-
 import com.badlogic.gdx.utils.Queue;
 
 import java.util.Vector;
 
 
 
+// ========================== Pathfinder ========================== //
+
+
+
+/**
+ Holds methods related to path finding algorithms.
+ @see GraphMap
+ @see GraphMapVertex
+ @see GraphMapEdge
+ @author Lucas Carvalho Flores
+ */
 public class Pathfinder {
 
   private static final String TAG = "Pathfinder";

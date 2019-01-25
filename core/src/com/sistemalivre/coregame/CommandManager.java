@@ -2,13 +2,24 @@ package com.sistemalivre.coregame;
 
 
 import com.badlogic.gdx.utils.ObjectMap;
-
-import java.util.LinkedList;
+import com.badlogic.gdx.utils.Queue;
 
 
 
 // ===================== CommandManager ===================== //
 
+/**
+ Singleton oriented class that orders the commands pipeline.
+ <p>
+ The CommandManager receives command requests, enqueues them, them fluses all
+ pending commands every cycle. This allows control actions to arrive form many
+ sources, like direct input, A.I., network, etc.
+ <p>
+ Commands can be issued to any entity, but the entity itself will validate the
+ command before execute it.
+ @see Command
+ @author Lucas Carvalho Flores
+ */
 public class CommandManager {
 
   private static final String TAG = "CommandManager";
@@ -17,10 +28,14 @@ public class CommandManager {
 
 // ========================= DATA ========================= //
 
-  // Queue with all commands to broadcast each state cycle
-  private static LinkedList<Command> pending_commands;
+  /**
+   Queue with all commands to broadcast/direct each cycle.
+   */
+  private static Queue<Command> pending_commands;
 
-  // Entity for running target-less commands.
+  /**
+   Entity for running targetless commands.
+   */
   private static Entity commander;
 
 
@@ -30,7 +45,7 @@ public class CommandManager {
 
   public static void setup() {
     // Prepares the holder for received commands
-    pending_commands = new LinkedList<>();
+    pending_commands = new Queue<>();
 
     // Cosntructos a entity to run target-less commands
     commander = new Entity("GameCommander") {
@@ -55,10 +70,10 @@ public class CommandManager {
 
     Command command;
 
-    while ( !(pending_commands.isEmpty()) ) {
+    while (pending_commands.size > 0) {
 
       // Get and remove a command from the queue
-      command = pending_commands.poll();
+      command = pending_commands.removeFirst();
 
       // If it has no target, the commander execute it
       if (command.type() == Command.TARGET_NONE) {
@@ -99,7 +114,13 @@ public class CommandManager {
     catch (NullPointerException excpetion) {
       Log.i(TAG, "Enfileirando comando " + command.getTAG());
     }
-    return pending_commands.offer(command);
+
+    pending_commands.addLast(command);
+
+    if (pending_commands.last() == command)
+      return true;
+    else
+      return false;
   }
 
 }
